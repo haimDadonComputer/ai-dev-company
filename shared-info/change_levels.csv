@@ -1,0 +1,6 @@
+level,description,required_agents,requires_user_approval,requires_impact_report,requires_qa,requires_contradictions
+simple_change,שינוי קטן שאינו משנה חוזים או מבנה,AI Manager;relevant agent,no,no,optional,optional
+feature,פיצ'ר רגיל,AI Manager;Product Owner;Impact Analyzer;relevant agents,yes,yes,yes,yes
+major_feature,פיצ'ר גדול שמשפיע על כמה תחומים,AI Manager;Product Owner;Impact Analyzer;Permissions;DB;API;Components;QA;Contradictions,yes,yes,yes,yes
+architecture_change,שינוי מבנה מערכת או טכנולוגיה,AI Manager;Impact Analyzer;all agents,yes,yes,yes,yes
+hotfix,תיקון דחוף בפרודקשן,AI Manager;relevant agent;QA;Contradictions,yes,yes,yes,yes

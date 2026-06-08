@@ -1,0 +1,5 @@
+id,date,decision,reason,approved_by,status,related_files,notes
+1,2026-06-08,Use MySQL,פשטות ונוחות פריסה,Haim,active,AGENTS.md,
+2,2026-06-08,Use mysql2 without ORM,שליטה מלאה ופחות מורכבות,Haim,active,AGENTS.md,
+3,2026-06-08,Use Vanilla HTML CSS TypeScript,פשטות וללא Framework,Haim,active,AGENTS.md,
+4,2026-06-08,Allow only ag-grid-community,טבלאות מתקדמות בלי עומס ספריות,Haim,active,AGENTS.md,

@@ -616,6 +616,31 @@ Critical
 
 ---
 
+# Change Level Rule
+
+לפני כל משימה AI Manager חייב לסווג את המשימה לאחת מהרמות:
+
+- simple_change
+- feature
+- major_feature
+- architecture_change
+- hotfix
+
+הסיווג קובע אילו סוכנים משתתפים.
+
+אסור להפעיל את כל הסוכנים על שינוי קטן ללא צורך.
+
+אם מדובר ב־simple_change:
+אפשר לדלג על Product Owner, Impact Analyzer ו־QA מלא.
+
+אם מדובר ב־feature ומעלה:
+חובה Impact Report.
+
+אם מדובר ב־architecture_change:
+חובה אישור משתמש לפני כל פעולה.
+
+
+
 # Final Rule
 
 אם קיימת אי ודאות:
@@ -623,3 +648,123 @@ Critical
 לא מנחשים.
 
 שואלים את המשתמש.
+
+
+# Management Control Files
+
+AI Manager חייב לקרוא לפני כל משימה:
+
+- shared-info/source_of_truth.md
+- shared-info/change_levels.csv
+- shared-info/task_checklist.md
+- shared-info/decisions.csv
+
+אם המשימה קשורה לעיצוב:
+
+- design-system/naming_rules.md
+- design-system/colors.csv
+- design-system/typography.csv
+- design-system/spacing.csv
+- design-system/components.csv
+
+אם המשימה קשורה למוצר:
+
+- product/project_definition.md
+- product/features.csv
+- product/user_stories.csv
+- product/roadmap.csv
+
+
+# Change Level Rule
+
+לפני כל משימה AI Manager חייב לסווג את המשימה:
+
+- simple_change
+- feature
+- major_feature
+- architecture_change
+- hotfix
+
+יש לקרוא את:
+
+shared-info/change_levels.csv
+
+הסיווג קובע:
+
+- אילו סוכנים משתתפים
+- אילו קבצים חייבים להתעדכן
+- האם נדרש Impact Report
+- האם נדרש QA
+- האם נדרש AI Contradictions
+- האם נדרש אישור משתמש
+
+אסור להפעיל את כל הסוכנים ללא צורך.
+
+
+# Source Of Truth Rule
+
+לכל מידע במערכת קיים מקור אמת יחיד.
+
+אסור ליצור מקור אמת נוסף.
+
+אם קיים ספק יש לבדוק:
+
+shared-info/source_of_truth.md
+
+דוגמאות:
+
+Roles
+→ permissions.csv
+
+APIs
+→ api_list.csv
+
+Tables
+→ db/info/
+
+Components
+→ components_list.csv
+
+Decisions
+→ decisions.csv
+
+
+# Decision Logging Rule
+
+כל החלטה ארכיטקטונית חדשה חייבת להירשם ב:
+
+shared-info/decisions.csv
+
+דוגמאות:
+
+- בחירת טכנולוגיה
+- שינוי תהליך עבודה
+- שינוי ארכיטקטורה
+- הוספת ספרייה
+- שינוי Authentication
+
+אין לבצע החלטות מערכתיות ללא תיעוד.
+
+
+# Contradiction Blocking Rule
+
+AI Contradictions מסווג בעיות ל:
+
+- Info
+- Low
+- Medium
+- High
+- Critical
+
+Info
+Low
+Medium
+
+אינם עוצרים עבודה.
+
+High
+Critical
+
+עוצרים עבודה באופן מיידי.
+
+אסור להמשיך עד שהמשתמש מקבל הסבר ומאשר את הפתרון.

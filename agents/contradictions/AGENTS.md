@@ -145,6 +145,20 @@ id,date,agent,action_type,domain_files_changed,external_domain_used,tools_used,s
 ```
 
 ---
+# Noise Control
+
+AI Contradictions חייב לסווג כל בעיה לפי:
+
+- Info
+- Low
+- Medium
+- High
+- Critical
+
+רק High או Critical עוצרים עבודה.
+
+Info, Low ו־Medium מדווחים אך אינם עוצרים את התהליך.
+---
 
 ## פלט חובה בסיום
 
