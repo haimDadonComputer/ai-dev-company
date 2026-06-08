@@ -1,0 +1,6 @@
+name,value,usage
+primary,#2563eb,primary actions
+secondary,#64748b,secondary actions
+success,#16a34a,success messages
+danger,#dc2626,error messages
+warning,#f59e0b,warning messages
