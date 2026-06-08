@@ -1,0 +1,3 @@
+role_name,description,can_view,can_create,can_edit,can_delete,allowed_api,allowed_components,notes
+guest,משתמש לא מחובר,public pages בלבד,none,none,none,none,public components,ברירת מחדל
+admin,מנהל מערכת,all,all,all,all,all,all,High Risk role
