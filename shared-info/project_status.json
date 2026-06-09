@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "projectPhase": "infrastructure-ready-with-environmental-qa-blockers",
+  "projectPhase": "digital-center-crm-specification-ready-with-visual-qa-pending",
   "lastUpdated": "2026-06-09",
   "implementedModules": [
     "authentication",
@@ -13,13 +13,6 @@
   ],
   "activeBlockers": [
     {
-      "id": "QA-MYSQL-E2E",
-      "severity": "High",
-      "reason": "MySQL is not listening on 127.0.0.1:3306",
-      "blocks": "Full database and HTTP E2E approval",
-      "source": "shared-info/contradictions.csv"
-    },
-    {
       "id": "QA-VISUAL",
       "severity": "Medium",
       "reason": "Browser visual QA has not been executed",
@@ -29,11 +22,10 @@
   ],
   "automatedTests": {
     "command": "npm test",
-    "lastResult": "10/10 PASS"
+    "lastResult": "13/13 PASS; DB and HTTP E2E PASS for MySQL blocker scenarios"
   },
   "nextRequiredActions": [
-    "Start a MySQL 8 server and run npm run db:init",
-    "Run database and HTTP E2E scenarios",
+    "Approve the digital center CRM specification and MVP scope",
     "Run browser visual QA for responsive and design profile variants"
   ]
 }

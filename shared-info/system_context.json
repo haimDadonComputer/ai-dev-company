@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-09T14:23:14.352Z",
+  "generatedAt": "2026-06-09T15:33:53.344Z",
   "manifest": {
     "path": "shared-info/system_manifest.json",
     "hash": "243a401f5958ce9b7243daaf58ac4519cf5c3ef538f58c8fbc3b0ec280298d2a",
@@ -175,213 +175,601 @@
     },
     "product/project_definition.md": {
       "path": "product/project_definition.md",
-      "hash": "c2771d0fe044192ab04710ac393431c6e854b1937b8196448d7f68842c67cd8b",
-      "data": "# Project Definition\n\n## Project Name\n\nתשתית בסיס לאפליקציות ניהול\n\n## Project Goal\n\nליצור בסיס רב-שימושי שממנו ניתן להקים פרויקטים חדשים, עם מערכת הזדהות\nלמנהל מערכת, ניהול הגדרות אתר והעלאת קבצים מאובטחת.\n\n## Target Audience\n\n- מנהל מערכת שמגדיר ומתחזק את פרטי האתר.\n- מבקר לא מחובר שצורך מידע ציבורי שהוגדר במערכת הניהול.\n- מפתח שמעתיק ומרחיב את התשתית עבור פרויקט חדש.\n\n## Roles\n\n- `guest`: גישה למידע ציבורי בלבד.\n- `admin`: התחברות לממשק הניהול, ניהול הגדרות כלליות והעלאת קבצים.\n\n## Modules\n\n- Authentication\n- Users\n- Admin shell\n- General settings\n- Media uploads\n- Public settings\n\n## Business Rules\n\n- משתמש מנהל התחלתי ייווצר במסד הנתונים בשם `admin`.\n- הסיסמה ההתחלתית תהיה `123123`, תישמר כגיבוב מאובטח ולעולם לא כטקסט גלוי.\n- מנהל שמתחבר עם הסיסמה ההתחלתית יחויב להחליף אותה לפני גישה לניהול.\n- JWT יישמר ב־HttpOnly Cookie בלבד ולא ב־localStorage.\n- העלאת קבצים תתבצע באמצעות כפתור ובחירת קובץ מהמכשיר.\n- גודל קובץ מרבי הוא 5MB.\n- יתקבלו רק סוגי קבצים שיוגדרו במפורש ב־allowlist.\n- שמות קבצים בשרת יהיו אקראיים ולא יתבססו על שם הקובץ שסיפק המשתמש.\n- עמוד הניהול `כללי` יאפשר לערוך לוגו, שם אתר, סלוגן, טלפון, כתובת,\n  WhatsApp, Instagram, אימייל ותמונות כלליות.\n- כל שינוי בהגדרות יישמר עם חותמות זמן ומזהה המשתמש שביצע אותו.\n- כל סוד, לרבות מפתח JWT ופרטי MySQL, יוגדר ב־`.env`.\n- כל פרויקט נגזר חייב להגדיר Design Profile ייחודי לפני פריסה לפרודקשן.\n- שינוי צבעים בלבד אינו נחשב זהות חזותית חדשה.\n- לפחות ארבעה ממדי עיצוב מהותיים חייבים להשתנות בין פרויקטים.\n\n## Architecture Decisions\n\n- Backend: Node.js, Express ו־TypeScript.\n- Database: MySQL עם `mysql2` ו־SQL ישיר בלבד.\n- Frontend: SPA עם Vanilla HTML, Vanilla CSS ו־TypeScript, בכיוון RTL.\n- Password hashing: `crypto.scrypt` המובנה ב־Node עם salt אקראי.\n- File upload: הזרמה בינארית לשרת ללא ספריית multipart חיצונית.\n- Storage: קובצי מדיה בדיסק השרת ומטא-דאטה במסד הנתונים.\n- Design Architecture: התנהגות הרכיבים משותפת, אך טוקנים, פריסה וזהות\n  חזותית מוגדרים ב־Design Profile פרויקטלי.\n- Git אינו חלק מתהליך העבודה הנוכחי בהתאם להוראת קובץ `AGENTS.md` הראשי.\n"
+      "hash": "fbe1f16375e74574ad4ef01b5c26afb4efbf02db6ebc43aa487e4944f7f82532",
+      "data": "# אפיון מערכת: המרכז הדיגיטלי\n\n## שם הפרויקט\n\nCRM ואתר תדמית עבור \"המרכז הדיגיטלי\".\n\n## מטרת המערכת\n\nהמערכת נועדה לנהל את פעילות המרכז הדיגיטלי מקצה לקצה:\n\n- אתר תדמית ציבורי המציג את המרכז, הפעילויות והקבוצות הפתוחות.\n- קליטת מתעניינים דרך טפסים ציבוריים.\n- CRM פנימי לניהול תלמידים, מדריכים, פעילויות, קבוצות, שיעורים, נוכחות, סקרים,\n  תעודות, פניות, קבצים והתראות.\n- אזורי משתמש נפרדים לתלמיד, מדריך ומנהל.\n\nהאפיון הנוכחי עוסק במוצר, חוויית משתמש, מבנה מסכים, ישויות, הרשאות, זרימות עבודה\nוקשרים בין נתונים. הוא אינו מימוש קוד.\n\n## עקרונות יסוד\n\n- לכל משתמש יש תפקיד אחד בלבד: תלמיד, מדריך או מנהל.\n- אין הרשמה עצמאית למערכת. משתמשים נוצרים על ידי מנהל בלבד.\n- רק מנהל יכול לאפס סיסמה.\n- משתמש יכול להחליף סיסמה מתוך האזור האישי.\n- אין חובה להחליף סיסמה בכניסה הראשונה בפרויקט זה, למעט מנהל bootstrap של התשתית\n  הקיימת.\n- אסור למחוק מידע עסקי. כל ישות עסקית תומכת בסטטוסים: פעיל, לא פעיל, בארכיון.\n- השארת פרטים באתר אינה הרשמה. היא יוצרת פנייה ציבורית.\n- רק מנהל יכול לצרף תלמיד בפועל לקבוצה, ובנוסף מדריך המשויך לקבוצה יכול לשייך\n  תלמידים לקבוצתו.\n- אין מערכת סליקה. נשמר סטטוס תשלום בלבד.\n- קבצים מועלים דרך כפתור בחירת קובץ בלבד, עד 5MB לקובץ.\n- הטבלאות במערכת הניהול יוצגו כטבלאות מתקדמות, בכפוף למדיניות הספריות: מותרת רק\n  `ag-grid-community`.\n\n## תפקידי משתמש\n\n### אורח\n\nמשתמש לא מחובר באתר הציבורי.\n\nיכולות:\n\n- צפייה בעמוד הבית.\n- צפייה באודות המרכז.\n- צפייה בפעילויות שפורסמו.\n- צפייה בקבוצות שפורסמו באתר.\n- השארת פרטים.\n- יצירת קשר.\n- מעבר להתחברות.\n\n### תלמיד\n\nמשתמש מחובר שנוצר על ידי מנהל.\n\nיכולות:\n\n- צפייה בקבוצות שלי.\n- צפייה בשיעורים שלי.\n- צפייה בחומרי לימוד ציבוריים עבור שיעורים.\n- מענה לסקרים המשויכים לקבוצות שלו.\n- פתיחה וצפייה בפניות שלו.\n- צפייה בתעודות שלו.\n- צפייה בהתראות.\n- החלפת סיסמה.\n\n### מדריך\n\nמשתמש מחובר שנוצר על ידי מנהל.\n\nיכולות:\n\n- צפייה בקבוצות שלי.\n- צפייה בתלמידים בקבוצות שלי.\n- ניהול שיעורים בקבוצות שלי.\n- הזנת נוכחות.\n- ניהול חומרי לימוד וחומר פנימי לשיעורים שלי.\n- פתיחה וטיפול בפניות פנימיות בהתאם להרשאה.\n- צפייה בהתראות.\n- החלפת סיסמה.\n\n### מנהל\n\nמשתמש מחובר עם הרשאות ניהול מלאות.\n\nיכולות:\n\n- ניהול הגדרות כלליות.\n- ניהול משתמשים, תלמידים ומדריכים.\n- ניהול פעילויות וקבוצות.\n- ניהול שיעורים ונוכחות.\n- ניהול סקרים.\n- ניהול פניות ציבוריות ופניות פנימיות.\n- ניהול תעודות.\n- ניהול קבצים ומדיה.\n- צפייה ביומן מרכזי.\n- שימוש בחיפוש גלובלי.\n- ניהול התראות.\n- ניהול ארכיון.\n\n## מפת מסכים מלאה\n\n### אתר ציבורי\n\n- `/home` - עמוד בית.\n- `/about` - אודות המרכז.\n- `/activities` - רשימת פעילויות שפורסמו.\n- `/activities/:activityId` - עמוד פעילות ציבורי.\n- `/activities/:activityId/groups/:groupId` - פרטי קבוצה ציבורית.\n- `/contact` - צור קשר.\n- `/lead` - השארת פרטים.\n- `/login` - התחברות למערכת.\n\n### אזור תלמיד\n\n- `/student/dashboard` - דשבורד תלמיד.\n- `/student/groups` - הקבוצות שלי.\n- `/student/lessons` - השיעורים שלי.\n- `/student/materials` - חומרי לימוד.\n- `/student/surveys` - הסקרים שלי.\n- `/student/tickets` - הפניות שלי.\n- `/student/certificates` - התעודות שלי.\n- `/student/notifications` - התראות.\n- `/student/profile/password` - שינוי סיסמה.\n\n### אזור מדריך\n\n- `/instructor/dashboard` - דשבורד מדריך.\n- `/instructor/groups` - הקבוצות שלי.\n- `/instructor/students` - התלמידים שלי.\n- `/instructor/lessons` - שיעורים.\n- `/instructor/attendance` - נוכחות.\n- `/instructor/materials` - חומרי לימוד.\n- `/instructor/tickets` - פניות.\n- `/instructor/notifications` - התראות.\n- `/instructor/profile/password` - שינוי סיסמה.\n\n### אזור מנהל\n\n- `/admin/dashboard` - דשבורד מנהל.\n- `/admin/settings/general` - הגדרות כלליות.\n- `/admin/users` - משתמשים.\n- `/admin/students` - תלמידים.\n- `/admin/instructors` - מדריכים.\n- `/admin/activities` - פעילויות.\n- `/admin/groups` - קבוצות.\n- `/admin/lessons` - שיעורים.\n- `/admin/attendance` - נוכחות.\n- `/admin/surveys` - סקרים.\n- `/admin/public-leads` - פניות ציבוריות.\n- `/admin/tickets` - פניות פנימיות.\n- `/admin/certificates` - תעודות.\n- `/admin/files` - קבצים.\n- `/admin/calendar` - יומן.\n- `/admin/notifications` - התראות.\n- `/admin/search` - חיפוש גלובלי.\n- `/admin/archive` - ארכיון.\n- `/admin/lookups` - רשימות ניתנות לניהול.\n\n## מבנה אתר התדמית\n\n### תפריט עליון\n\nמופיע בכל דפי האתר הציבורי.\n\nשדות ותוכן:\n\n- לוגו.\n- שם העסק.\n- קישור לאודות.\n- קישור לפעילויות.\n- קישור לצור קשר.\n- קישור התחברות.\n\n### Hero\n\nמקטע פתיחה גדול בעמוד הבית.\n\nכולל:\n\n- סרטון רקע או תמונת רקע, בהתאם למדיה שהמנהל הגדיר.\n- כותרת ראשית.\n- תיאור קצר של המרכז.\n- כפתור צפייה בפעילויות.\n- כפתור יצירת קשר.\n\n### פעילויות ציבוריות\n\nרשימת פעילויות שמסומנות לפרסום באתר.\n\nכל פעילות מציגה:\n\n- שם.\n- סוג.\n- קהל יעד.\n- תמונה.\n- תקציר.\n- כפתור לצפייה בקבוצות פתוחות.\n\n### קבוצות ציבוריות\n\nבתוך עמוד פעילות יוצגו רק קבוצות שסומנו לפרסום באתר.\n\nכל קבוצה מציגה:\n\n- שם קבוצה.\n- תיאור.\n- תאריכי התחלה וסיום.\n- ימים ושעות.\n- מדריך אם שובץ.\n- קיבולת כללית או סטטוס הרשמה, אם יוחלט לחשוף.\n- כפתור השארת פרטים.\n\n### השארת פרטים\n\nהטופס אינו יוצר משתמש ואינו רושם תלמיד לקבוצה.\n\nשדות:\n\n- שם מלא.\n- כתובת מגורים.\n- טלפון.\n- פעילות.\n- קבוצה.\n- הערות.\n- כיצד שמעת עלינו.\n\nתוצאה:\n\n- נוצרת פנייה ציבורית בסטטוס חדש.\n- מנהל מטפל בפנייה.\n- רק לאחר טיפול מנהל יכול ליצור משתמש תלמיד ולשייך אותו לקבוצה.\n\n### צור קשר\n\nמקטע תחתון או עמוד נפרד.\n\nכולל:\n\n- טלפון.\n- מייל.\n- כתובת.\n- מפה.\n- שעות פעילות.\n- WhatsApp.\n- רשתות חברתיות.\n\n## מפת הרשאות מלאה\n\n| מודול | אורח | תלמיד | מדריך | מנהל |\n|---|---|---|---|---|\n| אתר ציבורי | צפייה | צפייה | צפייה | צפייה וניהול דרך admin |\n| השארת פרטים | יצירה | יצירה | יצירה | צפייה וטיפול |\n| משתמשים | אין | צפייה עצמית | צפייה עצמית | יצירה, עריכה, איפוס סיסמה, ארכיון |\n| תלמידים | אין | צפייה עצמית | צפייה בתלמידי קבוצות שלו | ניהול מלא |\n| מדריכים | אין | אין | צפייה עצמית | ניהול מלא |\n| פעילויות | צפייה במפורסם | צפייה לפי קבוצות | צפייה לפי קבוצות | ניהול מלא |\n| קבוצות | צפייה במפורסם | צפייה בקבוצות שלי | ניהול קבוצות שלי | ניהול מלא |\n| שיוך תלמיד לקבוצה | אין | אין | שיוך לקבוצות שלי | ניהול מלא |\n| שיעורים | אין | צפייה בשיעורים שלי | ניהול שיעורי קבוצות שלי | ניהול מלא |\n| נוכחות | אין | צפייה אם יוחלט לחשוף | הזנה לקבוצות שלי | ניהול מלא |\n| חומרי לימוד | אין | צפייה בחומר לימוד בלבד | ניהול חומר וחומר פנימי | ניהול מלא |\n| סקרים | אין | מענה לסקרים שלי | צפייה לפי קבוצות שלי אם יורשה | ניהול מלא |\n| פניות ציבוריות | יצירה | אין | אין | ניהול מלא |\n| פניות פנימיות | אין | פתיחה וצפייה בשלי | פתיחה וטיפול במוקצות | ניהול מלא |\n| תעודות | אין | צפייה בשלי | אין כברירת מחדל | ניהול מלא |\n| קבצים | אין | צפייה בהרשאה | העלאה לשיעורים שלו | ניהול מלא |\n| יומן | אין | שיעורים שלי | שיעורים שלי | יומן מלא |\n| התראות | אין | צפייה בשלי | צפייה בשלי | ניהול וצפייה מלאה |\n| חיפוש גלובלי | אין | מוגבל לעצמי | מוגבל לקבוצות שלי | מלא |\n| ארכיון | אין | אין | אין | ניהול מלא |\n\n## ERD מלא\n\n```text\nusers\n  1 ── 0..1 students\n  1 ── 0..1 instructors\n  1 ── N internal_tickets opened_by\n  1 ── N internal_tickets assigned_to\n  1 ── N notifications\n  1 ── N files uploaded_by\n\nstudents\n  1 ── N group_students\n  1 ── N attendance_records\n  1 ── N survey_responses\n  1 ── N certificates\n\ninstructors\n  1 ── N activities coordinator\n  1 ── N groups instructor\n\nactivities\n  1 ── N groups\n  1 ── N certificates\n  N ── 0..1 files image\n  N ── 0..1 files syllabus\n\ngroups\n  1 ── N group_students\n  1 ── N lessons\n  1 ── N surveys\n  1 ── N public_leads\n  1 ── N certificates\n  N ── 0..1 instructors\n  N ── 0..1 files image\n\nlessons\n  1 ── N attendance_records\n  1 ── N lesson_files\n\nsurveys\n  1 ── N survey_questions\n  1 ── N survey_responses\n\nsurvey_questions\n  1 ── N survey_options\n  1 ── N survey_answers\n\nsurvey_responses\n  1 ── N survey_answers\n\nfiles\n  1 ── N lesson_files\n  1 ── N certificates\n  1 ── N internal_ticket_attachments\n```\n\n## ישויות ושדות\n\n### users\n\n- id.\n- role: student, instructor, admin.\n- first_name.\n- last_name.\n- username.\n- password_hash.\n- password_salt.\n- phone.\n- email.\n- status: active, inactive, archived.\n- notes.\n- created_at.\n- updated_at.\n\n### students\n\n- id.\n- user_id.\n- national_id.\n- birth_date.\n- full_address.\n- created_at.\n- updated_at.\n\n### instructors\n\n- id.\n- user_id.\n- expertise_areas.\n- biography.\n- resume_file_id.\n- certification_file_ids.\n- notes.\n- created_at.\n- updated_at.\n\n### activities\n\n- id.\n- name.\n- activity_type.\n- target_audience.\n- price_amount.\n- price_type.\n- description.\n- status: active, inactive, archived.\n- coordinator_instructor_id.\n- image_file_id.\n- syllabus_file_id.\n- early_plan.\n- notes.\n- publish_on_site.\n- created_at.\n- updated_at.\n\n### groups\n\n- id.\n- activity_id.\n- name.\n- description.\n- status: active, inactive, archived.\n- start_date.\n- end_date.\n- meeting_count.\n- start_time.\n- end_time.\n- activity_days.\n- instructor_id nullable.\n- max_capacity.\n- whatsapp_link.\n- dialog_name.\n- image_file_id.\n- notes.\n- publish_on_site.\n- created_at.\n- updated_at.\n\n### group_students\n\n- id.\n- group_id.\n- student_id.\n- joined_at.\n- ended_at.\n- end_reason.\n- payment_status_id.\n- status: active, inactive, archived.\n- row_color.\n- notes.\n- created_at.\n- updated_at.\n\n### payment_statuses\n\n- id.\n- name.\n- status.\n- sort_order.\n\nערכי ברירת מחדל מוצעים: שולם, לא שולם, שולם חלקית, פטור.\n\n### lessons\n\n- id.\n- group_id.\n- lesson_date.\n- start_time.\n- end_time.\n- topic.\n- learning_material.\n- internal_instructor_material.\n- status: scheduled, canceled, completed, archived.\n- notes.\n- created_at.\n- updated_at.\n\n### attendance_statuses\n\n- id.\n- name.\n- status.\n- sort_order.\n\nערכי ברירת מחדל מוצעים: נוכח, נעדר, איחר, עזב מוקדם, מוצדק.\n\n### attendance_records\n\n- id.\n- lesson_id.\n- student_id.\n- attendance_status_id.\n- note.\n- entered_by_user_id.\n- entered_at.\n- created_at.\n- updated_at.\n\n### surveys\n\n- id.\n- name.\n- description.\n- status.\n- group_id.\n- opens_at.\n- closes_at.\n- visible_to_students.\n- allow_response_edit.\n- created_by_user_id.\n- created_at.\n- updated_at.\n\n### survey_questions\n\n- id.\n- survey_id.\n- question_text.\n- field_type.\n- is_required.\n- sort_order.\n- created_at.\n- updated_at.\n\nסוגי שדות:\n\n- טקסט קצר.\n- טקסט ארוך.\n- מספר.\n- תאריך.\n- שעה.\n- בחירה אחת.\n- בחירה מרובה.\n- רשימה נפתחת.\n- דירוג.\n- כן/לא.\n\n### survey_options\n\n- id.\n- question_id.\n- option_text.\n- sort_order.\n\n### survey_responses\n\n- id.\n- survey_id.\n- student_id.\n- submitted_at.\n- updated_at.\n\n### survey_answers\n\n- id.\n- response_id.\n- question_id.\n- value_text.\n- value_number.\n- value_date.\n- value_time.\n- value_boolean.\n- selected_option_ids.\n\n### public_leads\n\n- id.\n- full_name.\n- address.\n- phone.\n- activity_id.\n- group_id.\n- notes.\n- referral_source.\n- status: חדש, בטיפול, חזרנו, נרשם, לא רלוונטי, נסגר.\n- assigned_to_user_id.\n- created_at.\n- updated_at.\n\n### internal_tickets\n\n- id.\n- title.\n- body.\n- opened_by_user_id.\n- status.\n- assigned_to_user_id.\n- opened_at.\n- closed_at.\n- created_at.\n- updated_at.\n\n### internal_ticket_comments\n\n- id.\n- ticket_id.\n- author_user_id.\n- body.\n- created_at.\n\n### certificates\n\n- id.\n- student_id.\n- activity_id.\n- group_id.\n- certificate_name.\n- file_id.\n- issued_at.\n- notes.\n- status.\n- created_at.\n- updated_at.\n\n### files\n\n- id.\n- original_name.\n- storage_name.\n- storage_path.\n- mime_type.\n- extension.\n- size_bytes.\n- sha256.\n- file_category: image, syllabus, certificate, lesson_material, attachment.\n- alt_text.\n- uploaded_by_user_id.\n- status: active, inactive, archived.\n- created_at.\n- updated_at.\n\n### lesson_files\n\n- id.\n- lesson_id.\n- file_id.\n- visibility: student, instructor_internal.\n- created_at.\n\n### notifications\n\n- id.\n- user_id.\n- type.\n- title.\n- body.\n- related_entity_type.\n- related_entity_id.\n- read_at.\n- created_at.\n\n### lookup_values\n\n- id.\n- lookup_type.\n- name.\n- status.\n- sort_order.\n\nמיועד לסטטוסים ניתנים לניהול כגון סטטוס תשלום, סטטוס נוכחות, סוג פעילות,\nמקור הגעה, סטטוס פנייה וסטטוס טיקט.\n\n## קשרים בין הישויות\n\n- משתמש הוא מקור הזהות היחיד. תלמיד ומדריך הם הרחבות של משתמש.\n- פעילות היא תבנית עסקית. קבוצה היא מופע בפועל של פעילות.\n- שינוי פעילות אינו משנה נתוני קבוצות קיימות שכבר נוצרו.\n- תלמיד יכול להשתתף במספר קבוצות דרך `group_students`.\n- מדריך יכול להיות משויך למספר קבוצות.\n- קבוצה יכולה להיווצר ללא מדריך, והמדריך ישויך בהמשך.\n- שיעור שייך לקבוצה אחת.\n- נוכחות נשמרת לכל תלמיד בכל שיעור.\n- סקר שייך לקבוצה אחת, ורק תלמידים בקבוצה יכולים לענות.\n- תעודה שייכת לתלמיד, פעילות וקבוצה, ומחזיקה קובץ PDF.\n- פנייה ציבורית יכולה להתייחס לפעילות ולקבוצה, אך אינה יוצרת תלמיד.\n- פנייה פנימית היא טיקט עם תגובות וקבצים מצורפים.\n- קובץ הוא ישות מרכזית ומשמש תמונות, סילבוסים, תעודות, חומרי לימוד וצרופות.\n\n## זרימות עבודה מרכזיות\n\n### קליטת מתעניין מהאתר\n\n1. אורח נכנס לפעילות ציבורית.\n2. אורח בוחר קבוצה שפורסמה באתר.\n3. אורח משאיר פרטים.\n4. נוצרת פנייה ציבורית בסטטוס חדש.\n5. מנהל מטפל בפנייה.\n6. אם המתעניין מתאים, מנהל יוצר משתמש תלמיד.\n7. מנהל משייך את התלמיד לקבוצה.\n8. נשלחת התראה לתלמיד ולגורמים הרלוונטיים.\n\n### יצירת פעילות וקבוצה\n\n1. מנהל יוצר פעילות כתבנית.\n2. מנהל מגדיר תיאור, מחיר, קהל יעד, תמונה וסילבוס.\n3. מנהל יוצר קבוצה מתוך הפעילות.\n4. מנהל מגדיר תאריכים, ימים, שעות, מספר מפגשים וקיבולת.\n5. מנהל בוחר האם לפרסם את הפעילות ואת הקבוצה באתר.\n6. המערכת מאפשרת יצירת שיעורים אוטומטית לפי תכנון הקבוצה.\n\n### יצירת שיעורים אוטומטית\n\n1. מנהל מגדיר לקבוצה תאריך התחלה, ימי פעילות, שעות ומספר מפגשים.\n2. המערכת מייצרת שיעורים עתידיים.\n3. מנהל או מדריך יכולים להוסיף, לערוך או לבטל שיעור.\n4. ביטול שיעור יוצר התראה לתלמידים בקבוצה.\n\n### ניהול נוכחות\n\n1. מדריך נכנס לשיעור של קבוצה שלו.\n2. המערכת מציגה את תלמידי הקבוצה הפעילים.\n3. מדריך מסמן סטטוס נוכחות לכל תלמיד.\n4. נשמר מי הזין ומתי.\n5. מנהל יכול לערוך או לבקר את הנתונים.\n\n### סקר לקבוצה\n\n1. מנהל יוצר סקר.\n2. מנהל מוסיף שאלות וסוגי שדות.\n3. מנהל משייך את הסקר לקבוצה.\n4. תלמידים בקבוצה רואים את הסקר אם הוא פעיל ומוצג.\n5. תלמיד מגיש תשובה.\n6. מנהל רואה תוצאות.\n\n### הפקת תעודה\n\n1. מנהל מעלה PDF.\n2. מנהל משייך את התעודה לתלמיד, פעילות וקבוצה.\n3. התלמיד מקבל התראה.\n4. התלמיד רואה את התעודה באזור האישי.\n\n### פנייה פנימית\n\n1. משתמש מחובר פותח פנייה.\n2. מנהל או משתמש מורשה מקבל שיוך לטיפול.\n3. ניתן להוסיף תגובות.\n4. עם סיום טיפול, הפנייה נסגרת.\n\n## מבנה אזורי המשתמשים\n\n### תלמיד\n\nדשבורד תלמיד יציג:\n\n- השיעור הקרוב.\n- קבוצות פעילות.\n- סקרים פתוחים.\n- תעודות חדשות.\n- התראות אחרונות.\n\n### מדריך\n\nדשבורד מדריך יציג:\n\n- שיעורים היום.\n- קבוצות פעילות.\n- תלמידים שדורשים תשומת לב לפי נוכחות.\n- פניות פתוחות המשויכות אליו.\n- התראות אחרונות.\n\n### מנהל\n\nדשבורד מנהל מוצע:\n\n- מספר פניות ציבוריות חדשות.\n- קבוצות פתוחות להרשמה.\n- שיעורים היום.\n- נוכחות חריגה.\n- סקרים פעילים ואחוזי מענה.\n- תעודות שהונפקו לאחרונה.\n- קבצים שהועלו לאחרונה.\n- התראות מערכת.\n- קיצור דרך ליצירת פעילות, קבוצה, תלמיד ופנייה.\n\n## מבנה ממשק הניהול\n\nכל מסך ניהול מרכזי יכלול:\n\n- כותרת ותיאור קצר.\n- טבלת נתונים מתקדמת.\n- חיפוש.\n- סינון.\n- מיון.\n- פעולות שורה.\n- כפתור יצירה.\n- מודל צפייה/עריכה.\n- תמיכה בסטטוס פעיל, לא פעיל ובארכיון.\n- שמירת צבע שורה היכן שנדרש.\n\nפעולות שורה כלליות:\n\n- צפייה.\n- עריכה.\n- ארכיון.\n- ניהול.\n- שכפול.\n- שינוי סטטוס.\n- הוספת הערה.\n- בחירת צבע לשורה.\n\n## MVP מוצע\n\nה־MVP לא יכלול את כל המערכת מיד. כדי לשמור על יציבות, הסדר המומלץ:\n\n1. התאמת Product ו־Design Profile ל\"המרכז הדיגיטלי\".\n2. הרחבת משתמשים לתפקידי תלמיד, מדריך ומנהל.\n3. ניהול פעילויות וקבוצות.\n4. אתר ציבורי עם פעילויות, קבוצות וטופס השארת פרטים.\n5. ניהול פניות ציבוריות.\n6. שיוך תלמידים לקבוצות.\n7. שיעורים ונוכחות.\n8. קבצים וחומרי לימוד.\n9. אזורי תלמיד ומדריך בסיסיים.\n\n## נקודות סיכון\n\n- שינוי מודל משתמשים מתפקיד admin בלבד לשלושה תפקידים הוא High Risk.\n- הרחבת DB כוללת טבלאות רבות וקשרים רבים.\n- הרשאות מדריך מורכבות כי הן תלויות בשיוך לקבוצה.\n- יצירת שיעורים אוטומטית דורשת טיפול בימי פעילות, חגים, ביטולים ושינויים.\n- סקרים הם תת-מערכת דינמית עם מבנה תשובות גמיש.\n- קבצים מסוג PDF נדרשים לתעודות, אך התשתית הנוכחית מאפשרת רק תמונות.\n- טבלאות מתקדמות דורשות שימוש ב־`ag-grid-community` בלבד או מימוש ידני.\n- Visual QA עדיין פתוח ברמת Medium.\n- אין Git workflow פעיל, ולכן נדרש תיעוד פעולה מדויק בכל שינוי.\n\n## חוסרים אפשריים\n\n- האם תלמיד יכול לראות נוכחות שלו.\n- האם מדריך יכול לראות פרטי קשר מלאים של תלמידים.\n- האם קיבולת קבוצה מוצגת לציבור.\n- האם יש רשימת המתנה לקבוצה מלאה.\n- האם צריך ייבוא תלמידים מקובץ.\n- האם תעודות דורשות תבנית או רק העלאת PDF.\n- האם קיימים תשלומים בפועל מחוץ למערכת שצריך לתעד.\n- האם יש הרשאות משנה למנהל.\n- האם יש צורך בדוחות ניהול.\n- האם יש צורך בשליחת SMS, WhatsApp או אימייל אוטומטיים.\n\n## המלצות לשיפור עתידי\n\n- הרשאות מפורטות לפי פעולה ולא רק לפי תפקיד.\n- דוחות ניהול לפי פעילות, קבוצה, נוכחות ופניות.\n- רשימת המתנה לקבוצות מלאות.\n- תבניות תעודה אוטומטיות.\n- ייבוא וייצוא CSV.\n- מערכת הודעות אימייל או WhatsApp בכפוף לאישור ספריות ושירותים חיצוניים.\n- תיעוד Audit Log מלא לכל שינוי עסקי.\n- מנגנון חיפוש מתקדם עם הרשאות לפי Role.\n- התאמת Design Profile מלא למותג \"המרכז הדיגיטלי\" לפני פרודקשן.\n"
     },
     "product/features.csv": {
       "path": "product/features.csv",
-      "hash": "fc2ceee4e35129da0f649528a10228cf2a957ae638714b39769d7ec5f7874982",
+      "hash": "d61741ee7483a8566be9d1ceaf1753102028475110b91c715fc2509db4ca1efc",
       "data": [
         {
           "id": "F001",
-          "name": "התחברות מנהל",
-          "status": "implemented",
+          "name": "התחברות והרשאות בסיס",
+          "status": "planned",
           "priority": "critical",
           "module": "authentication",
           "mvp": "yes",
           "future": "no",
-          "notes": "JWT ב-HttpOnly Cookie; סיסמה מגובבת"
+          "notes": "JWT ב-HttpOnly Cookie; ללא localStorage"
         },
         {
           "id": "F002",
-          "name": "החלפת סיסמה ראשונית",
-          "status": "implemented",
+          "name": "ניהול משתמשים לפי תפקיד יחיד",
+          "status": "planned",
+          "priority": "critical",
+          "module": "users",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "תלמיד מדריך מנהל; אין ריבוי תפקידים למשתמש אחד"
+        },
+        {
+          "id": "F003",
+          "name": "איפוס והחלפת סיסמה",
+          "status": "planned",
           "priority": "critical",
           "module": "authentication",
           "mvp": "yes",
           "future": "no",
-          "notes": "חובה לפני גישה לממשק הניהול"
-        },
-        {
-          "id": "F003",
-          "name": "מעטפת ממשק ניהול",
-          "status": "implemented",
-          "priority": "high",
-          "module": "admin",
-          "mvp": "yes",
-          "future": "no",
-          "notes": "SPA RTL ורספונסיבי"
+          "notes": "איפוס על ידי מנהל; החלפה עצמית באזור אישי"
         },
         {
           "id": "F004",
-          "name": "הגדרות כלליות",
-          "status": "implemented",
+          "name": "הגדרות כלליות ומיתוג",
+          "status": "planned",
           "priority": "high",
           "module": "general-settings",
           "mvp": "yes",
           "future": "no",
-          "notes": "לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל"
+          "notes": "לוגו טלפון כתובת מייל וואטסאפ רשתות חברתיות"
         },
         {
           "id": "F005",
-          "name": "העלאת קבצים מאובטחת",
-          "status": "implemented",
-          "priority": "critical",
-          "module": "media",
+          "name": "אתר תדמית ציבורי",
+          "status": "planned",
+          "priority": "high",
+          "module": "public-site",
           "mvp": "yes",
           "future": "no",
-          "notes": "עד 5MB; allowlist; שם אקראי; הרשאת admin"
+          "notes": "בית אודות פעילויות פעילות בודדת צור קשר"
         },
         {
           "id": "F006",
-          "name": "בחירת לוגו ותמונות",
-          "status": "implemented",
-          "priority": "high",
-          "module": "media",
+          "name": "Hero ציבורי עם מדיה",
+          "status": "planned",
+          "priority": "medium",
+          "module": "public-site",
           "mvp": "yes",
           "future": "no",
-          "notes": "בחירה מתוך קבצים שהועלו"
+          "notes": "סרטון או תמונת רקע לפי קבצי מדיה מאושרים"
         },
         {
           "id": "F007",
-          "name": "קריאת הגדרות ציבוריות",
-          "status": "implemented",
+          "name": "פעילויות ציבוריות",
+          "status": "planned",
           "priority": "high",
-          "module": "public-settings",
+          "module": "activities",
           "mvp": "yes",
           "future": "no",
-          "notes": "חשיפת שדות ציבוריים בלבד"
+          "notes": "רק פעילויות שמסומנות לפרסום יוצגו באתר"
         },
         {
           "id": "F008",
-          "name": "ניהול משתמשים מורחב",
-          "status": "backlog",
-          "priority": "medium",
-          "module": "users",
-          "mvp": "no",
-          "future": "yes",
-          "notes": "משתמשים ותפקידים נוספים יוגדרו בפרויקט נגזר"
+          "name": "קבוצות ציבוריות",
+          "status": "planned",
+          "priority": "high",
+          "module": "groups",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "רק קבוצות שמסומנות לפרסום יוצגו באתר"
         },
         {
           "id": "F009",
-          "name": "Design Profiles",
-          "status": "implemented",
+          "name": "השארת פרטים באתר",
+          "status": "planned",
           "priority": "critical",
-          "module": "design-system",
+          "module": "public-leads",
           "mvp": "yes",
           "future": "no",
-          "notes": "פרופיל עיצוב ייחודי; לפחות ארבעה ממדי שונות; חסימת reference בפרודקשן"
+          "notes": "יוצרת פנייה ציבורית ואינה הרשמה"
         },
         {
           "id": "F010",
-          "name": "Manager Bootstrap",
-          "status": "implemented",
+          "name": "ניהול פניות ציבוריות",
+          "status": "planned",
           "priority": "critical",
-          "module": "management",
+          "module": "public-leads",
           "mvp": "yes",
           "future": "no",
-          "notes": "Manifest; context snapshot; freshness validation; automatic task routing"
+          "notes": "סטטוסים חדש בטיפול חזרנו נרשם לא רלוונטי נסגר"
+        },
+        {
+          "id": "F011",
+          "name": "ניהול תלמידים",
+          "status": "planned",
+          "priority": "critical",
+          "module": "students",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "פרטי משתמש הרחבת תלמיד שיוך לקבוצות"
+        },
+        {
+          "id": "F012",
+          "name": "ניהול מדריכים",
+          "status": "planned",
+          "priority": "high",
+          "module": "instructors",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "תחומי התמחות ביוגרפיה קורות חיים ותעודות הסמכה"
+        },
+        {
+          "id": "F013",
+          "name": "ניהול פעילויות",
+          "status": "planned",
+          "priority": "critical",
+          "module": "activities",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "פעילות היא תבנית; שינוי פעילות לא משנה קבוצות קיימות"
+        },
+        {
+          "id": "F014",
+          "name": "ניהול קבוצות",
+          "status": "planned",
+          "priority": "critical",
+          "module": "groups",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "קבוצה היא מופע של פעילות; מדריך אינו חובה ביצירה"
+        },
+        {
+          "id": "F015",
+          "name": "שיוך תלמידים לקבוצות",
+          "status": "planned",
+          "priority": "critical",
+          "module": "enrollments",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "מנהל או מדריך משויך יכולים לשייך תלמיד; נשמרת היסטוריה"
+        },
+        {
+          "id": "F016",
+          "name": "סטטוס תשלום מנוהל",
+          "status": "planned",
+          "priority": "high",
+          "module": "enrollments",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "ללא סליקה; נשמר סטטוס בלבד"
+        },
+        {
+          "id": "F017",
+          "name": "יצירת שיעורים אוטומטית",
+          "status": "planned",
+          "priority": "critical",
+          "module": "lessons",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "לפי תאריך התחלה ימים שעות ומספר מפגשים"
+        },
+        {
+          "id": "F018",
+          "name": "ניהול שיעורים",
+          "status": "planned",
+          "priority": "critical",
+          "module": "lessons",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "הוספה עריכה ביטול ושיוך חומרי לימוד"
+        },
+        {
+          "id": "F019",
+          "name": "ניהול נוכחות",
+          "status": "planned",
+          "priority": "critical",
+          "module": "attendance",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "נוכחות לכל תלמיד בכל שיעור"
+        },
+        {
+          "id": "F020",
+          "name": "חומרי לימוד",
+          "status": "planned",
+          "priority": "high",
+          "module": "materials",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "תלמיד רואה חומר לימוד; מדריך ומנהל רואים גם חומר פנימי"
+        },
+        {
+          "id": "F021",
+          "name": "סקרים לקבוצות",
+          "status": "planned",
+          "priority": "medium",
+          "module": "surveys",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "סקרים דינמיים בסגנון Google Forms"
+        },
+        {
+          "id": "F022",
+          "name": "פניות פנימיות",
+          "status": "planned",
+          "priority": "medium",
+          "module": "tickets",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "מערכת טיקטים עם תגובות; לא צ'אט"
+        },
+        {
+          "id": "F023",
+          "name": "תעודות PDF",
+          "status": "planned",
+          "priority": "medium",
+          "module": "certificates",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "העלאה ידנית ושיוך לתלמיד פעילות וקבוצה"
+        },
+        {
+          "id": "F024",
+          "name": "ניהול קבצים מרכזי",
+          "status": "planned",
+          "priority": "critical",
+          "module": "files",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "תמונות סילבוסים תעודות חומרי לימוד וצרופות עד 5MB"
+        },
+        {
+          "id": "F025",
+          "name": "מרכז התראות",
+          "status": "planned",
+          "priority": "medium",
+          "module": "notifications",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "שיוך תלמיד פנייה חדשה סקר חדש תעודה חדשה שיעור בוטל"
+        },
+        {
+          "id": "F026",
+          "name": "יומן מרכזי",
+          "status": "planned",
+          "priority": "high",
+          "module": "calendar",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "סינון לפי מדריך קבוצה פעילות ותאריך"
+        },
+        {
+          "id": "F027",
+          "name": "חיפוש גלובלי",
+          "status": "planned",
+          "priority": "medium",
+          "module": "search",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "חיפוש תלמידים מדריכים פעילויות קבוצות שיעורים סקרים פניות ותעודות"
+        },
+        {
+          "id": "F028",
+          "name": "טבלאות מתקדמות",
+          "status": "planned",
+          "priority": "high",
+          "module": "tables",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "מיון סינון חיפוש קיבוץ שינוי עמודות ופעולות שורה"
+        },
+        {
+          "id": "F029",
+          "name": "אזור תלמיד",
+          "status": "planned",
+          "priority": "high",
+          "module": "student-portal",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "קבוצות שיעורים חומרי לימוד סקרים פניות תעודות התראות"
+        },
+        {
+          "id": "F030",
+          "name": "אזור מדריך",
+          "status": "planned",
+          "priority": "high",
+          "module": "instructor-portal",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "קבוצות תלמידים שיעורים נוכחות חומרי לימוד פניות התראות"
+        },
+        {
+          "id": "F031",
+          "name": "דשבורד מנהל",
+          "status": "planned",
+          "priority": "high",
+          "module": "admin-dashboard",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "פניות חדשות קבוצות פתוחות שיעורים היום נוכחות חריגה וקיצורי פעולה"
+        },
+        {
+          "id": "F032",
+          "name": "ארכיון עסקי",
+          "status": "planned",
+          "priority": "critical",
+          "module": "archive",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "אין מחיקה עסקית; סטטוס פעיל לא פעיל בארכיון"
         }
       ]
     },
     "product/user_stories.csv": {
       "path": "product/user_stories.csv",
-      "hash": "edd4830de4d6e0b6ee51ac621524b5942d3f5fb4e5b4ca6c7d2dd2660946d5bd",
+      "hash": "4cd25670f53eb1ee3d26007b362d61375f896f33fb73b410792f045ec333e4a3",
       "data": [
         {
           "id": "US001",
-          "role": "admin",
-          "story": "כמנהל מערכת אני רוצה להתחבר כדי לגשת לממשק הניהול",
-          "acceptance_criteria": "התחברות תקינה יוצרת HttpOnly Cookie; פרטים שגויים מחזירים שגיאה כללית; אין JWT ב-localStorage",
+          "role": "guest",
+          "story": "כאורח אני רוצה לראות את עמוד הבית כדי להבין מה המרכז מציע",
+          "acceptance_criteria": "עמוד הבית מציג Hero תיאור המרכז כפתור פעילויות וכפתור יצירת קשר",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
         },
         {
           "id": "US002",
-          "role": "admin",
-          "story": "כמנהל ראשוני אני רוצה להחליף את הסיסמה הזמנית כדי לאבטח את החשבון",
-          "acceptance_criteria": "הסיסמה 123123 מחייבת החלפה; עד ההחלפה אין גישה לפעולות ניהול; הסיסמה החדשה נשמרת כגיבוב",
+          "role": "guest",
+          "story": "כאורח אני רוצה לראות פעילויות שפורסמו באתר",
+          "acceptance_criteria": "רק פעילויות עם publish_on_site=true וסטטוס פעיל מוצגות",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
         },
         {
           "id": "US003",
-          "role": "admin",
-          "story": "כמנהל מערכת אני רוצה להעלות קובץ מהמחשב כדי להשתמש בו באתר",
-          "acceptance_criteria": "העלאה מתבצעת מכפתור; קובץ מעל 5MB או מסוג אסור נדחה; קובץ תקין נשמר בשם אקראי",
+          "role": "guest",
+          "story": "כאורח אני רוצה לראות קבוצות פתוחות בתוך פעילות",
+          "acceptance_criteria": "רק קבוצות פעילות שמסומנות לפרסום באתר מוצגות בעמוד הפעילות",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
         },
         {
           "id": "US004",
-          "role": "admin",
-          "story": "כמנהל מערכת אני רוצה לערוך את פרטי האתר בעמוד כללי",
-          "acceptance_criteria": "ניתן לשמור לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל ותמונות",
-          "priority": "high",
-          "status": "implemented"
+          "role": "guest",
+          "story": "כאורח אני רוצה להשאיר פרטים לקבוצה שמעניינת אותי",
+          "acceptance_criteria": "שליחת הטופס יוצרת פנייה ציבורית ואינה יוצרת משתמש או שיוך לקבוצה",
+          "priority": "critical",
+          "status": "planned"
         },
         {
           "id": "US005",
           "role": "admin",
-          "story": "כמנהל מערכת אני רוצה לבחור קובץ שהועלה כלוגו",
-          "acceptance_criteria": "רק קובץ תמונה קיים ופעיל ניתן לשייך כלוגו; תצוגה מקדימה מוצגת לפני שמירה",
-          "priority": "high",
-          "status": "implemented"
+          "story": "כמנהל אני רוצה לטפל בפניות ציבוריות כדי להפוך מתעניינים לתלמידים",
+          "acceptance_criteria": "ניתן לשנות סטטוס פנייה לשייך אחראי טיפול וליצור תלמיד ושיוך לקבוצה לאחר החלטה",
+          "priority": "critical",
+          "status": "planned"
         },
         {
           "id": "US006",
-          "role": "guest",
-          "story": "כמבקר אני רוצה לקבל את פרטי האתר הציבוריים",
-          "acceptance_criteria": "ה-API הציבורי מחזיר רק שדות שאושרו לפרסום ואינו חושף נתוני משתמשים או נתיבי שרת",
-          "priority": "high",
-          "status": "implemented"
+          "role": "admin",
+          "story": "כמנהל אני רוצה ליצור משתמש עם תפקיד אחד בלבד",
+          "acceptance_criteria": "המערכת מאפשרת לבחור תלמיד מדריך או מנהל וחוסמת ריבוי תפקידים לאותו משתמש",
+          "priority": "critical",
+          "status": "planned"
         },
         {
           "id": "US007",
           "role": "admin",
-          "story": "כמנהל מערכת אני רוצה להתנתק",
-          "acceptance_criteria": "ה-Cookie נמחק והגישה לנתיבי ניהול נחסמת מיד",
-          "priority": "high",
-          "status": "implemented"
+          "story": "כמנהל אני רוצה לאפס סיסמה למשתמש",
+          "acceptance_criteria": "רק מנהל יכול לאפס סיסמה ונשמר תיעוד פעולה",
+          "priority": "critical",
+          "status": "planned"
         },
         {
           "id": "US008",
-          "role": "developer",
-          "story": "כמפתח אני רוצה להגדיר Design Profile עצמאי לכל פרויקט",
-          "acceptance_criteria": "הפרויקט מגדיר brief טוקנים navigation וצפיפות; שינוי צבעים בלבד אינו עובר validation",
-          "priority": "critical",
-          "status": "implemented"
+          "role": "user",
+          "story": "כמשתמש מחובר אני רוצה להחליף סיסמה באזור האישי",
+          "acceptance_criteria": "משתמש מחובר יכול לשנות סיסמה לאחר אימות הסיסמה הנוכחית",
+          "priority": "high",
+          "status": "planned"
         },
         {
           "id": "US009",
-          "role": "developer",
-          "story": "כמפתח אני רוצה שה-build יחסום את עיצוב התשתית בפרודקשן",
-          "acceptance_criteria": "reference profile נכשל ב-NODE_ENV=production גם אם override פיתוח פעיל",
+          "role": "admin",
+          "story": "כמנהל אני רוצה לנהל פעילויות כתבניות",
+          "acceptance_criteria": "פעילות כוללת שם סוג קהל יעד מחיר תיאור מדיה סילבוס ופרסום באתר",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
         },
         {
           "id": "US010",
-          "role": "AI Manager",
-          "story": "כמנהל AI אני רוצה לקבל את כל מקורות האמת והחוזים אוטומטית",
-          "acceptance_criteria": "לפני כל משימה נטענים bootstrap manifest context ו-status; context מיושן חוסם build",
+          "role": "admin",
+          "story": "כמנהל אני רוצה ליצור קבוצה מתוך פעילות",
+          "acceptance_criteria": "קבוצה כוללת תאריכים ימים שעות מספר מפגשים קיבולת ומדריך אופציונלי",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
         },
         {
           "id": "US011",
-          "role": "AI Manager",
-          "story": "כמנהל AI אני רוצה לזהות מקורות כפולים והפניות שבורות",
-          "acceptance_criteria": "context:check נכשל על duplicate source או Role API Table Component לא קיימים",
+          "role": "admin",
+          "story": "כמנהל אני רוצה לפרסם רק קבוצות מסוימות באתר",
+          "acceptance_criteria": "קבוצה מוצגת לציבור רק כאשר publish_on_site=true והפעילות שלה מפורסמת",
           "priority": "critical",
-          "status": "implemented"
+          "status": "planned"
+        },
+        {
+          "id": "US012",
+          "role": "admin",
+          "story": "כמנהל אני רוצה לשייך תלמיד לקבוצה",
+          "acceptance_criteria": "שיוך תלמיד יוצר רשומת היסטוריה עם תאריך הצטרפות וסטטוס תשלום",
+          "priority": "critical",
+          "status": "planned"
+        },
+        {
+          "id": "US013",
+          "role": "instructor",
+          "story": "כמדריך אני רוצה לשייך תלמיד לקבוצה שלי",
+          "acceptance_criteria": "מדריך יכול לשייך תלמיד רק לקבוצה שהוא משויך אליה",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US014",
+          "role": "admin",
+          "story": "כמנהל אני רוצה ליצור שיעורים אוטומטית לקבוצה",
+          "acceptance_criteria": "המערכת יוצרת שיעורים לפי תאריך התחלה ימים שעות ומספר מפגשים",
+          "priority": "critical",
+          "status": "planned"
+        },
+        {
+          "id": "US015",
+          "role": "instructor",
+          "story": "כמדריך אני רוצה לערוך שיעור בקבוצה שלי",
+          "acceptance_criteria": "מדריך יכול לערוך נושא חומר לימוד וחומר פנימי בשיעור של קבוצה שלו",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US016",
+          "role": "instructor",
+          "story": "כמדריך אני רוצה להזין נוכחות",
+          "acceptance_criteria": "רשימת תלמידי הקבוצה מוצגת והסטטוס נשמר עם המשתמש המזין ותאריך הזנה",
+          "priority": "critical",
+          "status": "planned"
+        },
+        {
+          "id": "US017",
+          "role": "student",
+          "story": "כתלמיד אני רוצה לראות את השיעורים שלי",
+          "acceptance_criteria": "התלמיד רואה רק שיעורים של קבוצות שהוא משויך אליהן",
+          "priority": "critical",
+          "status": "planned"
+        },
+        {
+          "id": "US018",
+          "role": "student",
+          "story": "כתלמיד אני רוצה לראות חומרי לימוד",
+          "acceptance_criteria": "התלמיד רואה רק חומרי לימוד שמוגדרים כגלויים לתלמיד בשיעורים שלו",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US019",
+          "role": "instructor",
+          "story": "כמדריך אני רוצה לראות חומר פנימי למדריך",
+          "acceptance_criteria": "חומר פנימי מוצג למדריך המשויך ולמנהל בלבד",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US020",
+          "role": "admin",
+          "story": "כמנהל אני רוצה ליצור סקר לקבוצה",
+          "acceptance_criteria": "סקר כולל שאלות מסוגים שונים חובה או לא חובה ומשויך לקבוצה אחת",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US021",
+          "role": "student",
+          "story": "כתלמיד אני רוצה לענות לסקר של הקבוצה שלי",
+          "acceptance_criteria": "רק תלמיד פעיל בקבוצה רואה ועונה לסקר פתוח שמוצג לתלמידים",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US022",
+          "role": "user",
+          "story": "כמשתמש מחובר אני רוצה לפתוח פנייה פנימית",
+          "acceptance_criteria": "הפנייה כוללת כותרת תוכן פותח סטטוס אחראי ותמיכה בתגובות",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US023",
+          "role": "admin",
+          "story": "כמנהל אני רוצה להעלות תעודת PDF לתלמיד",
+          "acceptance_criteria": "התעודה משויכת לתלמיד פעילות וקבוצה והתלמיד רואה רק את התעודות שלו",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US024",
+          "role": "admin",
+          "story": "כמנהל אני רוצה לנהל קבצים מרכזיים",
+          "acceptance_criteria": "קובץ נשמר עם מטא-דאטה קטגוריה סטטוס וגודל עד 5MB",
+          "priority": "critical",
+          "status": "planned"
+        },
+        {
+          "id": "US025",
+          "role": "user",
+          "story": "כמשתמש אני רוצה לקבל התראות רלוונטיות",
+          "acceptance_criteria": "התראות נוצרות על שיוך לקבוצה פנייה חדשה סקר חדש תעודה חדשה או שיעור שבוטל",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US026",
+          "role": "admin",
+          "story": "כמנהל אני רוצה יומן מרכזי",
+          "acceptance_criteria": "היומן מציג שיעורים ומאפשר סינון לפי מדריך קבוצה פעילות ותאריך",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US027",
+          "role": "admin",
+          "story": "כמנהל אני רוצה חיפוש גלובלי",
+          "acceptance_criteria": "חיפוש מוצא תלמידים מדריכים פעילויות קבוצות שיעורים סקרים פניות ותעודות לפי הרשאות",
+          "priority": "medium",
+          "status": "planned"
+        },
+        {
+          "id": "US028",
+          "role": "admin",
+          "story": "כמנהל אני רוצה טבלאות מתקדמות בכל רשימה",
+          "acceptance_criteria": "טבלאות תומכות מיון סינון חיפוש קיבוץ שינוי עמודות ופעולות שורה",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US029",
+          "role": "student",
+          "story": "כתלמיד אני רוצה דשבורד אישי",
+          "acceptance_criteria": "הדשבורד מציג שיעור קרוב קבוצות פעילות סקרים פתוחים תעודות והתראות",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US030",
+          "role": "instructor",
+          "story": "כמדריך אני רוצה דשבורד עבודה",
+          "acceptance_criteria": "הדשבורד מציג שיעורים היום קבוצות פעילות תלמידים ופניות פתוחות",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US031",
+          "role": "admin",
+          "story": "כמנהל אני רוצה דשבורד מרכזי",
+          "acceptance_criteria": "הדשבורד מציג פניות חדשות קבוצות פתוחות שיעורים היום נוכחות חריגה וקיצורי פעולה",
+          "priority": "high",
+          "status": "planned"
+        },
+        {
+          "id": "US032",
+          "role": "admin",
+          "story": "כמנהל אני רוצה לארכב מידע עסקי במקום למחוק",
+          "acceptance_criteria": "כל ישות עסקית תומכת בסטטוס פעיל לא פעיל בארכיון ואינה נמחקת פיזית",
+          "priority": "critical",
+          "status": "planned"
         }
       ]
     },
     "product/roadmap.md": {
       "path": "product/roadmap.md",
-      "hash": "02053effdcd95fd08a3af1c38c09873d1988dae68bf269bfc268bfdbcee2c79c",
-      "data": "# Roadmap\n\n## MVP\n\n- משתמש `admin` התחלתי עם סיסמה זמנית מגובבת.\n- התחברות, התנתקות והחלפת סיסמה ראשונית.\n- מעטפת ממשק ניהול SPA, RTL ורספונסיבית.\n- עמוד `כללי` לניהול פרטי האתר.\n- העלאת תמונות וקבצים מאובטחת עד 5MB.\n- בחירת לוגו ותמונות מתוך המדיה שהועלתה.\n- API ציבורי מצומצם לקריאת הגדרות האתר.\n\n## Version 1.1\n\n- ספריית מדיה עם חיפוש, סינון ומחיקה רכה.\n- היסטוריית שינויים להגדרות.\n- ניהול משתמשי מנהלה נוספים לאחר אפיון הרשאות.\n\n## Version 2.0\n\n- התאמת התשתית לפרויקטים מרובים באמצעות תבניות הגדרה.\n- אחסון קבצים חיצוני כאפשרות, בכפוף לאישור ארכיטקטוני.\n- הרשאות מפורטות לפי מודולים ופעולות.\n"
+      "hash": "f6841d47adfe87cffd13870362eb4fcac80ffb6ac5e522c8d531de37835fe37e",
+      "data": "# Roadmap: המרכז הדיגיטלי\n\n## שלב 0: הכנה ואישור\n\n- אישור אפיון עסקי מלא.\n- אישור MVP.\n- אישור דוח השפעה.\n- החלטה לגבי חוסרים פתוחים: רשימת המתנה, צפיית תלמיד בנוכחות, דוחות, הודעות\n  חיצוניות ותבניות תעודה.\n- השלמת Visual QA שנותר ברמת Medium לתשתית.\n\n## MVP\n\n- התאמת Product ו־Design Profile למותג \"המרכז הדיגיטלי\".\n- הרחבת משתמשים לתפקידי תלמיד, מדריך ומנהל.\n- ניהול משתמשים, תלמידים ומדריכים.\n- ניהול פעילויות.\n- ניהול קבוצות.\n- אתר ציבורי בסיסי: בית, אודות, פעילויות, עמוד פעילות, צור קשר.\n- טופס השארת פרטים היוצר פנייה ציבורית.\n- ניהול פניות ציבוריות.\n- שיוך תלמידים לקבוצות עם סטטוס תשלום.\n- יצירת שיעורים אוטומטית וניהול שיעורים.\n- ניהול נוכחות.\n- קבצים וחומרי לימוד בסיסיים.\n- אזור תלמיד בסיסי.\n- אזור מדריך בסיסי.\n- דשבורד מנהל בסיסי.\n- ארכיון עסקי במקום מחיקה.\n\n## Version 1.1\n\n- סקרים לקבוצות.\n- תעודות PDF.\n- פניות פנימיות.\n- מרכז התראות.\n- יומן מרכזי מלא.\n- טבלאות מתקדמות עם פעולות שורה וצבע שורה.\n\n## Version 1.2\n\n- חיפוש גלובלי.\n- דוחות ניהול בסיסיים.\n- רשימות ניתנות לניהול לכל הסטטוסים.\n- הרחבת הרשאות מדריך לפי פעולות.\n- שיפור חוויית מובייל לכל אזורי המשתמש.\n\n## Version 2.0\n\n- תבניות תעודה אוטומטיות.\n- רשימת המתנה לקבוצות מלאות.\n- ייבוא וייצוא CSV.\n- שילוב הודעות אימייל, WhatsApp או SMS בכפוף לאישור שירותים וספריות.\n- Audit Log עסקי מלא.\n- דוחות מתקדמים לפי פעילות, קבוצה, מדריך ונוכחות.\n"
     },
     "shared-info/change_levels.csv": {
       "path": "shared-info/change_levels.csv",
@@ -577,7 +965,7 @@
     },
     "shared-info/action_log.csv": {
       "path": "shared-info/action_log.csv",
-      "hash": "bd7b0c0c1deaee410522b04e235744a909dbbd977e888271986b80ad810b0c7b",
+      "hash": "ef1ef9df0a625a61ddaa415c335e686fa30c6342762e6dc3661f396b46dbc069",
       "data": [
         {
           "id": "1",
@@ -842,6 +1230,42 @@
           "summary": "מקור אמת Product אוחד תחת product ונמחקו CSV ריקים מתחרים",
           "risk_level": "High",
           "needs_review": "yes"
+        },
+        {
+          "id": "23",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "qa_blocker_resolution",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;shared-info/contradictions.csv;shared-info/project_status.json",
+          "external_domain_used": "MySQL;src/server;dist/public",
+          "tools_used": "npm test;node E2E;PowerShell;apply_patch",
+          "summary": "חסם MySQL E2E נסגר לאחר db:init ובדיקות HTTP מול מסדי QA זמניים; נותר Visual QA כחסם Medium",
+          "risk_level": "Medium",
+          "needs_review": "no"
+        },
+        {
+          "id": "24",
+          "date": "2026-06-09",
+          "agent": "AI Product Owner",
+          "action_type": "crm_specification",
+          "domain_files_changed": "product/project_definition.md;product/features.csv;product/user_stories.csv;product/roadmap.md;agents/impact/domain/digital_center_crm_impact_report.md;agents/impact/info/impact_reports.csv;shared-info/project_status.json",
+          "external_domain_used": "pasted CRM specification;shared-info/source_of_truth.md;shared-info/change_levels.csv",
+          "tools_used": "PowerShell;apply_patch",
+          "summary": "הופק אפיון מלא ל-CRM ואתר תדמית המרכז הדיגיטלי כולל מסכים הרשאות ERD ישויות זרימות MVP וסיכונים",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "25",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "specification_scan",
+          "domain_files_changed": "shared-info/action_log.csv",
+          "external_domain_used": "product;permissions;db;api;components;qa",
+          "tools_used": "PowerShell;npm test",
+          "summary": "נסרק האפיון החדש: אין High או Critical פתוחים; הפער בין האפיון ל-roles/tables/apis הקיימים מסווג כ-planned לפני מימוש",
+          "risk_level": "Medium",
+          "needs_review": "no"
         }
       ]
     },
@@ -981,7 +1405,7 @@
     },
     "shared-info/contradictions.csv": {
       "path": "shared-info/contradictions.csv",
-      "hash": "c83c8a5c6b43667e93615b3049310524509784585ab12097464558c350a1e470",
+      "hash": "4b3411eb3a18bdb15c3fd4affc90dcd8cb99b0d406860be79cbdd32fcaabc142",
       "data": [
         {
           "id": "1",
@@ -1033,10 +1457,10 @@
           "severity": "High",
           "source_file": "agents/qa/info/test_results.csv",
           "problem": "AI QA לא אישר QA מלא: 5 תרחישים מסומנים BLOCKED ו-3 תרחישים מסומנים NOT_RUN",
-          "impact": "Definition Of Done אינו מתקיים ללא הוכחת E2E למסד הנתונים וללא Visual QA בדפדפן עבור ניתוב רספונסיבי ו-Design Profiles",
-          "recommended_fix": "להריץ את התרחישים החסומים מול MySQL ייעודי ואת בדיקות הדפדפן בשלושת סוגי הניווט והצפיפות ולתעד תוצאות",
-          "status": "open",
-          "blocks_work": "yes"
+          "impact": "Definition Of Done לא התקיים ללא הוכחת E2E למסד הנתונים וללא Visual QA בדפדפן עבור ניתוב רספונסיבי ו-Design Profiles",
+          "recommended_fix": "תרחישי MySQL ו-HTTP E2E הורצו במסדי QA זמניים ותועדו כ-PASS; Visual QA נותר כחסם Medium ב-project_status.json",
+          "status": "fixed",
+          "blocks_work": "no"
         },
         {
           "id": "6",
@@ -1370,7 +1794,7 @@
     },
     "agents/db/info/media_assets.csv": {
       "path": "agents/db/info/media_assets.csv",
-      "hash": "c2d4e511ed5f612d29111fc2ef1a91a0a2964483ab346a5b56475b9c67ced3a9",
+      "hash": "88bbf5ec922a082a1d6192dc0a3fc5414cd6cb4acd607fdab4e4ba41a2d589a9",
       "data": [
         {
           "table_name": "media_assets",
@@ -1408,7 +1832,7 @@
         {
           "table_name": "media_assets",
           "field_name": "storage_path",
-          "type": "VARCHAR(1024)",
+          "type": "VARCHAR(512)",
           "required": "yes",
           "unique": "yes",
           "default_value": "",
@@ -1977,7 +2401,7 @@
     },
     "agents/qa/info/test_cases.csv": {
       "path": "agents/qa/info/test_cases.csv",
-      "hash": "68377ffa3b9d46a5a7a79c14b15d632112154ac8d0bc1c6f2b6798ca595bdc30",
+      "hash": "2fc0db64868ea82b86928d6c41d435cf10416f9efd4ac7753ee91196deeedb97",
       "data": [
         {
           "id": "QA-001",
@@ -1986,7 +2410,7 @@
           "steps": "להריץ db:init מול MySQL נקי; לבדוק משתמש admin; לבדוק שהסיסמה אינה נשמרת כטקסט; לאמת התחברות עם 123123",
           "expected_result": "נוצר admin פעיל; נשמרים hash ו-salt; must_change_password=true; לא נשמרת סיסמה גלויה",
           "priority": "critical",
-          "status": "BLOCKED"
+          "status": "READY"
         },
         {
           "id": "QA-002",
@@ -2004,7 +2428,7 @@
           "steps": "לשלוח admin ו-123123 ל-/api/auth/login מול מסד מאותחל",
           "expected_result": "מתקבלת תשובת הצלחה עם משתמש admin ועוגיית התחברות; mustChangePassword=true",
           "priority": "critical",
-          "status": "BLOCKED"
+          "status": "READY"
         },
         {
           "id": "QA-004",
@@ -2013,7 +2437,7 @@
           "steps": "לשלוח שם משתמש לא קיים וסיסמה שגויה בנפרד",
           "expected_result": "מתקבלת 401 עם הודעה כללית שאינה חושפת אם המשתמש קיים",
           "priority": "critical",
-          "status": "BLOCKED"
+          "status": "READY"
         },
         {
           "id": "QA-005",
@@ -2067,7 +2491,7 @@
           "steps": "להעלות PNG JPEG ו-WebP קטנים מ-5MB עם application/octet-stream וכותרות תקינות",
           "expected_result": "הקובץ מזוהה לפי תוכן; נשמר בשם UUID; המטא-דאטה נשמר; התשובה אינה חושפת storagePath",
           "priority": "critical",
-          "status": "BLOCKED"
+          "status": "READY"
         },
         {
           "id": "QA-011",
@@ -2103,7 +2527,7 @@
           "steps": "למחוק נכס פעיל שאינו בשימוש; לקרוא רשימה ונתיב מדיה לאחר המחיקה; לבדוק רשומת DB",
           "expected_result": "deleted_at ו-deleted_by_user_id מתעדכנים; הנכס אינו מופיע ואינו מוגש; הקובץ והרשומה אינם נמחקים פיזית",
           "priority": "critical",
-          "status": "BLOCKED"
+          "status": "READY"
         },
         {
           "id": "QA-015",
@@ -2121,7 +2545,7 @@
           "steps": "להריץ build; לבדוק נכסי dist/public; לפתוח ישירות /login /change-password /admin/general /admin/media ולנווט קדימה ואחורה",
           "expected_result": "כל הנכסים נארזים; השרת מחזיר index.html לנתיבי SPA; History API והגנות הנתיב פועלים",
           "priority": "high",
-          "status": "NOT_RUN"
+          "status": "READY"
         },
         {
           "id": "QA-017",
@@ -2244,15 +2668,15 @@
     },
     "agents/qa/info/test_results.csv": {
       "path": "agents/qa/info/test_results.csv",
-      "hash": "a861134fe4e110d387d7b2e4e9a584fc62699204b2de4c369e5b3b12242ddc98",
+      "hash": "f2a4bfb64449f8b8c196a5c820d4e25ee23c95960d7fd6cdcfaf01be35935150",
       "data": [
         {
           "id": "QAR-001",
           "test_case_id": "QA-001",
           "date": "2026-06-09",
-          "result": "BLOCKED",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "לא הופעל MySQL ייעודי. אימות סטטי בלבד: agents/db/domain/start.ts יוצר admin מה-env עם scrypt salt אקראי ו-must_change_password=true."
+          "notes": "הורץ db:init מול MySQL במסד QA זמני נקי. אומת שנוצר admin פעיל עם role admin, must_change_password=true, hash ו-salt קיימים, והסיסמה 123123 אינה נשמרת כטקסט."
         },
         {
           "id": "QAR-002",
@@ -2260,23 +2684,23 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: src/server/routes/admin-routes.ts מפעיל requireAdmin ו-requirePasswordChanged; middleware מחזיר 403; router מפנה ל-change-password. בדיקת JWT עם הדגל עברה ב-npm test. לא בוצע E2E מול DB."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP במסד QA זמני. לפני החלפת סיסמה /api/admin/settings/general החזיר 403 PASSWORD_CHANGE_REQUIRED; לאחר החלפה לסיסמה חזקה הנתיב החזיר 200 ו-JWT חדש."
         },
         {
           "id": "QAR-003",
           "test_case_id": "QA-003",
           "date": "2026-06-09",
-          "result": "BLOCKED",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "נדרשים MySQL מאותחל ושרת HTTP פעיל כדי לאמת התחברות אמיתית ועוגייה."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP במסד QA זמני. התחברות admin עם הסיסמה הראשונית הצליחה, mustChangePassword=true הוחזר, ונשלחה עוגיית admin_session עם HttpOnly ו-SameSite=Strict."
         },
         {
           "id": "QAR-004",
           "test_case_id": "QA-004",
           "date": "2026-06-09",
-          "result": "BLOCKED",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "השירות מחזיר הודעת INVALID_CREDENTIALS אחידה סטטית; לא הורץ תרחיש HTTP מול MySQL."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP במסד QA זמני. משתמש חסר וסיסמה שגויה למשתמש קיים החזירו 401 עם INVALID_CREDENTIALS ואותה הודעה כללית."
         },
         {
           "id": "QAR-005",
@@ -2284,7 +2708,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: login-rate-limiter.ts מגדיר 5 ניסיונות בחלון 15 דקות ומחזיר 429; auth-controller רושם רק כשלי INVALID_CREDENTIALS ומנקה לאחר הצלחה. לא בוצע E2E."
+          "notes": "הורץ E2E מול שרת HTTP במסד QA זמני. לאחר 5 ניסיונות שגויים לאותו משתמש, הניסיון הבא נחסם ב-429 TOO_MANY_LOGIN_ATTEMPTS."
         },
         {
           "id": "QAR-006",
@@ -2292,7 +2716,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: cookies.ts מגדיר httpOnly=true sameSite=strict path=/ ו-secure בפרודקשיין; logout מפעיל clearAuthCookie. לא נבדק בדפדפן."
+          "notes": "הורץ E2E התחברות מול שרת HTTP. Set-Cookie כלל admin_session, HttpOnly, SameSite=Strict ו-Path=/; Secure נשאר מותנה בפרודקשיין לפי config."
         },
         {
           "id": "QAR-007",
@@ -2300,7 +2724,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי מול routes ו-permissions.csv: נתיבי admin מוגנים; public/settings ו-media/:id ציבוריים; auth/me מוגן. לא בוצע E2E."
+          "notes": "הורץ E2E מול שרת HTTP. אורח נחסם מ-/api/admin/settings/general ב-401, הגדרות ציבוריות זמינות, ומנהל לאחר החלפת סיסמה מורשה לפי החוזה."
         },
         {
           "id": "QAR-008",
@@ -2308,7 +2732,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: validators/settings.ts מגביל מפתחות אורכים אימייל ומזהי מדיה ומסיר כפילויות. שמירה בפועל לא נבדקה מול MySQL."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP. קלט הגדרות שגוי נדחה ב-400, וקלט תקין עם שם אתר ואימייל תקין נשמר והוחזר בהצלחה."
         },
         {
           "id": "QAR-009",
@@ -2322,9 +2746,9 @@
           "id": "QAR-010",
           "test_case_id": "QA-010",
           "date": "2026-06-09",
-          "result": "BLOCKED",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "נדרשים שרת HTTP MySQL ותיקיית העלאות מבודדת כדי לאמת שמירה מלאה של PNG JPEG ו-WebP."
+          "notes": "הורץ E2E מול MySQL, שרת HTTP ותיקיית העלאות זמנית. העלאת PNG תקינה נשמרה בשם UUID, נשמר מטא-דאטה, התשובה לא חשפה storagePath והקובץ הוגש דרך /api/media/:id."
         },
         {
           "id": "QAR-011",
@@ -2332,7 +2756,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: config אוסר מגבלה מעל 5MB; uploadMedia בודק Content-Length וגם סופר את הזרם ומחזיר 413; finally מסיר קובץ זמני."
+          "notes": "הורץ E2E מול שרת HTTP. העלאה עם גוף בפועל מעל 5MB נדחתה ב-413 FILE_TOO_LARGE."
         },
         {
           "id": "QAR-012",
@@ -2340,7 +2764,7 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: detectImage מאמת חתימות PNG JPEG ו-WebP בלבד ומחזיר 415 כאשר התוכן אינו תואם. לא בוצעה העלאת HTTP."
+          "notes": "הורץ E2E מול שרת HTTP. קובץ בשם fake.png עם תוכן שאינו PNG JPEG או WebP נדחה ב-415 UNSUPPORTED_FILE."
         },
         {
           "id": "QAR-013",
@@ -2354,9 +2778,9 @@
           "id": "QAR-014",
           "test_case_id": "QA-014",
           "date": "2026-06-09",
-          "result": "BLOCKED",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "ה-repo מבצע UPDATE ל-deleted_at ול-deleted_by_user_id ומסנן מחוקים סטטית; לא אומתה התנהגות בפועל מול MySQL והגשת קובץ."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP. מחיקת מדיה פעילה שאינה בשימוש הצליחה, והקריאה הציבורית לאותו נכס לאחר המחיקה החזירה 404."
         },
         {
           "id": "QAR-015",
@@ -2364,15 +2788,15 @@
           "date": "2026-06-09",
           "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי: deleteMedia בודק logoMediaAssetId ו-additionalMediaAssetIds ומחזיר 409 MEDIA_IN_USE לפני softDelete. לא בוצע E2E."
+          "notes": "הורץ E2E מול MySQL ושרת HTTP. מדיה שקושרה כלוגו בהגדרות נדחתה במחיקה עם 409 MEDIA_IN_USE ונשארה פעילה."
         },
         {
           "id": "QAR-016",
           "test_case_id": "QA-016",
           "date": "2026-06-09",
-          "result": "NOT_RUN",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "npm test הפעיל build בהצלחה ואומתו נכסי dist/public המרכזיים. ניתוב ישיר History API ו-fallback לא נבדקו בדפדפן ובשרת פעיל."
+          "notes": "הורץ build ולאחריו E2E מול שרת HTTP. נתיבים ישירים /login ו-/admin/general החזירו index.html של ה-SPA, ונכסי dist/public קיימים."
         },
         {
           "id": "QAR-017",
@@ -2476,7 +2900,7 @@
           "date": "2026-06-09",
           "result": "NOT_RUN",
           "tester": "AI QA",
-          "notes": "לא קיים דפדפן בדיקה פעיל בסביבה; לא בוצעה בדיקה חזותית של שילובי ניווט צפיפות ורוחבי מסך."
+          "notes": "נמצא Chrome מקומי, אך טרם בוצעה בדיקה חזותית מלאה לכל שילובי navigation density ורוחבי 320 768 ו-1440. נדרש סבב Visual QA נפרד."
         }
       ]
     },
@@ -2817,10 +3241,10 @@
     },
     "shared-info/project_status.json": {
       "path": "shared-info/project_status.json",
-      "hash": "7aaf0b910828ad52ede728af418352c0724cdcb411ab509ecc76c4faef3c7de3",
+      "hash": "4c7c2e6aacff570a0b1761619d72057d4adf98be1597308bd796ba936b922331",
       "data": {
         "schemaVersion": 1,
-        "projectPhase": "infrastructure-ready-with-environmental-qa-blockers",
+        "projectPhase": "digital-center-crm-specification-ready-with-visual-qa-pending",
         "lastUpdated": "2026-06-09",
         "implementedModules": [
           "authentication",
@@ -2833,13 +3257,6 @@
         ],
         "activeBlockers": [
           {
-            "id": "QA-MYSQL-E2E",
-            "severity": "High",
-            "reason": "MySQL is not listening on 127.0.0.1:3306",
-            "blocks": "Full database and HTTP E2E approval",
-            "source": "shared-info/contradictions.csv"
-          },
-          {
             "id": "QA-VISUAL",
             "severity": "Medium",
             "reason": "Browser visual QA has not been executed",
@@ -2849,11 +3266,10 @@
         ],
         "automatedTests": {
           "command": "npm test",
-          "lastResult": "10/10 PASS"
+          "lastResult": "13/13 PASS; DB and HTTP E2E PASS for MySQL blocker scenarios"
         },
         "nextRequiredActions": [
-          "Start a MySQL 8 server and run npm run db:init",
-          "Run database and HTTP E2E scenarios",
+          "Approve the digital center CRM specification and MVP scope",
           "Run browser visual QA for responsive and design profile variants"
         ]
       }
@@ -2864,9 +3280,9 @@
     "tables": 3,
     "apis": 11,
     "components": 10,
-    "features": 10,
-    "userStories": 11,
+    "features": 32,
+    "userStories": 32,
     "qaCases": 29,
-    "openContradictions": 1
+    "openContradictions": 0
   }
 }

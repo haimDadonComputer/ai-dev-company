@@ -84,7 +84,7 @@ async function start(): Promise<void> {
         id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         original_name VARCHAR(255) NOT NULL,
         storage_name VARCHAR(255) NOT NULL,
-        storage_path VARCHAR(1024) NOT NULL,
+        storage_path VARCHAR(512) NOT NULL,
         mime_type VARCHAR(100) NOT NULL,
         extension VARCHAR(20) NOT NULL,
         size_bytes BIGINT UNSIGNED NOT NULL,

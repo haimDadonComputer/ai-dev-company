@@ -1,20 +1,20 @@
 id,module,title,steps,expected_result,priority,status
-QA-001,database,"אתחול מנהל ראשוני במסד","להריץ db:init מול MySQL נקי; לבדוק משתמש admin; לבדוק שהסיסמה אינה נשמרת כטקסט; לאמת התחברות עם 123123","נוצר admin פעיל; נשמרים hash ו-salt; must_change_password=true; לא נשמרת סיסמה גלויה",critical,BLOCKED
+QA-001,database,"אתחול מנהל ראשוני במסד","להריץ db:init מול MySQL נקי; לבדוק משתמש admin; לבדוק שהסיסמה אינה נשמרת כטקסט; לאמת התחברות עם 123123","נוצר admin פעיל; נשמרים hash ו-salt; must_change_password=true; לא נשמרת סיסמה גלויה",critical,READY
 QA-002,authentication,"חובת החלפת סיסמה ראשונית","להתחבר כמנהל ראשוני; לנסות לגשת לנתיבי /api/admin; להחליף לסיסמה חזקה; לנסות שוב","לפני ההחלפה מתקבל 403 PASSWORD_CHANGE_REQUIRED; לאחר ההחלפה הגישה מותרת וה-JWT מתחדש",critical,READY
-QA-003,authentication,"התחברות תקינה","לשלוח admin ו-123123 ל-/api/auth/login מול מסד מאותחל","מתקבלת תשובת הצלחה עם משתמש admin ועוגיית התחברות; mustChangePassword=true",critical,BLOCKED
-QA-004,authentication,"התחברות עם פרטים שגויים","לשלוח שם משתמש לא קיים וסיסמה שגויה בנפרד","מתקבלת 401 עם הודעה כללית שאינה חושפת אם המשתמש קיים",critical,BLOCKED
+QA-003,authentication,"התחברות תקינה","לשלוח admin ו-123123 ל-/api/auth/login מול מסד מאותחל","מתקבלת תשובת הצלחה עם משתמש admin ועוגיית התחברות; mustChangePassword=true",critical,READY
+QA-004,authentication,"התחברות עם פרטים שגויים","לשלוח שם משתמש לא קיים וסיסמה שגויה בנפרד","מתקבלת 401 עם הודעה כללית שאינה חושפת אם המשתמש קיים",critical,READY
 QA-005,authentication,"הגבלת ניסיונות התחברות","לבצע 5 ניסיונות שגויים מאותו IP ושם משתמש; לבצע ניסיון נוסף בחלון של 15 דקות","הניסיון הבא נחסם ב-429 TOO_MANY_LOGIN_ATTEMPTS; הצלחה מנקה את המונה",critical,READY
 QA-006,authentication,"עוגיית JWT מאובטחת","לבצע התחברות; לבדוק Set-Cookie; להתנתק ולבדוק מחיקה","העוגייה admin_session מוגדרת HttpOnly SameSite=Strict Path=/; Secure בפרודקשיין; התנתקות מוחקת אותה",critical,READY
 QA-007,permissions,"הרשאות אורח ומנהל","לגשת ללא עוגייה לנתיבי auth/me ו-admin; לגשת ל-public/settings ול-media/:id; לחזור עם JWT מנהל","נתיבי ניהול מחזירים 401 לאורח; נתיבים ציבוריים זמינים; מנהל תקין מורשה לפי החוזה",critical,READY
 QA-008,settings,"אימות קלט הגדרות כלליות","לשלוח גוף לא תקין; שדה לא מוכר; אימייל לא תקין; מחרוזות ארוכות; מזהי מדיה לא תקינים; קלט תקין","קלט שגוי נדחה ב-400; כפילויות מדיה מוסרות; קלט תקין מנורמל ונשמר",high,READY
 QA-009,settings,"פרטיות הגדרות ציבוריות","לקרוא /api/public/settings ולהשוות לתשובת המנהל","התשובה הציבורית אינה כוללת updatedByUserId נתוני משתמש או נתיבי אחסון בשרת",critical,READY
-QA-010,media,"העלאת תמונה תקינה","להעלות PNG JPEG ו-WebP קטנים מ-5MB עם application/octet-stream וכותרות תקינות","הקובץ מזוהה לפי תוכן; נשמר בשם UUID; המטא-דאטה נשמר; התשובה אינה חושפת storagePath",critical,BLOCKED
+QA-010,media,"העלאת תמונה תקינה","להעלות PNG JPEG ו-WebP קטנים מ-5MB עם application/octet-stream וכותרות תקינות","הקובץ מזוהה לפי תוכן; נשמר בשם UUID; המטא-דאטה נשמר; התשובה אינה חושפת storagePath",critical,READY
 QA-011,media,"דחיית קובץ מעל 5MB","לשלוח Content-Length מעל 5242880 וגם זרם ללא אורך שחוצה את המגבלה","השרת מחזיר 413 FILE_TOO_LARGE ומסיר קובץ זמני",critical,READY
 QA-012,media,"דחיית magic bytes שגויים","לשלוח קובץ עם שם וסיומת PNG אך תוכן שאינו PNG JPEG או WebP","השרת מחזיר 415 UNSUPPORTED_FILE ואינו יוצר נכס מדיה",critical,READY
 QA-013,media,"שם קובץ וטקסט חלופי בעברית","להעלות כותרות URI-encoded עבור לוגו.png ולוגו האתר","השם והטקסט מפוענחים ונשמרים בעברית ללא קידוד גולמי",high,READY
-QA-014,media,"מחיקה רכה של מדיה","למחוק נכס פעיל שאינו בשימוש; לקרוא רשימה ונתיב מדיה לאחר המחיקה; לבדוק רשומת DB","deleted_at ו-deleted_by_user_id מתעדכנים; הנכס אינו מופיע ואינו מוגש; הקובץ והרשומה אינם נמחקים פיזית",critical,BLOCKED
+QA-014,media,"מחיקה רכה של מדיה","למחוק נכס פעיל שאינו בשימוש; לקרוא רשימה ונתיב מדיה לאחר המחיקה; לבדוק רשומת DB","deleted_at ו-deleted_by_user_id מתעדכנים; הנכס אינו מופיע ואינו מוגש; הקובץ והרשומה אינם נמחקים פיזית",critical,READY
 QA-015,media,"מניעת מחיקת מדיה בשימוש","לקשר מדיה כלוגו או כתמונה נוספת; לנסות למחוק אותה","המחיקה נדחית ב-409 MEDIA_IN_USE והנכס נשאר פעיל",critical,READY
-QA-016,frontend,"אריזת SPA וניתוב URL","להריץ build; לבדוק נכסי dist/public; לפתוח ישירות /login /change-password /admin/general /admin/media ולנווט קדימה ואחורה","כל הנכסים נארזים; השרת מחזיר index.html לנתיבי SPA; History API והגנות הנתיב פועלים",high,NOT_RUN
+QA-016,frontend,"אריזת SPA וניתוב URL","להריץ build; לבדוק נכסי dist/public; לפתוח ישירות /login /change-password /admin/general /admin/media ולנווט קדימה ואחורה","כל הנכסים נארזים; השרת מחזיר index.html לנתיבי SPA; History API והגנות הנתיב פועלים",high,READY
 QA-017,frontend,"RTL ותצוגת מובייל","לפתוח בדפדפן ברוחב 320 375 768 ו-1440 פיקסלים; לבדוק טפסים תפריטים גלריה ומודל","המסמך בעברית וב-RTL; אין גלישה אופקית; הממשק שימושי בכל רוחב",high,NOT_RUN
 QA-018,frontend,"אין אחסון JWT בדפדפן","לסרוק את קוד הלקוח ולבדוק Application Storage בזמן התחברות","אין שימוש ב-localStorage או sessionStorage; האימות נשען על HttpOnly Cookie בלבד",critical,READY
 QA-019,security,"גיבוב סיסמה ושלמות JWT","להריץ npm test; להשוות שני גיבובים לאותה סיסמה; לאמת סיסמה נכונה ושגויה; לשנות חתימת JWT","המלחים והגיבובים שונים; האימות מדויק; JWT ששונה נדחה",critical,READY
