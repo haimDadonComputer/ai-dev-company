@@ -1,0 +1,2 @@
+component_name,visible_to,used_by,api_used,description,risk_level
+change-password-page,admin,router,"auth_me|auth_change_password","עמוד החלפה מחייבת של סיסמת המנהל",High

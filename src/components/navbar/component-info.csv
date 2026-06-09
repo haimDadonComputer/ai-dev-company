@@ -1,0 +1,2 @@
+component_name,visible_to,used_by,api_used,description,risk_level
+navbar,admin,"admin-general-page|admin-media-page","auth_logout","סרגל עליון עם זיהוי מנהל והתנתקות",High

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "systemId": "ai-development-company-base",
+  "language": "he",
+  "managerRole": "AI Manager",
+  "bootstrap": {
+    "firstFile": "shared-info/manager_bootstrap.md",
+    "generatedContext": "shared-info/system_context.json",
+    "requiredBeforeEveryTask": true,
+    "validationCommand": "npm run context:check"
+  },
+  "sourcesOfTruth": {
+    "masterInstructions": ["AGENTS.md", "manager/AI_MANAGER.md"],
+    "project": [
+      "product/project_definition.md",
+      "product/features.csv",
+      "product/user_stories.csv",
+      "product/roadmap.md"
+    ],
+    "changeManagement": [
+      "shared-info/change_levels.csv",
+      "shared-info/task_checklist.md",
+      "shared-info/decisions.csv",
+      "shared-info/action_log.csv"
+    ],
+    "contracts": ["shared-info/contracts.csv"],
+    "contradictions": ["shared-info/contradictions.csv"],
+    "permissions": ["agents/permissions/info/permissions.csv"],
+    "database": [
+      "agents/db/info/tables-index.csv",
+      "agents/db/info/users.csv",
+      "agents/db/info/site_settings.csv",
+      "agents/db/info/media_assets.csv"
+    ],
+    "api": ["agents/api/info/api_list.csv"],
+    "components": ["agents/components/info/components_list.csv"],
+    "design": [
+      "design-system/project-profile.json",
+      "design-system/reference-design.json",
+      "design-system/naming_rules.md",
+      "design-system/profile_schema.md",
+      "design-system/project_design_checklist.md",
+      "design-system/colors.csv",
+      "design-system/typography.csv",
+      "design-system/spacing.csv",
+      "design-system/components.csv"
+    ],
+    "qa": [
+      "agents/qa/info/test_cases.csv",
+      "agents/qa/info/test_results.csv",
+      "agents/qa/info/regression_tests.csv"
+    ],
+    "environment": ["shared-info/environment_contract.csv"],
+    "modules": ["shared-info/modules.csv"],
+    "status": ["shared-info/project_status.json"]
+  },
+  "generatedArtifacts": {
+    "context": "shared-info/system_context.json",
+    "qaMirrors": {
+      "agents/qa/info/test_cases.csv": "qa/test_cases.csv",
+      "agents/qa/info/test_results.csv": "qa/test_results.csv",
+      "agents/qa/info/regression_tests.csv": "qa/regression_tests.csv"
+    }
+  },
+  "forbiddenDuplicateSources": [
+    "agents/product-owner/info/features.csv",
+    "agents/product-owner/info/user_stories.csv",
+    "agents/product-owner/info/roadmap.csv",
+    "product/roadmap.csv"
+  ],
+  "runtime": {
+    "backend": "Node.js + Express + TypeScript",
+    "database": "MySQL + mysql2",
+    "frontend": "Vanilla HTML + Vanilla CSS + TypeScript SPA",
+    "authentication": "JWT in HttpOnly Cookie",
+    "maximumUploadBytes": 5242880,
+    "allowedUploadTypes": ["image/png", "image/jpeg", "image/webp"],
+    "environmentFileDevelopment": ".env",
+    "environmentExample": ".env.example"
+  },
+  "taskRouting": {
+    "product": ["project", "contracts", "status"],
+    "design": ["design", "components", "project", "status"],
+    "permissions": ["permissions", "api", "components", "contracts"],
+    "database": ["database", "api", "contracts", "environment"],
+    "api": ["api", "database", "permissions", "contracts", "environment"],
+    "components": ["components", "api", "permissions", "design", "contracts"],
+    "qa": ["qa", "project", "contracts", "contradictions", "status"],
+    "all": ["project", "changeManagement", "contracts", "contradictions", "status"]
+  }
+}

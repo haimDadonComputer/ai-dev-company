@@ -1,1 +1,12 @@
 id,role,story,acceptance_criteria,priority,status
+US001,admin,"כמנהל מערכת אני רוצה להתחבר כדי לגשת לממשק הניהול","התחברות תקינה יוצרת HttpOnly Cookie; פרטים שגויים מחזירים שגיאה כללית; אין JWT ב-localStorage",critical,implemented
+US002,admin,"כמנהל ראשוני אני רוצה להחליף את הסיסמה הזמנית כדי לאבטח את החשבון","הסיסמה 123123 מחייבת החלפה; עד ההחלפה אין גישה לפעולות ניהול; הסיסמה החדשה נשמרת כגיבוב",critical,implemented
+US003,admin,"כמנהל מערכת אני רוצה להעלות קובץ מהמחשב כדי להשתמש בו באתר","העלאה מתבצעת מכפתור; קובץ מעל 5MB או מסוג אסור נדחה; קובץ תקין נשמר בשם אקראי",critical,implemented
+US004,admin,"כמנהל מערכת אני רוצה לערוך את פרטי האתר בעמוד כללי","ניתן לשמור לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל ותמונות",high,implemented
+US005,admin,"כמנהל מערכת אני רוצה לבחור קובץ שהועלה כלוגו","רק קובץ תמונה קיים ופעיל ניתן לשייך כלוגו; תצוגה מקדימה מוצגת לפני שמירה",high,implemented
+US006,guest,"כמבקר אני רוצה לקבל את פרטי האתר הציבוריים","ה-API הציבורי מחזיר רק שדות שאושרו לפרסום ואינו חושף נתוני משתמשים או נתיבי שרת",high,implemented
+US007,admin,"כמנהל מערכת אני רוצה להתנתק","ה-Cookie נמחק והגישה לנתיבי ניהול נחסמת מיד",high,implemented
+US008,developer,"כמפתח אני רוצה להגדיר Design Profile עצמאי לכל פרויקט","הפרויקט מגדיר brief טוקנים navigation וצפיפות; שינוי צבעים בלבד אינו עובר validation",critical,implemented
+US009,developer,"כמפתח אני רוצה שה-build יחסום את עיצוב התשתית בפרודקשן","reference profile נכשל ב-NODE_ENV=production גם אם override פיתוח פעיל",critical,implemented
+US010,AI Manager,"כמנהל AI אני רוצה לקבל את כל מקורות האמת והחוזים אוטומטית","לפני כל משימה נטענים bootstrap manifest context ו-status; context מיושן חוסם build",critical,implemented
+US011,AI Manager,"כמנהל AI אני רוצה לזהות מקורות כפולים והפניות שבורות","context:check נכשל על duplicate source או Role API Table Component לא קיימים",critical,implemented

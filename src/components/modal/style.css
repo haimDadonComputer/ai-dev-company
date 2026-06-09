@@ -1,0 +1,30 @@
+.modal-component {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--ui-space-md);
+  background: var(--ui-backdrop);
+}
+
+.modal-component__panel {
+  width: min(100%, var(--design-modal-width));
+  padding: var(--ui-space-lg);
+  border-radius: var(--ui-radius-surface);
+  background: var(--ui-surface-raised);
+  box-shadow: var(--ui-shadow-surface);
+}
+
+.modal-component__panel h2 {
+  margin-block-start: 0;
+  font-family: var(--design-font-heading);
+  font-size: var(--ui-font-size-heading);
+}
+
+.modal-component__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-sm);
+  margin-block-start: var(--ui-space-lg);
+}

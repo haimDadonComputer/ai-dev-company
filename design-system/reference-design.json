@@ -1,0 +1,47 @@
+{
+  "profile": {
+    "navigationPattern": "sidebar",
+    "density": "comfortable"
+  },
+  "dimensions": {
+    "typography": {
+      "--design-font-body": "Arial, \"Noto Sans Hebrew\", sans-serif",
+      "--design-font-heading": "Arial, \"Noto Sans Hebrew\", sans-serif",
+      "--design-font-size-display": "2rem",
+      "--design-font-size-heading": "1.5rem",
+      "--design-font-size-body": "1rem",
+      "--design-font-size-small": "0.875rem",
+      "--design-font-weight-body": "400",
+      "--design-font-weight-heading": "700",
+      "--design-line-height": "1.5"
+    },
+    "shape-language": {
+      "--design-radius-control": "0.5rem",
+      "--design-radius-surface": "0.75rem",
+      "--design-border-width": "1px"
+    },
+    "surfaces": {
+      "--design-color-background": "#f8fafc",
+      "--design-color-surface": "#ffffff",
+      "--design-color-surface-raised": "#ffffff",
+      "--design-color-border": "#cbd5e1",
+      "--design-shadow-surface": "0 10px 25px rgb(15 23 42 / 10%)"
+    },
+    "auth-composition": {
+      "--design-auth-background": "radial-gradient( circle at top right, #dbeafe, transparent 45% ), var(--design-color-background)",
+      "--design-auth-card-width": "28.75rem"
+    },
+    "color-hierarchy": {
+      "--design-color-action": "#2563eb",
+      "--design-color-action-hover": "#1d4ed8",
+      "--design-color-text": "#0f172a",
+      "--design-color-muted": "#475569",
+      "--design-color-selected-surface": "#dbeafe",
+      "--design-color-selected-text": "#1d4ed8"
+    },
+    "motion": {
+      "--design-motion-duration": "160ms",
+      "--design-motion-easing": "ease"
+    }
+  }
+}

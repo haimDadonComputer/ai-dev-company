@@ -1,1 +1,18 @@
-id,module,test_name,expected_result
+id,module,test_name,expected_result,critical
+REG-001,database,"אתחול חוזר אינו דורס מנהל קיים","הרצת db:init נוספת אינה משנה סיסמה או משתמש admin קיים",yes
+REG-002,authentication,"חובת החלפת סיסמה נשמרת לאורך רענון","מנהל עם JWT זמני מופנה תמיד להחלפת סיסמה ונתיבי ניהול נשארים חסומים",yes
+REG-003,authentication,"התחברות שגויה אינה חושפת קיום משתמש","שם לא קיים וסיסמה שגויה מחזירים אותה הודעה ואותו סטטוס",yes
+REG-004,authentication,"Rate limit מתאפס לאחר הצלחה או תום חלון","הצלחה מנקה מונה וחלון שפג אינו ממשיך לחסום",yes
+REG-005,authentication,"עוגיית אימות נשארת HttpOnly","כל הנפקה חידוש ומחיקה של admin_session שומרים על HttpOnly SameSite ו-Secure בפרודקשיין",yes
+REG-006,permissions,"אורח אינו ניגש לנתיבי ניהול","כל API תחת /api/admin ו-/api/auth/me מחזיר 401 ללא JWT תקין",yes
+REG-007,settings,"הגדרות ציבוריות נשארות מצומצמות","ה-API הציבורי אינו חושף updatedByUserId storagePath hash או פרטי משתמש",yes
+REG-008,settings,"מדיה לא פעילה אינה ניתנת לשיוך","מזהה מדיה חסר או מחוק נדחה ב-400 MEDIA_NOT_ACTIVE",yes
+REG-009,media,"מגבלת העלאה נשארת 5MB","Content-Length וזרם בפועל מעל 5242880 נדחים ב-413 ללא שאריות זמניות",yes
+REG-010,media,"זיהוי סוג נעשה לפי magic bytes","שינוי שם או MIME בצד לקוח אינו מאפשר תוכן שאינו PNG JPEG או WebP",yes
+REG-011,media,"עברית בכותרות העלאה נשמרת תקינה","שם קובץ וטקסט חלופי URI-encoded מפוענחים במלואם",yes
+REG-012,media,"מחיקה נשארת רכה","מחיקה מעדכנת deleted_at ו-deleted_by_user_id ואינה מוחקת פיזית רשומה או קובץ",yes
+REG-013,media,"מדיה בשימוש אינה נמחקת","לוגו ותמונות נוספות מקושרות מחזירות 409 ונשארות פעילות",yes
+REG-014,frontend,"כל נתיבי SPA נארזים ועובדים ברענון","build כולל HTML CSS ו-JavaScript לכל העמודים והשרת מחזיר index.html בנתיב ישיר",yes
+REG-015,frontend,"RTL ומובייל אינם נשברים","המסמך נשאר RTL ושימושי החל מרוחב 320px ללא גלישה אופקית",yes
+REG-016,security,"אין JWT באחסון דפדפן","אין שימוש ב-localStorage או sessionStorage והאימות נעשה בעוגיית HttpOnly בלבד",yes
+REG-017,security,"JWT ששונה נדחה","שינוי payload או signature גורם ל-verifyToken להחזיר null",yes

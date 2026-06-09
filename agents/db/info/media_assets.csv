@@ -1,0 +1,14 @@
+table_name,field_name,type,required,unique,default_value,description,used_by_api,notes
+media_assets,id,BIGINT UNSIGNED AUTO_INCREMENT,yes,yes,,מזהה נכס המדיה,Media,Primary key
+media_assets,original_name,VARCHAR(255),yes,no,,שם הקובץ המקורי לתצוגה בלבד,Media,Must not be used as server path
+media_assets,storage_name,VARCHAR(255),yes,yes,,שם אחסון אקראי בשרת,Media,
+media_assets,storage_path,VARCHAR(1024),yes,yes,,נתיב אחסון פנימי,Media,Must never be exposed by public API
+media_assets,mime_type,VARCHAR(100),yes,no,,MIME type שאומת בצד השרת,Media,CHECK allows image/png image/jpeg image/webp
+media_assets,extension,VARCHAR(20),yes,no,,סיומת מנורמלת שאומתה,Media,CHECK allows png jpg jpeg webp
+media_assets,size_bytes,BIGINT UNSIGNED,yes,no,,גודל הקובץ בבתים,Media,CHECK range 1-5242880 bytes
+media_assets,sha256,CHAR(64),yes,no,,SHA-256 של תוכן הקובץ,Media,Lowercase hexadecimal
+media_assets,alt_text,VARCHAR(500),no,no,NULL,טקסט חלופי לתמונה,Media,
+media_assets,uploaded_by_user_id,BIGINT UNSIGNED,yes,no,,מזהה המשתמש שהעלה את הקובץ,Media,FK users.id ON DELETE RESTRICT
+media_assets,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירת הרשומה,Media,
+media_assets,deleted_at,DATETIME(3),no,no,NULL,מועד מחיקה רכה,Media,NULL means active
+media_assets,deleted_by_user_id,BIGINT UNSIGNED,no,no,NULL,מזהה המשתמש שביצע מחיקה רכה,Media,FK users.id ON DELETE RESTRICT

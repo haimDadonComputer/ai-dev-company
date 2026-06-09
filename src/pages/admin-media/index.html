@@ -1,0 +1,30 @@
+<section class="admin-media-page">
+  <header class="page-header">
+    <h1>מדיה</h1>
+    <p>העלאת תמונות מאובטחת וניהול ספריית הקבצים.</p>
+  </header>
+  <form class="form-component admin-media-page__upload card" novalidate>
+    <h2>העלאת תמונה</h2>
+    <div class="form-component__message" role="alert" hidden></div>
+    <div class="form-component__field">
+      <label for="media-file">בחירת קובץ</label>
+      <input id="media-file" name="file" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="media-file-help">
+      <span id="media-file-help" class="form-component__help">PNG, JPEG או WebP בלבד, עד 5MB.</span>
+    </div>
+    <div class="form-component__field">
+      <label for="media-alt">טקסט חלופי</label>
+      <input id="media-alt" name="altText" type="text" maxlength="250" required>
+      <span class="form-component__help">תיאור קצר ונגיש של תוכן התמונה.</span>
+    </div>
+    <div class="admin-media-page__upload-status" hidden>
+      <label for="upload-progress">מצב העלאה</label>
+      <progress id="upload-progress" max="100"></progress>
+      <span class="admin-media-page__status-text" role="status"></span>
+    </div>
+    <button class="button-component button-component--primary" type="submit">העלאת תמונה</button>
+  </form>
+  <section class="admin-media-page__library" aria-labelledby="media-library-title">
+    <h2 id="media-library-title">ספריית מדיה</h2>
+    <div class="admin-media-page__gallery" aria-live="polite"></div>
+  </section>
+</section>

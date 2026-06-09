@@ -12,6 +12,30 @@
 
 ---
 
+# Mandatory Manager Bootstrap
+
+לפני כל משימה, ללא צורך בהוראה מפורשת מהמשתמש, AI Manager חייב:
+
+1. לקרוא `shared-info/manager_bootstrap.md`.
+2. לקרוא `shared-info/system_manifest.json`.
+3. להריץ `npm run context:check`.
+4. לקרוא `shared-info/system_context.json`.
+5. לקרוא `shared-info/project_status.json`.
+6. לטעון את מקורות האמת הרלוונטיים לפי `taskRouting` שב־manifest.
+
+אסור לתכנן, להפעיל סוכן או לערוך קוד לפני השלמת ה־bootstrap.
+
+אם `context:check` נכשל, מותר לבצע רק תיקון context והרצת:
+
+```powershell
+npm run context:build
+npm run context:check
+```
+
+`system_context.json` הוא snapshot מאוחד ולא מקור אמת נוסף.
+
+---
+
 # זהות המערכת
 
 המערכת פועלת כחברת פיתוח תוכנה מבוססת AI.
@@ -289,7 +313,7 @@ components/
 במערכת הניהול יהיה אפשר להתחבר כאדמין ולבצע פעולות בהתאם למה שהוחלט
 
 בכל האפליקציות שיווצרו יהיה אפשרות לעלות קבצים על ידי כפתור ולא על ידי ניתוב 
-כל קובץ יהיה עד 10MB 
+כל קובץ יהיה עד 5MB 
 
 הלוגו, המספר טלפון , כתובת ועוד יהיה ניתן תמיד לעריכה בממשק הניהול
 
@@ -475,6 +499,14 @@ test_results.csv
 regression_tests.csv
 ```
 
+הקבצים תחת `qa/` הם mirrors לצורכי תאימות.
+
+מקור האמת היחיד של QA הוא:
+
+```txt
+agents/qa/info/
+```
+
 ---
 
 ## Shared
@@ -651,7 +683,7 @@ AI Manager חייב לקרוא לפני כל משימה:
 - product/project_definition.md
 - product/features.csv
 - product/user_stories.csv
-- product/roadmap.csv
+- product/roadmap.md
 
 
 # Change Level Rule
@@ -689,6 +721,10 @@ shared-info/change_levels.csv
 אם קיים ספק יש לבדוק:
 
 shared-info/source_of_truth.md
+
+מפת מקורות האמת הקריאה למכונה נמצאת ב:
+
+shared-info/system_manifest.json
 
 דוגמאות:
 

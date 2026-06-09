@@ -1,0 +1,62 @@
+:root {
+  /*
+   * Reference profile only. Replace these values and project-profile.json
+   * when creating a real project.
+   */
+  --design-font-body: Arial, "Noto Sans Hebrew", sans-serif;
+  --design-font-heading: Arial, "Noto Sans Hebrew", sans-serif;
+  --design-font-size-display: 2rem;
+  --design-font-size-heading: 1.5rem;
+  --design-font-size-body: 1rem;
+  --design-font-size-small: 0.875rem;
+  --design-font-weight-body: 400;
+  --design-font-weight-heading: 700;
+  --design-line-height: 1.5;
+
+  --design-color-action: #2563eb;
+  --design-color-action-hover: #1d4ed8;
+  --design-color-action-contrast: #ffffff;
+  --design-color-background: #f8fafc;
+  --design-color-surface: #ffffff;
+  --design-color-surface-raised: #ffffff;
+  --design-color-text: #0f172a;
+  --design-color-muted: #475569;
+  --design-color-border: #cbd5e1;
+  --design-color-focus: #0ea5e9;
+  --design-color-success: #16a34a;
+  --design-color-danger: #dc2626;
+  --design-color-warning: #f59e0b;
+  --design-color-danger-surface: #fee2e2;
+  --design-color-danger-text: #991b1b;
+  --design-color-selected-surface: #dbeafe;
+  --design-color-selected-text: #1d4ed8;
+  --design-color-backdrop: rgb(15 23 42 / 65%);
+  --design-auth-background: radial-gradient(
+      circle at top right,
+      #dbeafe,
+      transparent 45%
+    ),
+    var(--design-color-background);
+
+  --design-space-xs: 0.25rem;
+  --design-space-sm: 0.5rem;
+  --design-space-md: 1rem;
+  --design-space-lg: 1.5rem;
+  --design-space-xl: 2rem;
+  --design-control-height: 2.75rem;
+
+  --design-radius-control: 0.5rem;
+  --design-radius-surface: 0.75rem;
+  --design-border-width: 1px;
+  --design-shadow-surface: 0 10px 25px rgb(15 23 42 / 10%);
+
+  --design-content-max-width: 73.75rem;
+  --design-navigation-width: 15rem;
+  --design-rail-width: 5.5rem;
+  --design-header-height: 4.0625rem;
+  --design-auth-card-width: 28.75rem;
+  --design-modal-width: 30rem;
+  --design-media-card-min-width: 13.75rem;
+  --design-motion-duration: 160ms;
+  --design-motion-easing: ease;
+}

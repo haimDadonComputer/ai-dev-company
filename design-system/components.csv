@@ -1,6 +1,7 @@
 component,description
-button,primary action button
-input,text input
-table,data table
-modal,popup dialog
-card,content card
+button,behavioral button styled only through semantic design tokens
+input,form control styled only through semantic design tokens
+table,data table whose density and surfaces come from the active profile
+modal,accessible dialog whose shape and surface come from the active profile
+card,content container whose border radius and shadow come from the active profile
+navigation,sidebar topbar or rail selected by the project profile

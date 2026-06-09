@@ -30,7 +30,13 @@
 
 agents/product-owner/domain/
 
-agents/product-owner/info/
+product/project_definition.md
+
+product/features.csv
+
+product/user_stories.csv
+
+product/roadmap.md
 
 shared-info/action_log.csv
 
@@ -40,9 +46,13 @@ shared-info/action_log.csv
 
 כל קבצי ה־CSV במערכת.
 
-project_definition.md
+product/project_definition.md
 
-roadmap.md
+product/roadmap.md
+
+shared-info/system_context.json
+
+shared-info/system_manifest.json
 
 ---
 
@@ -79,3 +89,5 @@ Business Impact
 ## חובה לעדכן
 
 action_log.csv
+
+אין ליצור עותק נוסף של Product תחת `agents/product-owner/info/`.

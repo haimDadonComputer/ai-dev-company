@@ -1,0 +1,2 @@
+component_name,visible_to,used_by,api_used,description,risk_level
+admin-media-page,admin,router,"auth_me|admin_media_upload|admin_media_list|admin_media_delete","העלאה ניהול ומחיקה של תמונות עד 5MB",High

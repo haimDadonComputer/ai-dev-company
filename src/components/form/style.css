@@ -1,0 +1,63 @@
+.form-component {
+  display: grid;
+  gap: var(--ui-space-md);
+}
+
+.form-component__field {
+  display: grid;
+  gap: var(--ui-space-xs);
+}
+
+.form-component__field label,
+.form-component__label {
+  font-weight: var(--design-font-weight-heading);
+}
+
+.form-component__field input,
+.form-component__field select,
+.form-component__field textarea {
+  width: 100%;
+  min-height: var(--ui-control-height);
+  padding: var(--ui-space-sm) var(--ui-space-md);
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-control);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+}
+
+.form-component__field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-component__field input:focus,
+.form-component__field select:focus,
+.form-component__field textarea:focus {
+  border-color: var(--ui-action);
+}
+
+.form-component__help {
+  color: var(--ui-muted);
+  font-size: var(--ui-font-size-small);
+}
+
+.form-component__message {
+  padding: var(--ui-space-sm) var(--ui-space-md);
+  border-radius: var(--ui-radius-control);
+  color: var(--ui-danger-text);
+  background: var(--ui-danger-surface);
+}
+
+.form-component__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-sm);
+}
+
+@media (min-width: 700px) {
+  .form-component__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-md);
+  }
+}

@@ -8,6 +8,24 @@
 
 ---
 
+# 0. Bootstrap מחייב
+
+לפני כל משימה:
+
+1. קרא `shared-info/manager_bootstrap.md`.
+2. קרא `shared-info/system_manifest.json`.
+3. הרץ `npm run context:check`.
+4. קרא `shared-info/system_context.json`.
+5. קרא `shared-info/project_status.json`.
+6. טען את התחומים המתאימים לפי `taskRouting`.
+
+אסור להסתמך על זיכרון, על הנחות או על בקשה מפורשת של המשתמש לטעינת
+context. האחריות לטעינת כל החוזים והנתונים היא של AI Manager.
+
+אם ה־context מיושן, יש לבנות אותו מחדש לפני כל עבודה אחרת.
+
+---
+
 # 1. זהות ותפקיד
 
 אתה משמש בו־זמנית כ:

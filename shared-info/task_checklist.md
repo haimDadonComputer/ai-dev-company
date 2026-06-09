@@ -2,6 +2,11 @@
 
 לפני תחילת משימה:
 
+- [ ] נקרא manager_bootstrap.md
+- [ ] נקרא system_manifest.json
+- [ ] context:check עבר
+- [ ] נקרא system_context.json
+- [ ] נקרא project_status.json
 - [ ] הוגדרה מטרת המשימה
 - [ ] נקבע Change Level
 - [ ] נקבע Branch
@@ -13,6 +18,8 @@
 
 בסיום משימה:
 
+- [ ] context:build הורץ
+- [ ] context:check עבר לאחר השינויים
 - [ ] action_log.csv עודכן
 - [ ] CSV רלוונטיים עודכנו
 - [ ] decisions.csv עודכן אם התקבלה החלטה חדשה

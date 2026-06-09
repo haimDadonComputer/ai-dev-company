@@ -3,3 +3,12 @@ id,date,decision,reason,approved_by,status,related_files,notes
 2,2026-06-08,Use mysql2 without ORM,שליטה מלאה ופחות מורכבות,Haim,active,AGENTS.md,
 3,2026-06-08,Use Vanilla HTML CSS TypeScript,פשטות וללא Framework,Haim,active,AGENTS.md,
 4,2026-06-08,Allow only ag-grid-community,טבלאות מתקדמות בלי עומס ספריות,Haim,active,AGENTS.md,
+5,2026-06-09,"Use Node built-in crypto for password hashing and JWT signing","עמידה במדיניות הספריות ושימוש ב-scrypt HMAC-SHA256 ללא תלות נוספת",Haim,active,"src/server/utils/password.ts;src/server/utils/jwt.ts","אושר במסגרת אישור High Risk"
+6,2026-06-09,"Store uploaded media on local server disk with metadata in MySQL","פתרון בסיסי ניתן להעתקה ללא שירות אחסון חיצוני",Haim,active,"agents/db/info/media_assets.csv;src/server/services","מוגבל ל-5MB ול-PNG JPEG WebP"
+7,2026-06-09,"Use active .env in development and process.env in production","תצורה אחידה בין פיתוח לפרודקשן ללא סודות בקוד",Haim,active,".env;.env.example;package.json","האחריות להחלפת ערכי פרודקשן היא של המשתמש"
+8,2026-06-09,"Require initial admin password change","הסיסמה הראשונית 123123 חלשה ואינה מתאימה לשימוש שוטף",Haim,active,"agents/db/domain/start.ts;src/server","גישה לפעולות ניהול נחסמת עד להחלפה"
+9,2026-06-09,"Separate functional infrastructure from project visual identity","מניעת מראה אחיד בין פרויקטים המבוססים על אותה תשתית",Haim,active,"design-system/project-profile.json;src/design/active-profile.css;src/app/styles.css","Architecture change אושר במפורש"
+10,2026-06-09,"Block infrastructure reference design in production","להבטיח שכל פרויקט יקבל זהות חזותית עצמאית לפני פריסה",Haim,active,"scripts/check-design-profile.mjs;package.json",".env מאפשר reference רק לפיתוח התשתית"
+11,2026-06-09,"Require Manager Bootstrap before every task","להבטיח שמנהל AI טוען את כל החוזים והנתונים ללא הוראה מפורשת",Haim,active,"AGENTS.md;shared-info/manager_bootstrap.md;shared-info/system_manifest.json","Architecture change אושר במפורש"
+12,2026-06-09,"Use generated hashed system context as a read model","לאפשר קריאת תמונת מערכת אחת בלי ליצור מקור אמת נוסף",Haim,active,"shared-info/system_context.json;scripts/build-system-context.mjs;scripts/check-system-context.mjs","כל שינוי במקור אמת מחייב context:build"
+13,2026-06-09,"Use agents/qa/info as the only QA source of truth","מניעת כפילות תוך שמירת קובצי qa הנדרשים כתמונות תאימות",Haim,active,"agents/qa/info;qa;shared-info/system_manifest.json","qa mirrors נוצרים אוטומטית"

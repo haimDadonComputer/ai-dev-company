@@ -1,1 +1,11 @@
 id,name,status,priority,module,mvp,future,notes
+F001,התחברות מנהל,implemented,critical,authentication,yes,no,"JWT ב-HttpOnly Cookie; סיסמה מגובבת"
+F002,החלפת סיסמה ראשונית,implemented,critical,authentication,yes,no,"חובה לפני גישה לממשק הניהול"
+F003,מעטפת ממשק ניהול,implemented,high,admin,yes,no,"SPA RTL ורספונסיבי"
+F004,הגדרות כלליות,implemented,high,general-settings,yes,no,"לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל"
+F005,העלאת קבצים מאובטחת,implemented,critical,media,yes,no,"עד 5MB; allowlist; שם אקראי; הרשאת admin"
+F006,בחירת לוגו ותמונות,implemented,high,media,yes,no,"בחירה מתוך קבצים שהועלו"
+F007,קריאת הגדרות ציבוריות,implemented,high,public-settings,yes,no,"חשיפת שדות ציבוריים בלבד"
+F008,ניהול משתמשים מורחב,backlog,medium,users,no,yes,"משתמשים ותפקידים נוספים יוגדרו בפרויקט נגזר"
+F009,Design Profiles,implemented,critical,design-system,yes,no,"פרופיל עיצוב ייחודי; לפחות ארבעה ממדי שונות; חסימת reference בפרודקשן"
+F010,Manager Bootstrap,implemented,critical,management,yes,no,"Manifest; context snapshot; freshness validation; automatic task routing"

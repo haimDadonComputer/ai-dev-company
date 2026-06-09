@@ -1,0 +1,16 @@
+name,required,secret,scope,default_example,description,used_by
+NODE_ENV,yes,no,runtime,development,מצב הרצה development test production,server;build
+PORT,yes,no,server,3000,פורט שרת HTTP,server
+APP_ORIGIN,yes,no,security,http://localhost:3000,Origin מורשה לבקשות משנות מצב,server
+DB_HOST,yes,no,database,127.0.0.1,כתובת שרת MySQL,db;server
+DB_PORT,yes,no,database,3306,פורט MySQL,db;server
+DB_USER,yes,no,database,root,משתמש MySQL,db;server
+DB_PASSWORD,yes,yes,database,replace-me,סיסמת MySQL,db;server
+DB_NAME,yes,no,database,ai_dev_company_base,שם מסד הנתונים,db;server
+JWT_SECRET,yes,yes,authentication,replace-with-at-least-32-random-characters,מפתח חתימת JWT,server
+JWT_TTL_SECONDS,yes,no,authentication,28800,משך חיי session בשניות,server
+ADMIN_INITIAL_USERNAME,yes,no,bootstrap,admin,שם מנהל ראשוני,db
+ADMIN_INITIAL_PASSWORD,yes,yes,bootstrap,replace-me,סיסמה ראשונית המחייבת החלפה,db
+UPLOAD_DIR,yes,no,media,storage/uploads,תיקיית אחסון קבצים,server
+MAX_UPLOAD_BYTES,yes,no,media,5242880,מגבלת העלאה קשיחה של 5MB,server
+ALLOW_REFERENCE_DESIGN,yes,no,design,false,מאפשר reference design בפיתוח התשתית בלבד,build

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "profileId": "base-infrastructure-reference",
+  "projectName": "תשתית בסיס",
+  "status": "reference",
+  "audience": "מפתחים שמקימים פרויקט חדש",
+  "visualConcept": "ממשק תפעולי ניטרלי שנועד להחלפה ואינו זהות מותג",
+  "differentiation": "אין להשתמש בפרופיל זה בפרודקשן; לכל פרויקט נדרש קונספט חזותי עצמאי",
+  "navigationPattern": "sidebar",
+  "density": "comfortable",
+  "shapeLanguage": "soft-rectangular",
+  "typographyStrategy": "system-sans",
+  "colorStrategy": "neutral-blue-reference",
+  "motionStrategy": "minimal-functional",
+  "changedDimensions": [],
+  "referenceOnly": true
+}

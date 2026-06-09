@@ -1,1 +1,4 @@
 table_name,csv_file,description,risk_level
+users,users.csv,משתמשים ונתוני אימות מגובבים,High
+media_assets,media_assets.csv,מטא-דאטה של קבצים שהועלו ומחיקה רכה,High
+site_settings,site_settings.csv,רשומת הגדרות האתר הכלליות,High

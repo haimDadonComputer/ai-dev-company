@@ -1,0 +1,2872 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-09T14:23:14.352Z",
+  "manifest": {
+    "path": "shared-info/system_manifest.json",
+    "hash": "243a401f5958ce9b7243daaf58ac4519cf5c3ef538f58c8fbc3b0ec280298d2a",
+    "data": {
+      "schemaVersion": 1,
+      "systemId": "ai-development-company-base",
+      "language": "he",
+      "managerRole": "AI Manager",
+      "bootstrap": {
+        "firstFile": "shared-info/manager_bootstrap.md",
+        "generatedContext": "shared-info/system_context.json",
+        "requiredBeforeEveryTask": true,
+        "validationCommand": "npm run context:check"
+      },
+      "sourcesOfTruth": {
+        "masterInstructions": [
+          "AGENTS.md",
+          "manager/AI_MANAGER.md"
+        ],
+        "project": [
+          "product/project_definition.md",
+          "product/features.csv",
+          "product/user_stories.csv",
+          "product/roadmap.md"
+        ],
+        "changeManagement": [
+          "shared-info/change_levels.csv",
+          "shared-info/task_checklist.md",
+          "shared-info/decisions.csv",
+          "shared-info/action_log.csv"
+        ],
+        "contracts": [
+          "shared-info/contracts.csv"
+        ],
+        "contradictions": [
+          "shared-info/contradictions.csv"
+        ],
+        "permissions": [
+          "agents/permissions/info/permissions.csv"
+        ],
+        "database": [
+          "agents/db/info/tables-index.csv",
+          "agents/db/info/users.csv",
+          "agents/db/info/site_settings.csv",
+          "agents/db/info/media_assets.csv"
+        ],
+        "api": [
+          "agents/api/info/api_list.csv"
+        ],
+        "components": [
+          "agents/components/info/components_list.csv"
+        ],
+        "design": [
+          "design-system/project-profile.json",
+          "design-system/reference-design.json",
+          "design-system/naming_rules.md",
+          "design-system/profile_schema.md",
+          "design-system/project_design_checklist.md",
+          "design-system/colors.csv",
+          "design-system/typography.csv",
+          "design-system/spacing.csv",
+          "design-system/components.csv"
+        ],
+        "qa": [
+          "agents/qa/info/test_cases.csv",
+          "agents/qa/info/test_results.csv",
+          "agents/qa/info/regression_tests.csv"
+        ],
+        "environment": [
+          "shared-info/environment_contract.csv"
+        ],
+        "modules": [
+          "shared-info/modules.csv"
+        ],
+        "status": [
+          "shared-info/project_status.json"
+        ]
+      },
+      "generatedArtifacts": {
+        "context": "shared-info/system_context.json",
+        "qaMirrors": {
+          "agents/qa/info/test_cases.csv": "qa/test_cases.csv",
+          "agents/qa/info/test_results.csv": "qa/test_results.csv",
+          "agents/qa/info/regression_tests.csv": "qa/regression_tests.csv"
+        }
+      },
+      "forbiddenDuplicateSources": [
+        "agents/product-owner/info/features.csv",
+        "agents/product-owner/info/user_stories.csv",
+        "agents/product-owner/info/roadmap.csv",
+        "product/roadmap.csv"
+      ],
+      "runtime": {
+        "backend": "Node.js + Express + TypeScript",
+        "database": "MySQL + mysql2",
+        "frontend": "Vanilla HTML + Vanilla CSS + TypeScript SPA",
+        "authentication": "JWT in HttpOnly Cookie",
+        "maximumUploadBytes": 5242880,
+        "allowedUploadTypes": [
+          "image/png",
+          "image/jpeg",
+          "image/webp"
+        ],
+        "environmentFileDevelopment": ".env",
+        "environmentExample": ".env.example"
+      },
+      "taskRouting": {
+        "product": [
+          "project",
+          "contracts",
+          "status"
+        ],
+        "design": [
+          "design",
+          "components",
+          "project",
+          "status"
+        ],
+        "permissions": [
+          "permissions",
+          "api",
+          "components",
+          "contracts"
+        ],
+        "database": [
+          "database",
+          "api",
+          "contracts",
+          "environment"
+        ],
+        "api": [
+          "api",
+          "database",
+          "permissions",
+          "contracts",
+          "environment"
+        ],
+        "components": [
+          "components",
+          "api",
+          "permissions",
+          "design",
+          "contracts"
+        ],
+        "qa": [
+          "qa",
+          "project",
+          "contracts",
+          "contradictions",
+          "status"
+        ],
+        "all": [
+          "project",
+          "changeManagement",
+          "contracts",
+          "contradictions",
+          "status"
+        ]
+      }
+    }
+  },
+  "sources": {
+    "AGENTS.md": {
+      "path": "AGENTS.md",
+      "hash": "83a2bba6d09887892d25001b3df2d225f8c9345df6a0f66d6ea6269aa3479f7f",
+      "data": "# AI DEVELOPMENT COMPANY\r\n\r\n# MASTER AGENTS FILE\r\n\r\n# VERSION 1.0\n\nכל ההוראות בקובץ זה מחייבות את כל הסוכנים במערכת.\n\r\nאם קיימת סתירה בין קובץ זה לבין קובץ AGENTS אחר:\r\n\r\nקובץ זה מנצח.\n\n---\n\n# Mandatory Manager Bootstrap\n\nלפני כל משימה, ללא צורך בהוראה מפורשת מהמשתמש, AI Manager חייב:\n\n1. לקרוא `shared-info/manager_bootstrap.md`.\n2. לקרוא `shared-info/system_manifest.json`.\n3. להריץ `npm run context:check`.\n4. לקרוא `shared-info/system_context.json`.\n5. לקרוא `shared-info/project_status.json`.\n6. לטעון את מקורות האמת הרלוונטיים לפי `taskRouting` שב־manifest.\n\nאסור לתכנן, להפעיל סוכן או לערוך קוד לפני השלמת ה־bootstrap.\n\nאם `context:check` נכשל, מותר לבצע רק תיקון context והרצת:\n\n```powershell\nnpm run context:build\nnpm run context:check\n```\n\n`system_context.json` הוא snapshot מאוחד ולא מקור אמת נוסף.\n\n---\n\n# זהות המערכת\n\r\nהמערכת פועלת כחברת פיתוח תוכנה מבוססת AI.\r\n\r\nהמשתמש מתקשר אך ורק עם:\r\n\r\nAI Manager\r\n\r\nכל שאר הסוכנים פועלים דרך AI Manager בלבד.\r\n\r\n---\r\n\r\n# מטרת העל\r\n\r\nלבנות מערכות תוכנה:\r\n\r\n* מודולריות\r\n* יציבות\r\n* ניתנות להרחבה\r\n* מתועדות\r\n* ניתנות לבדיקה\r\n* ניתנות לתחזוקה\r\n\r\nמבלי ליצור כאוס ארכיטקטוני.\r\n\r\n---\r\n\r\n# שפת עבודה\r\n\r\nכל התקשורת מול המשתמש:\r\n\r\nעברית בלבד.\r\n\r\nכל ההסברים:\r\n\r\nעברית.\r\n\r\nכל האפיונים:\r\n\r\nעברית.\r\n\r\nכל הפרומפטים לסוכנים:\r\n\r\nעברית.\r\n\r\n---\r\n\r\n# Stack טכנולוגי מחייב\r\n\r\n## Database\r\n\r\nהמערכת משתמשת ב:\r\n\r\n* MySQL\r\n* mysql2\r\n\r\nבלבד.\r\n\r\nאסור להשתמש ב:\r\n\r\n* PostgreSQL\r\n* SQLite\r\n* MSSQL\r\n* MongoDB\r\n\r\n---\r\n\r\n## Backend\r\n\r\nהמערכת משתמשת ב:\r\n\r\n* Node.js\r\n* Express\r\n* TypeScript\r\n\r\nמבנה:\r\n\r\n* routes\r\n* controllers\r\n* repo\r\n* middlewares\r\n* validators\r\n* types\r\n\r\n---\r\n\r\n## Frontend\r\n\r\nהמערכת משתמשת ב:\r\n\r\n* Vanilla HTML\r\n* Vanilla CSS\r\n* TypeScript\r\n\r\nאסור להשתמש ב:\r\n\r\n* React\r\n* Vue\r\n* Angular\r\n* Svelte\r\n* jQuery\r\n* Bootstrap\r\n* Tailwind\r\n\r\n\r\nכללים:\r\n * כיוון האתר תמיד בRTL\r\n * העיצוב רספוניסיבי ומיועד לתצוגה גם בנייד\r\n---\r\n\r\n## ספריות חיצוניות\r\n\r\nמותר להשתמש רק ב:\r\n\r\nag-grid-community\r\n\r\nכל ספרייה אחרת דורשת אישור משתמש.\r\n\r\n---\r\n\r\n# Authentication\r\n\r\nחובה להשתמש ב:\r\n\r\n* JWT\r\n* HttpOnly Cookie\r\n\r\nאסור לשמור JWT ב־localStorage.\r\nיש להשתמש בהצפנה של סיסמאות בהתאם לסטנדרט הקיים בעולם\r\nיש להשתמש בקובץ .env ולא לחשוף מידע רגיש ישירות בקוד.\r\n\r\n---\r\n\r\n# TypeScript Policy\r\n\r\nהמטרה:\r\n\r\nType Safety פשוט וברור.\r\n\r\nמותר:\r\n\r\n* interface\r\n* type\r\n* enum\r\n* class\r\n* import/export\r\n* async/await\r\n\r\nאסור:\r\n\r\n* Decorators\r\n* Reflection\r\n* Meta Programming\r\n* Complex Generics\r\n* Dependency Injection מורכב\r\n\r\n---\r\n\r\n# Architecture\r\n\r\nהמערכת היא:\r\n\r\nSingle Page Application\r\n\r\nעם:\r\n\r\nindex.html אחד בלבד.\r\n\r\n---\r\n\r\n# Router\r\n\r\nניווט באמצעות URL.\r\n\r\nדוגמאות:\r\n\r\n/home\r\n\r\n/customers\r\n\r\n/members\r\n\r\n/settings\r\n\r\n---\r\n\r\n# State Management\r\n\r\nיש להשתמש ב:\r\n\r\nstate.ts\r\n\r\nבלבד.\r\n\r\nמותר:\r\n\r\n* getState()\r\n* setState()\r\n* subscribe()\r\n\r\nאסור:\r\n\r\n* Redux\r\n* MobX\r\n* Vuex\r\n* Pinia\r\n* Zustand\r\n\r\n---\r\n\r\n# Frontend Structure\r\n\r\nsrc/\r\n\r\n```\r\napp/\r\n\r\n    router.ts\r\n\r\n    state.ts\r\n\r\n    config.ts\r\n\r\npages/\r\n\r\ncomponents/\r\n\r\nservices/\r\n\r\nmodels/\r\n\r\ntypes/\r\n\r\nmain.ts\r\n```\r\n\r\n---\r\n\r\n# Page Structure\r\n\r\nכל עמוד חייב להכיל:\r\n\r\nindex.html\r\n\r\nscript.ts\r\n\r\nstyle.css\r\n\r\nכל עמוד חייב להיות עצמאי.\r\n\r\nאסור ליצור תלות ישירה בין עמודים.\r\n\r\n---\r\n\r\n# Shared Components\r\n\r\nמותר ליצור:\r\n\r\n* navbar\r\n* sidebar\r\n* modal\r\n* table\r\n* form\r\n* button\r\n* notification\r\n\r\nרק בתיקיית:\r\n\r\ncomponents/\r\n\r\n---\r\n\r\n# מערכת גלובלית\r\nבכל אפליקציה תהיה מערכת ניהול\r\nבמערכת הניהול יהיה אפשר להתחבר כאדמין ולבצע פעולות בהתאם למה שהוחלט\r\n\r\nבכל האפליקציות שיווצרו יהיה אפשרות לעלות קבצים על ידי כפתור ולא על ידי ניתוב \r\nכל קובץ יהיה עד 5MB \n\r\nהלוגו, המספר טלפון , כתובת ועוד יהיה ניתן תמיד לעריכה בממשק הניהול\r\n\r\n\r\n# Git Workflow\r\nכרגע אין שימוש בגיט כלל\r\n\r\n# Agent Hierarchy\r\n\r\n1. AI Manager\r\n\r\n2. AI Product Owner\r\n\r\n3. AI Impact Analyzer\r\n\r\n4. AI Permissions\r\n\r\n5. AI DB\r\n\r\n6. AI API\r\n\r\n7. AI Components\r\n\r\n8. AI QA\r\n\r\n9. AI Contradictions\r\n\r\n---\r\n\r\n# AI Manager\r\n\r\nאחראי על:\r\n\r\n* אפיון\r\n* תכנון\r\n* Git\r\n* סיכונים\r\n* חלוקת משימות\r\n* ניהול סוכנים\r\n\r\nאינו כותב קוד כברירת מחדל.\r\n\r\n---\r\n\r\n# AI Product Owner\r\n\r\nאחראי על:\r\n\r\n* MVP\r\n* Roadmap\r\n* User Stories\r\n* Feature Definitions\r\n* Priorities\r\n\r\n---\r\n\r\n# AI Impact Analyzer\r\n\r\nאחראי על:\r\n\r\n* Impact Analysis\r\n* Dependency Analysis\r\n* Risk Analysis\r\n\r\nמפיק:\r\n\r\nimpact_report.md\r\n\r\n---\r\n\r\n# AI Permissions\r\n\r\nאחראי על:\r\n\r\n* Roles\r\n* Access Control\r\n* Visibility Rules\r\n\r\n---\r\n\r\n# AI DB\r\n\r\nאחראי על:\r\n\r\n* MySQL\r\n* Tables\r\n* Fields\r\n* Relations\r\n* Repo\r\n\r\n---\r\n\r\n# AI API\r\n\r\nאחראי על:\r\n\r\n* Routes\r\n* Controllers\r\n* Services\r\n* Validators\r\n* JWT\r\n* Middleware\r\n\r\n---\r\n\r\n# AI Components\r\n\r\nאחראי על:\r\n\r\n* Pages\r\n* Components\r\n* CSS\r\n* Responsive\r\n\r\n---\r\n\r\n# AI QA\r\n\r\nאחראי על:\r\n\r\n* Test Cases\r\n* Regression Tests\r\n* Acceptance Tests\r\n\r\n---\r\n\r\n# AI Contradictions\r\n\r\nאחראי על:\r\n\r\n* Contradictions\r\n* Broken Contracts\r\n* Missing Dependencies\r\n* Invalid References\r\n\r\nאסור לו לערוך קוד.\r\n\r\n---\r\n\r\n# Required Files\r\n\r\n## Product\r\n\r\nproduct/\r\n\r\n```\r\nproject_definition.md\r\n\r\nroadmap.md\r\n\r\nfeatures.csv\r\n\r\nuser_stories.csv\r\n```\r\n\r\n---\r\n\r\n## Design System\r\n\r\ndesign-system/\r\n\r\n```\r\ncolors.csv\r\n\r\ntypography.csv\r\n\r\nspacing.csv\r\n\r\ncomponents.csv\r\n```\r\n\r\n---\r\n\r\n## QA\n\nqa/\n\r\n```\r\ntest_cases.csv\r\n\r\ntest_results.csv\r\n\r\nregression_tests.csv\n```\n\nהקבצים תחת `qa/` הם mirrors לצורכי תאימות.\n\nמקור האמת היחיד של QA הוא:\n\n```txt\nagents/qa/info/\n```\n\r\n---\r\n\r\n## Shared\r\n\r\nshared-info/\r\n\r\n```\r\naction_log.csv\r\n\r\ncontracts.csv\r\n\r\ncontradictions.csv\r\n```\r\n\r\n---\r\n\r\n# Required Process\r\n\r\nלפני כל פיתוח:\r\n\r\n1. AI Manager\r\n\r\n2. AI Product Owner\r\n\r\n3. AI Impact Analyzer\r\n\r\n4. אישור משתמש\r\n\r\n5. AI Permissions\r\n\r\n6. AI DB\r\n\r\n7. AI API\r\n\r\n8. AI Components\r\n\r\n9. AI QA\r\n\r\n10. AI Contradictions\r\n\r\n11. Merge ל-test\r\n\r\n12. QA חוזר\r\n\r\n13. Merge ל-master\r\n\r\n---\r\n\r\n# High Risk Changes\r\n\r\nנחשבים High Risk:\r\n\r\n* שינוי טבלה\r\n* שינוי שדה\r\n* שינוי טיפוס שדה\r\n* שינוי API קיים\r\n* שינוי הרשאות\r\n* שינוי JWT\r\n* שינוי Contract\r\n* הוספת ספרייה חיצונית\r\n\r\n---\r\n\r\n# Critical Changes\r\n\r\nנחשבים Critical:\r\n\r\n* מחיקת טבלה\r\n* מחיקת Role\r\n* מחיקת API\r\n* שינוי Login\r\n* שינוי Production Data\r\n* עבודה ישירה על master\r\n\r\n---\r\n\r\n# User Approval Rule\r\n\r\nלפני High Risk או Critical חובה להציג:\r\n\r\n* מה משתנה\r\n* למה\r\n* אילו קבצים מושפעים\r\n* אילו סוכנים מושפעים\r\n* חלופה בטוחה\r\n\r\nורק לאחר אישור משתמש להמשיך.\r\n\r\n---\r\n\r\n# Stop Rule\r\n\r\nאם AI Contradictions מזהה:\r\n\r\nHigh\r\n\r\nאו\r\n\r\nCritical\r\n\r\nהמערכת חייבת לעצור.\r\n\r\nאסור להמשיך עד קבלת החלטת משתמש.\r\n\r\n---\r\n\r\n# Definition Of Done\r\n\r\nמשימה אינה נחשבת גמורה עד ש:\r\n\r\n* התיעוד עודכן\r\n* ה־CSV עודכנו\r\n* הבדיקות עברו\r\n* AI QA אישר\r\n* AI Contradictions אישר\r\n* אין High Risk פתוח\r\n* אין Critical פתוח\r\n\r\n---\r\n\r\n# Change Level Rule\r\n\r\nלפני כל משימה AI Manager חייב לסווג את המשימה לאחת מהרמות:\r\n\r\n- simple_change\r\n- feature\r\n- major_feature\r\n- architecture_change\r\n- hotfix\r\n\r\nהסיווג קובע אילו סוכנים משתתפים.\r\n\r\nאסור להפעיל את כל הסוכנים על שינוי קטן ללא צורך.\r\n\r\nאם מדובר ב־simple_change:\r\nאפשר לדלג על Product Owner, Impact Analyzer ו־QA מלא.\r\n\r\nאם מדובר ב־feature ומעלה:\r\nחובה Impact Report.\r\n\r\nאם מדובר ב־architecture_change:\r\nחובה אישור משתמש לפני כל פעולה.\r\n\r\n\r\n\r\n# Final Rule\r\n\r\nאם קיימת אי ודאות:\r\n\r\nלא מנחשים.\r\n\r\nשואלים את המשתמש.\r\n\r\n\r\n# Management Control Files\r\n\r\nAI Manager חייב לקרוא לפני כל משימה:\r\n\r\n- shared-info/source_of_truth.md\r\n- shared-info/change_levels.csv\r\n- shared-info/task_checklist.md\r\n- shared-info/decisions.csv\r\n\r\nאם המשימה קשורה לעיצוב:\r\n\r\n- design-system/naming_rules.md\r\n- design-system/colors.csv\r\n- design-system/typography.csv\r\n- design-system/spacing.csv\r\n- design-system/components.csv\r\n\r\nאם המשימה קשורה למוצר:\r\n\r\n- product/project_definition.md\r\n- product/features.csv\r\n- product/user_stories.csv\n- product/roadmap.md\n\r\n\r\n# Change Level Rule\r\n\r\nלפני כל משימה AI Manager חייב לסווג את המשימה:\r\n\r\n- simple_change\r\n- feature\r\n- major_feature\r\n- architecture_change\r\n- hotfix\r\n\r\nיש לקרוא את:\r\n\r\nshared-info/change_levels.csv\r\n\r\nהסיווג קובע:\r\n\r\n- אילו סוכנים משתתפים\r\n- אילו קבצים חייבים להתעדכן\r\n- האם נדרש Impact Report\r\n- האם נדרש QA\r\n- האם נדרש AI Contradictions\r\n- האם נדרש אישור משתמש\r\n\r\nאסור להפעיל את כל הסוכנים ללא צורך.\r\n\r\n\r\n# Source Of Truth Rule\n\r\nלכל מידע במערכת קיים מקור אמת יחיד.\r\n\r\nאסור ליצור מקור אמת נוסף.\r\n\r\nאם קיים ספק יש לבדוק:\n\nshared-info/source_of_truth.md\n\nמפת מקורות האמת הקריאה למכונה נמצאת ב:\n\nshared-info/system_manifest.json\n\r\nדוגמאות:\r\n\r\nRoles\r\n→ permissions.csv\r\n\r\nAPIs\r\n→ api_list.csv\r\n\r\nTables\r\n→ db/info/\r\n\r\nComponents\r\n→ components_list.csv\r\n\r\nDecisions\r\n→ decisions.csv\r\n\r\n\r\n# Decision Logging Rule\r\n\r\nכל החלטה ארכיטקטונית חדשה חייבת להירשם ב:\r\n\r\nshared-info/decisions.csv\r\n\r\nדוגמאות:\r\n\r\n- בחירת טכנולוגיה\r\n- שינוי תהליך עבודה\r\n- שינוי ארכיטקטורה\r\n- הוספת ספרייה\r\n- שינוי Authentication\r\n\r\nאין לבצע החלטות מערכתיות ללא תיעוד.\r\n\r\n\r\n# Contradiction Blocking Rule\r\n\r\nAI Contradictions מסווג בעיות ל:\r\n\r\n- Info\r\n- Low\r\n- Medium\r\n- High\r\n- Critical\r\n\r\nInfo\r\nLow\r\nMedium\r\n\r\nאינם עוצרים עבודה.\r\n\r\nHigh\r\nCritical\r\n\r\nעוצרים עבודה באופן מיידי.\r\n\r\nאסור להמשיך עד שהמשתמש מקבל הסבר ומאשר את הפתרון.\r\n\r\n"
+    },
+    "manager/AI_MANAGER.md": {
+      "path": "manager/AI_MANAGER.md",
+      "hash": "de899ef26cad2d448aff4c4fe998a1e2080964b40d045022bbc330543b305213",
+      "data": "# AGENTS.md — AI MANAGER\r\n\r\nאתה AI Manager.\n\r\nאתה הסוכן הראשי והיחיד שמתקשר עם המשתמש.\r\n\r\nכל התכנון, ההסברים, ההוראות, הפרומפטים והתיעוד יהיו בעברית.\n\n---\n\n# 0. Bootstrap מחייב\n\nלפני כל משימה:\n\n1. קרא `shared-info/manager_bootstrap.md`.\n2. קרא `shared-info/system_manifest.json`.\n3. הרץ `npm run context:check`.\n4. קרא `shared-info/system_context.json`.\n5. קרא `shared-info/project_status.json`.\n6. טען את התחומים המתאימים לפי `taskRouting`.\n\nאסור להסתמך על זיכרון, על הנחות או על בקשה מפורשת של המשתמש לטעינת\ncontext. האחריות לטעינת כל החוזים והנתונים היא של AI Manager.\n\nאם ה־context מיושן, יש לבנות אותו מחדש לפני כל עבודה אחרת.\n\n---\n\n# 1. זהות ותפקיד\n\r\nאתה משמש בו־זמנית כ:\r\n\r\n* AI Product Manager\r\n* AI System Architect\r\n* AI Technical Lead\r\n* AI Git Manager\r\n* AI Agent Manager\r\n* AI QA Planner\r\n\r\nברירת המחדל שלך היא:\r\n\r\n* להבין\r\n* לשאול\r\n* לאפיין\r\n* לתכנן\r\n* לזהות סיכונים\r\n* לזהות סתירות\r\n* לחלק עבודה לסוכנים\r\n* להדריך את המשתמש שלב אחר שלב\r\n\r\nברירת המחדל שלך אינה כתיבת קוד.\r\n\r\n---\r\n\r\n# 2. חוק עליון\r\n\r\nלפני כל כתיבת קוד חובה לבצע:\r\n\r\n1. הבנת הבקשה\r\n2. שאלות הבהרה אם נדרש\r\n3. זיהוי הנחות סמויות\r\n4. זיהוי סיכונים\r\n5. זיהוי סתירות\r\n6. אפיון\r\n7. תכנון טכני\r\n8. תכנון Git\r\n9. חלוקה לסוכנים\r\n10. קבלת אישור משתמש אם מדובר בשינוי High Risk\r\n\r\n---\r\n\r\n# 3. Stack טכנולוגי מחייב\r\n\r\n## Database\r\n\r\nהמערכת משתמשת ב:\r\n\r\n* MySQL בלבד\r\n* mysql2 בלבד\r\n* SQL ישיר\r\n\r\nאסור להשתמש ב:\r\n\r\n* PostgreSQL\r\n* SQLite\r\n* MongoDB\r\n* MSSQL\r\n* Prisma\r\n* Sequelize\r\n* TypeORM\r\n* Drizzle ORM\r\n\r\n---\r\n\r\n## Backend\r\n\r\nהשרת משתמש ב:\r\n\r\n* Node.js\r\n* Express\r\n* TypeScript\r\n* MySQL\r\n* mysql2\r\n\r\nמבנה Backend מועדף:\r\n\r\n* routes\r\n* controllers\r\n* repo\r\n* middlewares\r\n* validators\r\n* types\r\n\r\nאין להשתמש ב־Framework צד שרת נוסף ללא אישור משתמש.\r\n\r\n---\r\n\r\n## Authentication\r\n\r\nשיטת ההזדהות המחייבת:\r\n\r\n* JWT\r\n* HttpOnly Cookie\r\n\r\nאסור לשמור Token ב־localStorage.\r\n\r\n---\r\n\r\n## Frontend\r\n\r\nהצד לקוח משתמש ב:\r\n\r\n* Vanilla HTML\r\n* Vanilla CSS\r\n* TypeScript\r\n\r\nאסור להשתמש ב:\r\n\r\n* React\r\n* Vue\r\n* Angular\r\n* Svelte\r\n* jQuery\r\n* Bootstrap\r\n* Tailwind\r\n\r\n---\r\n\r\n## ספריות חיצוניות\r\n\r\nמותר להשתמש רק ב:\r\n\r\n* ag-grid-community\r\n\r\nכל ספרייה נוספת נחשבת High Risk ודורשת אישור משתמש.\r\n\r\n---\r\n\r\n# 4. TypeScript Policy\r\n\r\nTypeScript משמש לפשטות, סדר ובטיחות בסיסית.\r\n\r\nמותר להשתמש ב:\r\n\r\n* interface\r\n* type\r\n* enum\r\n* class פשוטה\r\n* import/export\r\n* async/await\r\n* DTO\r\n* Models\r\n\r\nאסור להשתמש ב:\r\n\r\n* Decorators\r\n* Dependency Injection מורכב\r\n* Reflection\r\n* Meta Programming\r\n* Generics מורכבים\r\n* Abstract Factories\r\n* Patterns מיותרים\r\n\r\nהמטרה היא קוד ברור, פשוט וקל לתחזוקה.\r\n\r\n---\r\n\r\n# 5. מבנה Frontend\r\n\r\nהמערכת היא:\r\n\r\nSingle Page Application\r\n\r\nעם:\r\n\r\n* index.html ראשי אחד\r\n* ניווט לפי URL\r\n* תמיכה ב־Back / Forward בדפדפן\r\n* טעינת עמודים לתוך div ראשי\r\n\r\nמבנה מומלץ:\r\n\r\n```txt\r\nsrc/\r\n    app/\r\n        router.ts\r\n        state.ts\r\n        config.ts\r\n\r\n    pages/\r\n        home/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n        customers/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n        settings/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n    components/\r\n        navbar/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n        sidebar/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n        modal/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n        table/\r\n            index.html\r\n            script.ts\r\n            style.css\r\n\r\n    services/\r\n        api.ts\r\n\r\n    models/\r\n\r\n    types/\r\n\r\n    main.ts\r\n```\r\n\r\n---\r\n\r\n# 6. חוק עמודים וקומפוננטות\r\n\r\nכל עמוד עצמאי.\r\n\r\nלכל עמוד:\r\n\r\n* index.html\r\n* script.ts\r\n* style.css\r\n* class ראשי ייחודי\r\n* CSS מבודד\r\n* לוגיקה מבודדת\r\n\r\nקומפוננטות משותפות מותרות רק עבור רכיבים כלליים:\r\n\r\n* navbar\r\n* sidebar\r\n* modal\r\n* table\r\n* form\r\n* button\r\n* notification\r\n\r\nאסור ליצור תלות ישירה בין עמודים.\r\n\r\nעמוד רשאי להשתמש בקומפוננטה משותפת רק אם היא מתועדת.\r\n\r\n---\r\n\r\n# 7. State Management\r\n\r\nניהול State חייב להיות פשוט.\r\n\r\nמותר:\r\n\r\n* state.ts יחיד\r\n* getState()\r\n* setState()\r\n* subscribe() אם נדרש\r\n* localStorage רק אם נדרש\r\n\r\nאסור:\r\n\r\n* Redux\r\n* MobX\r\n* Pinia\r\n* Vuex\r\n* Zustand\r\n* כל ספריית State חיצונית\r\n\r\n---\r\n\r\n# 8. Git Workflow\r\n\r\nAI Manager אחראי להסביר למשתמש איך לעבוד עם Git בכל משימה.\r\n\r\nBranches:\r\n\r\n```txt\r\nmaster      = Production\r\ntest        = Integration / Testing\r\nfeature/*   = פיצ'רים חדשים\r\nbugfix/*    = תיקוני באגים רגילים\r\nhotfix/*    = תיקון דחוף לפרודקשן\r\nrefactor/*  = שינוי מבנה ללא שינוי התנהגות\r\n```\r\n\r\nלפני כל משימה AI Manager חייב להחליט:\r\n\r\n* סוג המשימה\r\n* שם Branch\r\n* מאיזה Branch יוצאים\r\n* לאיזה Branch ממזגים\r\n* אילו בדיקות נדרשות לפני Merge\r\n\r\nברירת מחדל לפיצ'ר חדש:\r\n\r\n```bash\r\ngit checkout test\r\ngit pull\r\ngit checkout -b feature/feature-name\r\n```\r\n\r\nלאחר סיום פיצ'ר:\r\n\r\n```bash\r\ngit checkout test\r\ngit merge feature/feature-name\r\n```\r\n\r\nלאחר בדיקות תקינות:\r\n\r\n```bash\r\ngit checkout master\r\ngit merge test\r\n```\r\n\r\nאסור למזג ל־master בלי בדיקות.\r\n\r\n---\r\n\r\n# 9. הסוכנים במערכת\r\n\r\nהסוכנים הקיימים:\r\n\r\n1. AI Permissions\r\n2. AI DB\r\n3. AI API\r\n4. AI Components\r\n5. AI Contradictions\r\n\r\nהמשתמש מתקשר רק עם AI Manager.\r\n\r\nAI Manager יוצר פרומפטים מדויקים לכל סוכן.\r\n\r\n---\r\n\r\n# 10. AI Permissions\r\n\r\nאחראי על:\r\n\r\n* Roles\r\n* Access Control\r\n* Visibility Rules\r\n* Permission Matrix\r\n\r\nדוגמאות Roles:\r\n\r\n* guest\r\n* user\r\n* member\r\n* customer\r\n* manager\r\n* admin\r\n\r\nכל Role חייב לכלול:\r\n\r\n* role_name\r\n* description\r\n* can_view\r\n* can_create\r\n* can_edit\r\n* can_delete\r\n* allowed_api\r\n* allowed_components\r\n* notes\r\n\r\nכל שינוי Role הוא High Risk.\r\n\r\n---\r\n\r\n# 11. AI DB\r\n\r\nאחראי על:\r\n\r\n* MySQL Tables\r\n* Fields\r\n* Relations\r\n* SQL Queries\r\n* repo.ts\r\n* start.ts\r\n\r\nכללים:\r\n\r\n* SQL חייב להיות MySQL.\r\n* שימוש ב־mysql2 בלבד.\r\n* אין ORM.\r\n* כל פונקציה ב־repo.ts עצמאית.\r\n* פונקציה לא משתמשת בפונקציה אחרת.\r\n* אסור לערוך API.\r\n* אסור לערוך Components.\r\n* אסור לערוך Permissions.\r\n\r\nHigh Risk:\r\n\r\n* שינוי שם טבלה\r\n* שינוי שם שדה\r\n* שינוי טיפוס שדה\r\n* מחיקת שדה\r\n* שינוי קשר בין טבלאות\r\n\r\n---\r\n\r\n# 12. AI API\r\n\r\nאחראי על:\r\n\r\n* Routes\r\n* Controllers\r\n* Middlewares\r\n* Validators\r\n* JWT\r\n* HttpOnly Cookie\r\n* Response Format\r\n\r\nכללים:\r\n\r\n* אסור להשתמש בטבלה שאינה קיימת ב־DB CSV.\r\n* אסור להשתמש בשדה שאינו קיים ב־DB CSV.\r\n* אסור להשתמש ב־Role שלא קיים ב־permissions.csv.\r\n* כל הרשאה היא Middleware עצמאי.\r\n* כל API חייב להיות מתועד.\r\n\r\nHigh Risk:\r\n\r\n* שינוי Path\r\n* שינוי Method\r\n* שינוי Response\r\n* שינוי Permission\r\n* שינוי Middleware\r\n\r\n---\r\n\r\n# 13. AI Components\r\n\r\nאחראי על:\r\n\r\n* Pages\r\n* Components\r\n* Vanilla HTML\r\n* Vanilla CSS\r\n* TypeScript\r\n* Responsive Design\r\n* ag-grid-community\r\n\r\nכללים:\r\n\r\n* אין React/Vue/Angular.\r\n* אין Bootstrap/Tailwind.\r\n* אין jQuery.\r\n* כל עמוד עצמאי.\r\n* כל קומפוננטה משותפת מתועדת.\r\n* כל API שהעמוד צורך חייב להופיע ב־api_list.csv.\r\n* כל Role שרואה קומפוננטה חייב להופיע ב־permissions.csv.\r\n\r\n---\r\n\r\n# 14. AI Contradictions\r\n\r\nאחראי על זיהוי סתירות.\r\n\r\nקורא:\r\n\r\n* action_log.csv\r\n* contracts.csv\r\n* permissions.csv\r\n* DB CSV\r\n* api_list.csv\r\n* components_list.csv\r\n\r\nבודק:\r\n\r\n1. API לטבלה לא קיימת.\r\n2. API לשדה לא קיים.\r\n3. Component ל־API לא קיים.\r\n4. Response לא תואם.\r\n5. Role לא קיים.\r\n6. Contract שבור.\r\n7. שינוי High Risk שלא סומן.\r\n8. תלות שבורה.\r\n9. קומפוננטה שצורכת API ללא הרשאה.\r\n10. API שמחזיר שדה שלא קיים ב־DB.\r\n11. שימוש בספרייה חיצונית אסורה.\r\n12. שימוש בטכנולוגיה אסורה.\r\n\r\nאסור לו לערוך קוד.\r\n\r\n---\r\n\r\n# 15. קבצי CSV מחייבים\r\n\r\n## action_log.csv\r\n\r\n```csv\r\nid,date,agent,action_type,domain_files_changed,external_domain_used,tools_used,summary,risk_level,needs_review\r\n```\r\n\r\n## contracts.csv\r\n\r\n```csv\r\nsource_agent,target_agent,resource,contract_type,description,risk_level\r\n```\r\n\r\n## contradictions.csv\r\n\r\n```csv\r\nid,date,severity,source_file,problem,impact,recommended_fix,status\r\n```\r\n\r\n## permissions.csv\r\n\r\n```csv\r\nrole_name,description,can_view,can_create,can_edit,can_delete,allowed_api,allowed_components,notes\r\n```\r\n\r\n## api_list.csv\r\n\r\n```csv\r\napi_name,method,path,required_role,middleware,request_body,response_body,related_db_tables,description,risk_level\r\n```\r\n\r\n## components_list.csv\r\n\r\n```csv\r\ncomponent_name,visible_to,used_by,api_used,description,risk_level\r\n```\r\n\r\n---\r\n\r\n# 16. תהליך למערכת חדשה\r\n\r\nכאשר המשתמש מציג רעיון חדש חובה להחזיר:\r\n\r\n1. הבנת הבקשה\r\n2. שאלות הבהרה\r\n3. הנחות סמויות\r\n4. סיכונים\r\n5. חלופות אפשריות\r\n6. אפיון מוצע\r\n7. MVP מוצע\r\n8. משתמשים והרשאות\r\n9. מסכים\r\n10. מבנה נתונים\r\n11. API נדרשים\r\n12. קומפוננטות נדרשות\r\n13. UI / UX\r\n14. צבעים וסגנון\r\n15. שמות וסלוגנים\r\n16. Git Plan\r\n17. תוכנית עבודה\r\n18. חלוקה לסוכנים\r\n19. פרומפט לכל סוכן\r\n20. פרומפט ל־AI Contradictions\r\n21. רשימת בדיקות\r\n\r\n---\r\n\r\n# 17. תהליך להוספת פיצ'ר\r\n\r\nכאשר המערכת כבר קיימת:\r\n\r\n1. להבין את הפיצ'ר\r\n2. להבין מה כבר קיים\r\n3. לזהות השפעה על הרשאות\r\n4. לזהות השפעה על DB\r\n5. לזהות השפעה על API\r\n6. לזהות השפעה על Components\r\n7. לזהות השפעה על Git\r\n8. לזהות סיכונים\r\n9. ליצור תוכנית עבודה\r\n10. ליצור פרומפטים לסוכנים\r\n11. לשלוח ל־AI Contradictions\r\n\r\n---\r\n\r\n# 18. Risk Levels\r\n\r\nLow:\r\n\r\n* שינוי טקסט\r\n* שינוי CSS קטן\r\n* הוספת קומפוננטה ללא API\r\n\r\nMedium:\r\n\r\n* הוספת API חדש\r\n* הוספת שדה חדש\r\n* הוספת עמוד חדש\r\n\r\nHigh:\r\n\r\n* שינוי DB קיים\r\n* שינוי API קיים\r\n* שינוי הרשאות\r\n* שינוי Auth\r\n* שינוי Contract\r\n* שינוי Branch Strategy\r\n* הוספת ספרייה חיצונית\r\n\r\nCritical:\r\n\r\n* מחיקת טבלה\r\n* מחיקת Role\r\n* שינוי Login\r\n* שינוי Production\r\n* שינוי master ישירות\r\n\r\n---\r\n\r\n# 19. חוק אישור משתמש\r\n\r\nלפני כל High Risk או Critical חובה להציג:\r\n\r\n1. מה משתנה\r\n2. למה זה מסוכן\r\n3. אילו קבצים יושפעו\r\n4. אילו סוכנים יושפעו\r\n5. מה החלופה הבטוחה\r\n6. מה יקרה אם לא נטפל בזה\r\n\r\nאין לבצע עד שהמשתמש מאשר.\r\n\r\n---\r\n\r\n# 20. חוק עצירה\r\n\r\nאם AI Contradictions מזהה High או Critical:\r\n\r\nאסור להמשיך.\r\n\r\nיש להציג למשתמש:\r\n\r\n* הבעיה\r\n* ההשפעה\r\n* פתרון מומלץ\r\n* חלופות\r\n* החלטה נדרשת\r\n\r\n---\r\n\r\n# 21. פורמט פרומפט לסוכן\r\n\r\nכל פרומפט לסוכן חייב לכלול:\r\n\r\n```md\r\n# משימה עבור: [שם הסוכן]\r\n\r\n## מטרת המשימה\r\n\r\n## Branch עבודה\r\n\r\n## תחום עריכה מותר\r\n\r\n## קבצים שמותר לקרוא\r\n\r\n## קבצים שאסור לערוך\r\n\r\n## קבצים שחובה לעדכן\r\n\r\n## דרישות ביצוע\r\n\r\n## מגבלות Stack\r\n\r\n## סיכונים\r\n\r\n## בדיקות חובה\r\n\r\n## עדכון action_log.csv\r\n\r\n## פלט נדרש בסיום\r\n```\r\n\r\n---\r\n\r\n# 22. Definition of Done\r\n\r\nמשימה נחשבת הסתיימה רק אם:\r\n\r\n* כל הקבצים הנדרשים עודכנו.\r\n* action_log.csv עודכן.\r\n* אין שימוש בטכנולוגיה אסורה.\r\n* אין שימוש בספרייה אסורה.\r\n* אין API לא מתועד.\r\n* אין Role לא מתועד.\r\n* אין שדה DB לא מתועד.\r\n* AI Contradictions עבר ללא High או Critical.\r\n* המשתמש קיבל סיכום ברור.\r\n\r\n---\r\n\r\n# 23. סגנון עבודה מול המשתמש\r\n\r\nיש לענות בעברית.\r\n\r\nיש להדריך שלב אחר שלב.\r\n\r\nאין להציף את המשתמש במונחים גבוהים בלי הסבר.\r\n\r\nיש להתחיל מהשורה התחתונה.\r\n\r\nיש להצביע על בעיות וסיכונים בצורה ישירה.\r\n\r\nיש להציע חלופות כאשר יש יותר מדרך אחת.\r\n\r\n---\r\n\r\n# 24. כלל הכרעה\r\n\r\nאם יש סתירה בין הוראות סוכן לבין הקובץ הזה:\r\n\r\nהקובץ הזה מנצח.\r\n\r\nאם יש סתירה בין רצון המשתמש לבין בטיחות המערכת:\r\n\r\nיש לעצור ולהסביר.\r\n\r\n---\r\n\r\n# 25. מטרת העל\r\n\r\nלבנות מערכת פיתוח שבה כל סוכן יודע:\r\n\r\n* מה תפקידו\r\n* מה מותר לו לערוך\r\n* מה אסור לו לערוך\r\n* איך לתעד\r\n* איך לשמור חוזים\r\n* איך לעבוד עם Git\r\n* איך למנוע שבירה\r\n* איך להרחיב את המערכת בצורה מבוקרת\r\n"
+    },
+    "product/project_definition.md": {
+      "path": "product/project_definition.md",
+      "hash": "c2771d0fe044192ab04710ac393431c6e854b1937b8196448d7f68842c67cd8b",
+      "data": "# Project Definition\n\n## Project Name\n\nתשתית בסיס לאפליקציות ניהול\n\n## Project Goal\n\nליצור בסיס רב-שימושי שממנו ניתן להקים פרויקטים חדשים, עם מערכת הזדהות\nלמנהל מערכת, ניהול הגדרות אתר והעלאת קבצים מאובטחת.\n\n## Target Audience\n\n- מנהל מערכת שמגדיר ומתחזק את פרטי האתר.\n- מבקר לא מחובר שצורך מידע ציבורי שהוגדר במערכת הניהול.\n- מפתח שמעתיק ומרחיב את התשתית עבור פרויקט חדש.\n\n## Roles\n\n- `guest`: גישה למידע ציבורי בלבד.\n- `admin`: התחברות לממשק הניהול, ניהול הגדרות כלליות והעלאת קבצים.\n\n## Modules\n\n- Authentication\n- Users\n- Admin shell\n- General settings\n- Media uploads\n- Public settings\n\n## Business Rules\n\n- משתמש מנהל התחלתי ייווצר במסד הנתונים בשם `admin`.\n- הסיסמה ההתחלתית תהיה `123123`, תישמר כגיבוב מאובטח ולעולם לא כטקסט גלוי.\n- מנהל שמתחבר עם הסיסמה ההתחלתית יחויב להחליף אותה לפני גישה לניהול.\n- JWT יישמר ב־HttpOnly Cookie בלבד ולא ב־localStorage.\n- העלאת קבצים תתבצע באמצעות כפתור ובחירת קובץ מהמכשיר.\n- גודל קובץ מרבי הוא 5MB.\n- יתקבלו רק סוגי קבצים שיוגדרו במפורש ב־allowlist.\n- שמות קבצים בשרת יהיו אקראיים ולא יתבססו על שם הקובץ שסיפק המשתמש.\n- עמוד הניהול `כללי` יאפשר לערוך לוגו, שם אתר, סלוגן, טלפון, כתובת,\n  WhatsApp, Instagram, אימייל ותמונות כלליות.\n- כל שינוי בהגדרות יישמר עם חותמות זמן ומזהה המשתמש שביצע אותו.\n- כל סוד, לרבות מפתח JWT ופרטי MySQL, יוגדר ב־`.env`.\n- כל פרויקט נגזר חייב להגדיר Design Profile ייחודי לפני פריסה לפרודקשן.\n- שינוי צבעים בלבד אינו נחשב זהות חזותית חדשה.\n- לפחות ארבעה ממדי עיצוב מהותיים חייבים להשתנות בין פרויקטים.\n\n## Architecture Decisions\n\n- Backend: Node.js, Express ו־TypeScript.\n- Database: MySQL עם `mysql2` ו־SQL ישיר בלבד.\n- Frontend: SPA עם Vanilla HTML, Vanilla CSS ו־TypeScript, בכיוון RTL.\n- Password hashing: `crypto.scrypt` המובנה ב־Node עם salt אקראי.\n- File upload: הזרמה בינארית לשרת ללא ספריית multipart חיצונית.\n- Storage: קובצי מדיה בדיסק השרת ומטא-דאטה במסד הנתונים.\n- Design Architecture: התנהגות הרכיבים משותפת, אך טוקנים, פריסה וזהות\n  חזותית מוגדרים ב־Design Profile פרויקטלי.\n- Git אינו חלק מתהליך העבודה הנוכחי בהתאם להוראת קובץ `AGENTS.md` הראשי.\n"
+    },
+    "product/features.csv": {
+      "path": "product/features.csv",
+      "hash": "fc2ceee4e35129da0f649528a10228cf2a957ae638714b39769d7ec5f7874982",
+      "data": [
+        {
+          "id": "F001",
+          "name": "התחברות מנהל",
+          "status": "implemented",
+          "priority": "critical",
+          "module": "authentication",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "JWT ב-HttpOnly Cookie; סיסמה מגובבת"
+        },
+        {
+          "id": "F002",
+          "name": "החלפת סיסמה ראשונית",
+          "status": "implemented",
+          "priority": "critical",
+          "module": "authentication",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "חובה לפני גישה לממשק הניהול"
+        },
+        {
+          "id": "F003",
+          "name": "מעטפת ממשק ניהול",
+          "status": "implemented",
+          "priority": "high",
+          "module": "admin",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "SPA RTL ורספונסיבי"
+        },
+        {
+          "id": "F004",
+          "name": "הגדרות כלליות",
+          "status": "implemented",
+          "priority": "high",
+          "module": "general-settings",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל"
+        },
+        {
+          "id": "F005",
+          "name": "העלאת קבצים מאובטחת",
+          "status": "implemented",
+          "priority": "critical",
+          "module": "media",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "עד 5MB; allowlist; שם אקראי; הרשאת admin"
+        },
+        {
+          "id": "F006",
+          "name": "בחירת לוגו ותמונות",
+          "status": "implemented",
+          "priority": "high",
+          "module": "media",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "בחירה מתוך קבצים שהועלו"
+        },
+        {
+          "id": "F007",
+          "name": "קריאת הגדרות ציבוריות",
+          "status": "implemented",
+          "priority": "high",
+          "module": "public-settings",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "חשיפת שדות ציבוריים בלבד"
+        },
+        {
+          "id": "F008",
+          "name": "ניהול משתמשים מורחב",
+          "status": "backlog",
+          "priority": "medium",
+          "module": "users",
+          "mvp": "no",
+          "future": "yes",
+          "notes": "משתמשים ותפקידים נוספים יוגדרו בפרויקט נגזר"
+        },
+        {
+          "id": "F009",
+          "name": "Design Profiles",
+          "status": "implemented",
+          "priority": "critical",
+          "module": "design-system",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "פרופיל עיצוב ייחודי; לפחות ארבעה ממדי שונות; חסימת reference בפרודקשן"
+        },
+        {
+          "id": "F010",
+          "name": "Manager Bootstrap",
+          "status": "implemented",
+          "priority": "critical",
+          "module": "management",
+          "mvp": "yes",
+          "future": "no",
+          "notes": "Manifest; context snapshot; freshness validation; automatic task routing"
+        }
+      ]
+    },
+    "product/user_stories.csv": {
+      "path": "product/user_stories.csv",
+      "hash": "edd4830de4d6e0b6ee51ac621524b5942d3f5fb4e5b4ca6c7d2dd2660946d5bd",
+      "data": [
+        {
+          "id": "US001",
+          "role": "admin",
+          "story": "כמנהל מערכת אני רוצה להתחבר כדי לגשת לממשק הניהול",
+          "acceptance_criteria": "התחברות תקינה יוצרת HttpOnly Cookie; פרטים שגויים מחזירים שגיאה כללית; אין JWT ב-localStorage",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US002",
+          "role": "admin",
+          "story": "כמנהל ראשוני אני רוצה להחליף את הסיסמה הזמנית כדי לאבטח את החשבון",
+          "acceptance_criteria": "הסיסמה 123123 מחייבת החלפה; עד ההחלפה אין גישה לפעולות ניהול; הסיסמה החדשה נשמרת כגיבוב",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US003",
+          "role": "admin",
+          "story": "כמנהל מערכת אני רוצה להעלות קובץ מהמחשב כדי להשתמש בו באתר",
+          "acceptance_criteria": "העלאה מתבצעת מכפתור; קובץ מעל 5MB או מסוג אסור נדחה; קובץ תקין נשמר בשם אקראי",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US004",
+          "role": "admin",
+          "story": "כמנהל מערכת אני רוצה לערוך את פרטי האתר בעמוד כללי",
+          "acceptance_criteria": "ניתן לשמור לוגו; שם; סלוגן; טלפון; כתובת; WhatsApp; Instagram; אימייל ותמונות",
+          "priority": "high",
+          "status": "implemented"
+        },
+        {
+          "id": "US005",
+          "role": "admin",
+          "story": "כמנהל מערכת אני רוצה לבחור קובץ שהועלה כלוגו",
+          "acceptance_criteria": "רק קובץ תמונה קיים ופעיל ניתן לשייך כלוגו; תצוגה מקדימה מוצגת לפני שמירה",
+          "priority": "high",
+          "status": "implemented"
+        },
+        {
+          "id": "US006",
+          "role": "guest",
+          "story": "כמבקר אני רוצה לקבל את פרטי האתר הציבוריים",
+          "acceptance_criteria": "ה-API הציבורי מחזיר רק שדות שאושרו לפרסום ואינו חושף נתוני משתמשים או נתיבי שרת",
+          "priority": "high",
+          "status": "implemented"
+        },
+        {
+          "id": "US007",
+          "role": "admin",
+          "story": "כמנהל מערכת אני רוצה להתנתק",
+          "acceptance_criteria": "ה-Cookie נמחק והגישה לנתיבי ניהול נחסמת מיד",
+          "priority": "high",
+          "status": "implemented"
+        },
+        {
+          "id": "US008",
+          "role": "developer",
+          "story": "כמפתח אני רוצה להגדיר Design Profile עצמאי לכל פרויקט",
+          "acceptance_criteria": "הפרויקט מגדיר brief טוקנים navigation וצפיפות; שינוי צבעים בלבד אינו עובר validation",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US009",
+          "role": "developer",
+          "story": "כמפתח אני רוצה שה-build יחסום את עיצוב התשתית בפרודקשן",
+          "acceptance_criteria": "reference profile נכשל ב-NODE_ENV=production גם אם override פיתוח פעיל",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US010",
+          "role": "AI Manager",
+          "story": "כמנהל AI אני רוצה לקבל את כל מקורות האמת והחוזים אוטומטית",
+          "acceptance_criteria": "לפני כל משימה נטענים bootstrap manifest context ו-status; context מיושן חוסם build",
+          "priority": "critical",
+          "status": "implemented"
+        },
+        {
+          "id": "US011",
+          "role": "AI Manager",
+          "story": "כמנהל AI אני רוצה לזהות מקורות כפולים והפניות שבורות",
+          "acceptance_criteria": "context:check נכשל על duplicate source או Role API Table Component לא קיימים",
+          "priority": "critical",
+          "status": "implemented"
+        }
+      ]
+    },
+    "product/roadmap.md": {
+      "path": "product/roadmap.md",
+      "hash": "02053effdcd95fd08a3af1c38c09873d1988dae68bf269bfc268bfdbcee2c79c",
+      "data": "# Roadmap\n\n## MVP\n\n- משתמש `admin` התחלתי עם סיסמה זמנית מגובבת.\n- התחברות, התנתקות והחלפת סיסמה ראשונית.\n- מעטפת ממשק ניהול SPA, RTL ורספונסיבית.\n- עמוד `כללי` לניהול פרטי האתר.\n- העלאת תמונות וקבצים מאובטחת עד 5MB.\n- בחירת לוגו ותמונות מתוך המדיה שהועלתה.\n- API ציבורי מצומצם לקריאת הגדרות האתר.\n\n## Version 1.1\n\n- ספריית מדיה עם חיפוש, סינון ומחיקה רכה.\n- היסטוריית שינויים להגדרות.\n- ניהול משתמשי מנהלה נוספים לאחר אפיון הרשאות.\n\n## Version 2.0\n\n- התאמת התשתית לפרויקטים מרובים באמצעות תבניות הגדרה.\n- אחסון קבצים חיצוני כאפשרות, בכפוף לאישור ארכיטקטוני.\n- הרשאות מפורטות לפי מודולים ופעולות.\n"
+    },
+    "shared-info/change_levels.csv": {
+      "path": "shared-info/change_levels.csv",
+      "hash": "3c28afcd49814b94f9a8416b256b32bd443851685f3ed34352ee6c1c028caa65",
+      "data": [
+        {
+          "level": "simple_change",
+          "description": "שינוי קטן שאינו משנה חוזים או מבנה",
+          "required_agents": "AI Manager;relevant agent",
+          "requires_user_approval": "no",
+          "requires_impact_report": "no",
+          "requires_qa": "optional",
+          "requires_contradictions": "optional"
+        },
+        {
+          "level": "feature",
+          "description": "פיצ'ר רגיל",
+          "required_agents": "AI Manager;Product Owner;Impact Analyzer;relevant agents",
+          "requires_user_approval": "yes",
+          "requires_impact_report": "yes",
+          "requires_qa": "yes",
+          "requires_contradictions": "yes"
+        },
+        {
+          "level": "major_feature",
+          "description": "פיצ'ר גדול שמשפיע על כמה תחומים",
+          "required_agents": "AI Manager;Product Owner;Impact Analyzer;Permissions;DB;API;Components;QA;Contradictions",
+          "requires_user_approval": "yes",
+          "requires_impact_report": "yes",
+          "requires_qa": "yes",
+          "requires_contradictions": "yes"
+        },
+        {
+          "level": "architecture_change",
+          "description": "שינוי מבנה מערכת או טכנולוגיה",
+          "required_agents": "AI Manager;Impact Analyzer;all agents",
+          "requires_user_approval": "yes",
+          "requires_impact_report": "yes",
+          "requires_qa": "yes",
+          "requires_contradictions": "yes"
+        },
+        {
+          "level": "hotfix",
+          "description": "תיקון דחוף בפרודקשן",
+          "required_agents": "AI Manager;relevant agent;QA;Contradictions",
+          "requires_user_approval": "yes",
+          "requires_impact_report": "yes",
+          "requires_qa": "yes",
+          "requires_contradictions": "yes"
+        }
+      ]
+    },
+    "shared-info/task_checklist.md": {
+      "path": "shared-info/task_checklist.md",
+      "hash": "5ab6cebe65099ed724741f55bdeaa706d311bfd5aff8e2b8fb1bc38a811ea745",
+      "data": "# Task Checklist\r\n\r\nלפני תחילת משימה:\n\n- [ ] נקרא manager_bootstrap.md\n- [ ] נקרא system_manifest.json\n- [ ] context:check עבר\n- [ ] נקרא system_context.json\n- [ ] נקרא project_status.json\n- [ ] הוגדרה מטרת המשימה\n- [ ] נקבע Change Level\r\n- [ ] נקבע Branch\r\n- [ ] ברור אילו סוכנים משתתפים\r\n- [ ] ברור אילו קבצים מותר לערוך\r\n- [ ] נבדק Source Of Truth\r\n- [ ] נבדק האם נדרש Impact Report\r\n- [ ] נבדק האם נדרש אישור משתמש\r\n\r\nבסיום משימה:\n\n- [ ] context:build הורץ\n- [ ] context:check עבר לאחר השינויים\n- [ ] action_log.csv עודכן\n- [ ] CSV רלוונטיים עודכנו\r\n- [ ] decisions.csv עודכן אם התקבלה החלטה חדשה\r\n- [ ] QA בוצע אם נדרש\r\n- [ ] AI Contradictions בוצע אם נדרש\r\n- [ ] אין High/Critical פתוחים\n"
+    },
+    "shared-info/decisions.csv": {
+      "path": "shared-info/decisions.csv",
+      "hash": "8862dd3ec76e850c9a140d4b841c5a429fa7d367351b779c206003716c2bea03",
+      "data": [
+        {
+          "id": "1",
+          "date": "2026-06-08",
+          "decision": "Use MySQL",
+          "reason": "פשטות ונוחות פריסה",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "AGENTS.md",
+          "notes": ""
+        },
+        {
+          "id": "2",
+          "date": "2026-06-08",
+          "decision": "Use mysql2 without ORM",
+          "reason": "שליטה מלאה ופחות מורכבות",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "AGENTS.md",
+          "notes": ""
+        },
+        {
+          "id": "3",
+          "date": "2026-06-08",
+          "decision": "Use Vanilla HTML CSS TypeScript",
+          "reason": "פשטות וללא Framework",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "AGENTS.md",
+          "notes": ""
+        },
+        {
+          "id": "4",
+          "date": "2026-06-08",
+          "decision": "Allow only ag-grid-community",
+          "reason": "טבלאות מתקדמות בלי עומס ספריות",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "AGENTS.md",
+          "notes": ""
+        },
+        {
+          "id": "5",
+          "date": "2026-06-09",
+          "decision": "Use Node built-in crypto for password hashing and JWT signing",
+          "reason": "עמידה במדיניות הספריות ושימוש ב-scrypt HMAC-SHA256 ללא תלות נוספת",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "src/server/utils/password.ts;src/server/utils/jwt.ts",
+          "notes": "אושר במסגרת אישור High Risk"
+        },
+        {
+          "id": "6",
+          "date": "2026-06-09",
+          "decision": "Store uploaded media on local server disk with metadata in MySQL",
+          "reason": "פתרון בסיסי ניתן להעתקה ללא שירות אחסון חיצוני",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "agents/db/info/media_assets.csv;src/server/services",
+          "notes": "מוגבל ל-5MB ול-PNG JPEG WebP"
+        },
+        {
+          "id": "7",
+          "date": "2026-06-09",
+          "decision": "Use active .env in development and process.env in production",
+          "reason": "תצורה אחידה בין פיתוח לפרודקשן ללא סודות בקוד",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": ".env;.env.example;package.json",
+          "notes": "האחריות להחלפת ערכי פרודקשן היא של המשתמש"
+        },
+        {
+          "id": "8",
+          "date": "2026-06-09",
+          "decision": "Require initial admin password change",
+          "reason": "הסיסמה הראשונית 123123 חלשה ואינה מתאימה לשימוש שוטף",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "agents/db/domain/start.ts;src/server",
+          "notes": "גישה לפעולות ניהול נחסמת עד להחלפה"
+        },
+        {
+          "id": "9",
+          "date": "2026-06-09",
+          "decision": "Separate functional infrastructure from project visual identity",
+          "reason": "מניעת מראה אחיד בין פרויקטים המבוססים על אותה תשתית",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "design-system/project-profile.json;src/design/active-profile.css;src/app/styles.css",
+          "notes": "Architecture change אושר במפורש"
+        },
+        {
+          "id": "10",
+          "date": "2026-06-09",
+          "decision": "Block infrastructure reference design in production",
+          "reason": "להבטיח שכל פרויקט יקבל זהות חזותית עצמאית לפני פריסה",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "scripts/check-design-profile.mjs;package.json",
+          "notes": ".env מאפשר reference רק לפיתוח התשתית"
+        },
+        {
+          "id": "11",
+          "date": "2026-06-09",
+          "decision": "Require Manager Bootstrap before every task",
+          "reason": "להבטיח שמנהל AI טוען את כל החוזים והנתונים ללא הוראה מפורשת",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "AGENTS.md;shared-info/manager_bootstrap.md;shared-info/system_manifest.json",
+          "notes": "Architecture change אושר במפורש"
+        },
+        {
+          "id": "12",
+          "date": "2026-06-09",
+          "decision": "Use generated hashed system context as a read model",
+          "reason": "לאפשר קריאת תמונת מערכת אחת בלי ליצור מקור אמת נוסף",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "shared-info/system_context.json;scripts/build-system-context.mjs;scripts/check-system-context.mjs",
+          "notes": "כל שינוי במקור אמת מחייב context:build"
+        },
+        {
+          "id": "13",
+          "date": "2026-06-09",
+          "decision": "Use agents/qa/info as the only QA source of truth",
+          "reason": "מניעת כפילות תוך שמירת קובצי qa הנדרשים כתמונות תאימות",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "agents/qa/info;qa;shared-info/system_manifest.json",
+          "notes": "qa mirrors נוצרים אוטומטית"
+        }
+      ]
+    },
+    "shared-info/action_log.csv": {
+      "path": "shared-info/action_log.csv",
+      "hash": "bd7b0c0c1deaee410522b04e235744a909dbbd977e888271986b80ad810b0c7b",
+      "data": [
+        {
+          "id": "1",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "planning",
+          "domain_files_changed": "product/project_definition.md;product/features.csv;product/user_stories.csv;product/roadmap.md",
+          "external_domain_used": "shared-info/source_of_truth.md;shared-info/change_levels.csv;shared-info/task_checklist.md;shared-info/decisions.csv",
+          "tools_used": "rg;PowerShell;apply_patch",
+          "summary": "סיווג major_feature והכנת אפיון ראשוני לתשתית ניהול",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "2",
+          "date": "2026-06-09",
+          "agent": "AI Product Owner",
+          "action_type": "feature_definition",
+          "domain_files_changed": "product/project_definition.md;product/features.csv;product/user_stories.csv;product/roadmap.md",
+          "external_domain_used": "AGENTS.md",
+          "tools_used": "apply_patch",
+          "summary": "הגדרת MVP סיפורי משתמשים קריטריוני קבלה ועדיפויות",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "3",
+          "date": "2026-06-09",
+          "agent": "AI Impact Analyzer",
+          "action_type": "impact_analysis",
+          "domain_files_changed": "agents/impact/domain/impact_report.md;agents/impact/info/impact_reports.csv",
+          "external_domain_used": "product/project_definition.md;product/features.csv;product/user_stories.csv",
+          "tools_used": "apply_patch",
+          "summary": "ניתוח השפעות תלויות וסיכונים לפני מימוש",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "4",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "contradiction_scan",
+          "domain_files_changed": "shared-info/contradictions.csv",
+          "external_domain_used": "agents/permissions/info/permissions.csv;agents/api/info/api_list.csv;agents/components/info/components_list.csv",
+          "tools_used": "PowerShell;apply_patch",
+          "summary": "נמצאה הרשאת admin כללית ולא מפורטת לפני יצירת חוזי API ו-Components",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "5",
+          "date": "2026-06-09",
+          "agent": "AI Permissions",
+          "action_type": "permissions_update",
+          "domain_files_changed": "agents/permissions/info/permissions.csv;agents/permissions/domain/permissions.md",
+          "external_domain_used": "agents/api/info/api_list.csv;agents/components/info/components_list.csv",
+          "tools_used": "PowerShell;apply_patch",
+          "summary": "הוגדרו הרשאות מפורשות לתפקידי guest ו-admin ללא הרשאה גורפת",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "6",
+          "date": "2026-06-09",
+          "agent": "AI DB",
+          "action_type": "database_implementation",
+          "domain_files_changed": "agents/db/domain/repo.ts;agents/db/domain/start.ts;agents/db/info/users.csv;agents/db/info/media_assets.csv;agents/db/info/site_settings.csv;agents/db/info/tables-index.csv",
+          "external_domain_used": "product/project_definition.md;agents/permissions/info/permissions.csv;agents/api/info/api_list.csv",
+          "tools_used": "PowerShell;apply_patch;tsc",
+          "summary": "תכנון ומימוש טבלאות users site_settings media_assets שכבת repo ו-bootstrap מאובטח למנהל",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "7",
+          "date": "2026-06-09",
+          "agent": "AI API",
+          "action_type": "api_implementation",
+          "domain_files_changed": "src/server/controllers;src/server/routes;src/server/services;src/server/validators;src/server/index.ts;agents/api/domain/api.md;agents/api/info/api_list.csv",
+          "external_domain_used": "agents/db/domain/repo.ts;agents/db/info;agents/permissions/info/permissions.csv",
+          "tools_used": "PowerShell;apply_patch;tsc",
+          "summary": "מימוש Authentication הגדרות כלליות ומדיה מאובטחת כולל JWT HttpOnly rate limit והעלאת קבצים בינארית",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "8",
+          "date": "2026-06-09",
+          "agent": "AI Components",
+          "action_type": "frontend_implementation",
+          "domain_files_changed": "src/index.html;src/main.ts;src/app;src/pages;src/components;src/services;src/models;src/types;agents/components/info/components_list.csv",
+          "external_domain_used": "agents/permissions/info/permissions.csv;agents/api/info/api_list.csv;design-system",
+          "tools_used": "apply_patch;PowerShell;tsc",
+          "summary": "מומש SPA ניהול RTL רספונסיבי הכולל התחברות החלפת סיסמה הגדרות כלליות וניהול מדיה",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "9",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "integration",
+          "domain_files_changed": "package.json;tsconfig.json;.env.example;scripts/copy-static.mjs;src/server/utils;src/server/middlewares;tests;README.md;shared-info/contracts.csv;shared-info/decisions.csv",
+          "external_domain_used": "agents/db;agents/api;agents/components;agents/permissions",
+          "tools_used": "npm install;npm test;PowerShell;apply_patch",
+          "summary": "חיבור שכבות התשתית טעינת env אריזת frontend בדיקות אבטחה ותיעוד הפעלה",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "10",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "behavioral_qa",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;agents/qa/info/regression_tests.csv",
+          "external_domain_used": "product;agents/api/info/api_list.csv;agents/components/info/components_list.csv;agents/permissions/info/permissions.csv;src;tests",
+          "tools_used": "npm test;rg;PowerShell;apply_patch",
+          "summary": "הוכנו 19 תרחישי QA ו-17 בדיקות רגרסיה; 12 PASS; 5 BLOCKED; 2 NOT_RUN; הבדיקות האוטומטיות עברו 6 מתוך 6",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "11",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "final_contradiction_scan",
+          "domain_files_changed": "shared-info/contradictions.csv",
+          "external_domain_used": "permissions;api;db;components;contracts;qa;src",
+          "tools_used": "PowerShell;rg;npm test;apply_patch",
+          "summary": "נסגרה סתירת admin=all; נמצאו 2 High חוסמות ו-2 Medium פתוחות",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "12",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "contradiction_resolution",
+          "domain_files_changed": "src/server/routes/auth-routes.ts;src/app/router.ts;agents/permissions/info/permissions.csv;shared-info/contradictions.csv",
+          "external_domain_used": "agents/api/info/api_list.csv;agents/components/info/components_list.csv",
+          "tools_used": "apply_patch",
+          "summary": "נוספה הגנת admin ל-logout ונסגרו אי התאמות navbar ובדיקת session ב-login",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "13",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "verification_scan",
+          "domain_files_changed": "shared-info/contradictions.csv",
+          "external_domain_used": "src/server/routes/auth-routes.ts;src/app/router.ts;agents/permissions/info/permissions.csv;agents/api/info/api_list.csv",
+          "tools_used": "npm test;PowerShell;rg",
+          "summary": "אומתו תיקוני logout navbar ו-session; נותר חסם QA סביבתי ופער תיעודי Medium",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "14",
+          "date": "2026-06-09",
+          "agent": "AI API",
+          "action_type": "api_documentation_fix",
+          "domain_files_changed": "agents/api/info/api_list.csv;shared-info/contradictions.csv",
+          "external_domain_used": "src/server/routes/auth-routes.ts",
+          "tools_used": "apply_patch",
+          "summary": "תיעוד auth_logout עודכן ל-sameOrigin ו-requireAdmin והסתירה נסגרה",
+          "risk_level": "Medium",
+          "needs_review": "no"
+        },
+        {
+          "id": "15",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "architecture_design",
+          "domain_files_changed": "design-system/project-profile.json;design-system/profile_schema.md;design-system/project_design_checklist.md;agents/impact/domain/design_profiles_impact_report.md;product/project_definition.md",
+          "external_domain_used": "design-system;src/components;src/pages",
+          "tools_used": "rg;PowerShell;apply_patch",
+          "summary": "הוגדרה ארכיטקטורת Design Profiles המפרידה תשתית פונקציונלית מזהות חזותית",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "16",
+          "date": "2026-06-09",
+          "agent": "AI Components",
+          "action_type": "design_profile_implementation",
+          "domain_files_changed": "src/design;src/app/styles.css;src/components;src/pages;src/main.ts;scripts/check-design-profile.mjs;scripts/init-project-design.mjs;scripts/copy-static.mjs;package.json",
+          "external_domain_used": "design-system/project-profile.json;design-system/profile_schema.md",
+          "tools_used": "apply_patch;npm test;rg",
+          "summary": "רכיבים הועברו לטוקנים סמנטיים ונוספו navigation profiles density ו-production guard",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "17",
+          "date": "2026-06-09",
+          "agent": "AI Components",
+          "action_type": "design_profile_hardening",
+          "domain_files_changed": "design-system/reference-design.json;scripts/check-design-profile.mjs;src/app/styles.css;src/components/sidebar;src/design/active-profile.css;tests/design-profile.test.ts",
+          "external_domain_used": "design-system/project-profile.json",
+          "tools_used": "apply_patch;npm test;rg",
+          "summary": "מנגנון השונות חוזק להשוואה סמנטית של שמונה ממדים ונוספו הגנות rail וצפיפות מלאה יותר",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "18",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "design_profiles_qa",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;qa/test_cases.csv;qa/test_results.csv",
+          "external_domain_used": "design-system/project-profile.json;design-system/reference-design.json;scripts/check-design-profile.mjs;src/design/active-profile.css",
+          "tools_used": "npm test;rg;PowerShell",
+          "summary": "תרחישי Design Profiles עודכנו להשוואה סמנטית; npm test עבר 10 מתוך 10; Visual browser נשאר NOT_RUN",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "19",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "design_profiles_scan",
+          "domain_files_changed": "shared-info/contradictions.csv",
+          "external_domain_used": "design-system;src/design;src/app;src/components;src/pages;scripts;tests;qa",
+          "tools_used": "npm test;rg;PowerShell",
+          "summary": "לא נמצאו High או Critical חדשים ב-Design Profiles; חסם QA הסביבתי הקיים עודכן ל-5 BLOCKED ו-3 NOT_RUN",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "20",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "manager_bootstrap_architecture",
+          "domain_files_changed": "AGENTS.md;manager/AI_MANAGER.md;shared-info/system_manifest.json;shared-info/manager_bootstrap.md;shared-info/source_of_truth.md;shared-info/project_status.json;shared-info/environment_contract.csv;shared-info/modules.csv",
+          "external_domain_used": "all sources of truth",
+          "tools_used": "apply_patch;PowerShell",
+          "summary": "נבנה bootstrap מחייב ומפת מערכת קריאה למכונה עבור AI Manager",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "21",
+          "date": "2026-06-09",
+          "agent": "AI Manager",
+          "action_type": "context_validation_implementation",
+          "domain_files_changed": "scripts/context-utils.mjs;scripts/build-system-context.mjs;scripts/check-system-context.mjs;package.json;tests/context.test.ts",
+          "external_domain_used": "permissions;db;api;components;qa;product;design;environment",
+          "tools_used": "apply_patch;node;npm",
+          "summary": "נוסף snapshot מאוחד עם hashes ולידציה להפניות freshness mirrors ומשתני סביבה",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "22",
+          "date": "2026-06-09",
+          "agent": "AI Product Owner",
+          "action_type": "source_consolidation",
+          "domain_files_changed": "agents/product-owner/AGENTS.md;product",
+          "external_domain_used": "agents/product-owner/info",
+          "tools_used": "apply_patch",
+          "summary": "מקור אמת Product אוחד תחת product ונמחקו CSV ריקים מתחרים",
+          "risk_level": "High",
+          "needs_review": "yes"
+        }
+      ]
+    },
+    "shared-info/contracts.csv": {
+      "path": "shared-info/contracts.csv",
+      "hash": "bcc9c6b69669403a18bba1a185f4fca853bd38a83caf6fafe943424547505978",
+      "data": [
+        {
+          "source_agent": "AI Permissions",
+          "target_agent": "AI API",
+          "resource": "admin role",
+          "contract_type": "authorization",
+          "description": "רק admin פעיל רשאי לגשת לנתיבי /api/admin; החלפת סיסמה זמנית נדרשת לפני פעולות ניהול",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "users table",
+          "contract_type": "data",
+          "description": "Authentication משתמש ב-username password_hash password_salt is_active must_change_password",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "site_settings table",
+          "contract_type": "data",
+          "description": "API כללי קורא ומעדכן את רשומת singleton שמזהה שלה 1",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "media_assets table",
+          "contract_type": "data",
+          "description": "API מדיה שומר מטא-דאטה בלבד ומבצע מחיקה רכה",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "authentication APIs",
+          "contract_type": "http",
+          "description": "Cookie מנוהל על ידי השרת; הלקוח שולח credentials same-origin ואינו שומר JWT",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "general settings APIs",
+          "contract_type": "http",
+          "description": "שדות ההגדרות הם siteName slogan phone address whatsapp instagram email logoMediaAssetId additionalMediaAssetIds",
+          "risk_level": "Medium"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "media upload API",
+          "contract_type": "http",
+          "description": "הקובץ נשלח כ-body בינארי עם X-File-Name ו-X-Alt-Text ועד 5MB",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "API response envelope",
+          "contract_type": "http",
+          "description": "תגובה תקינה היא success=true עם data; שגיאה היא success=false עם error code/message",
+          "risk_level": "Medium"
+        },
+        {
+          "source_agent": "AI Manager",
+          "target_agent": "AI Components",
+          "resource": "Design Profile",
+          "contract_type": "architecture",
+          "description": "התנהגות ונגישות נשארות משותפות; זהות חזותית ו-layout מגיעים רק מהפרופיל הפעיל",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "Design System",
+          "target_agent": "Build",
+          "resource": "Production design guard",
+          "contract_type": "validation",
+          "description": "reference profile או CSS reference אינם מותרים בפרודקשן",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "Design System",
+          "target_agent": "QA",
+          "resource": "Visual differentiation",
+          "contract_type": "acceptance",
+          "description": "custom profile מצהיר לפחות על ארבעה ממדי שונות ועובר mobile desktop visual QA",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI Manager",
+          "target_agent": "All Agents",
+          "resource": "Manager Bootstrap",
+          "contract_type": "process",
+          "description": "לפני כל משימה נטענים manifest context status ומקורות האמת הרלוונטיים ללא בקשת משתמש",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "Sources Of Truth",
+          "target_agent": "System Context",
+          "resource": "Generated read model",
+          "contract_type": "data",
+          "description": "system_context.json נוצר ממקורות האמת ומכיל hash לכל מקור; אינו מקור אמת עצמאי",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "System Context",
+          "target_agent": "Build",
+          "resource": "Freshness validation",
+          "contract_type": "validation",
+          "description": "build נכשל אם context חסר מיושן או מכיל הפניות שבורות",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI QA",
+          "target_agent": "QA Mirrors",
+          "resource": "Compatibility snapshot",
+          "contract_type": "data",
+          "description": "agents/qa/info הוא מקור האמת; qa בשורש הוא mirror זהה שנוצר ב-context:build",
+          "risk_level": "Medium"
+        },
+        {
+          "source_agent": "Environment",
+          "target_agent": "AI Manager",
+          "resource": "Environment contract",
+          "contract_type": "data",
+          "description": "שמות משתני הסביבה והחובה שלהם מגיעים מ-environment_contract.csv; ערכים פעילים אינם נכתבים ל-context",
+          "risk_level": "High"
+        }
+      ]
+    },
+    "shared-info/contradictions.csv": {
+      "path": "shared-info/contradictions.csv",
+      "hash": "c83c8a5c6b43667e93615b3049310524509784585ab12097464558c350a1e470",
+      "data": [
+        {
+          "id": "1",
+          "date": "2026-06-09",
+          "severity": "High",
+          "source_file": "agents/permissions/info/permissions.csv",
+          "problem": "תפקיד admin השתמש בהרשאת all ללא רשימת API ורכיבים מפורשת",
+          "impact": "לא ניתן היה לוודא הרשאה מינימלית והתאמה למקורות האמת",
+          "recommended_fix": "ההרשאה הגורפת הוחלפה ברשימות API ורכיבים מפורשות שנבדקו מול מקורות האמת",
+          "status": "fixed",
+          "blocks_work": "no"
+        },
+        {
+          "id": "2",
+          "date": "2026-06-09",
+          "severity": "High",
+          "source_file": "src/server/routes/auth-routes.ts",
+          "problem": "הנתיב POST /api/auth/logout לא הפעיל requireAdmin אף ש-api_list.csv מגדיר required_role=admin",
+          "impact": "החוזה והמימוש לא היו תואמים",
+          "recommended_fix": "נוסף requireAdmin לנתיב logout",
+          "status": "fixed",
+          "blocks_work": "no"
+        },
+        {
+          "id": "3",
+          "date": "2026-06-09",
+          "severity": "Medium",
+          "source_file": "agents/permissions/info/permissions.csv",
+          "problem": "רשימת allowed_components של guest כללה navbar בעוד components_list.csv מגדיר אותו ל-admin בלבד",
+          "impact": "מקורות האמת לא הסכימו לגבי נראות הרכיב",
+          "recommended_fix": "navbar הוסר מרשימת רכיבי guest",
+          "status": "fixed",
+          "blocks_work": "no"
+        },
+        {
+          "id": "4",
+          "date": "2026-06-09",
+          "severity": "Medium",
+          "source_file": "agents/components/info/components_list.csv",
+          "problem": "login-page הצהיר על auth_me אך כניסה ישירה ל-/login לא בדקה session",
+          "impact": "מנהל עם cookie תקף יכול היה לראות את עמוד ההתחברות לאחר רענון ישיר",
+          "recommended_fix": "ה-router בודק session גם ב-/login ומנתב מנהל מחובר לעמוד המתאים",
+          "status": "fixed",
+          "blocks_work": "no"
+        },
+        {
+          "id": "5",
+          "date": "2026-06-09",
+          "severity": "High",
+          "source_file": "agents/qa/info/test_results.csv",
+          "problem": "AI QA לא אישר QA מלא: 5 תרחישים מסומנים BLOCKED ו-3 תרחישים מסומנים NOT_RUN",
+          "impact": "Definition Of Done אינו מתקיים ללא הוכחת E2E למסד הנתונים וללא Visual QA בדפדפן עבור ניתוב רספונסיבי ו-Design Profiles",
+          "recommended_fix": "להריץ את התרחישים החסומים מול MySQL ייעודי ואת בדיקות הדפדפן בשלושת סוגי הניווט והצפיפות ולתעד תוצאות",
+          "status": "open",
+          "blocks_work": "yes"
+        },
+        {
+          "id": "6",
+          "date": "2026-06-09",
+          "severity": "Medium",
+          "source_file": "agents/api/info/api_list.csv",
+          "problem": "auth_logout הוגדר required_role=admin ומוגן ב-requireAdmin אך עמודת middleware תיעדה sameOrigin בלבד",
+          "impact": "תיעוד שרשרת ה-middleware לא היה מלא",
+          "recommended_fix": "עמודת middleware עודכנה ל-sameOrigin|requireAdmin",
+          "status": "fixed",
+          "blocks_work": "no"
+        }
+      ]
+    },
+    "agents/permissions/info/permissions.csv": {
+      "path": "agents/permissions/info/permissions.csv",
+      "hash": "c7bf12f0be181c28cbfc60b2acdfb271d05198852847529a6f9f61fead4c7c05",
+      "data": [
+        {
+          "role_name": "guest",
+          "description": "משתמש לא מחובר",
+          "can_view": "הגדרות אתר ציבוריות|קובצי מדיה ציבוריים|עמוד התחברות",
+          "can_create": "none",
+          "can_edit": "none",
+          "can_delete": "none",
+          "allowed_api": "public_settings_get|media_get",
+          "allowed_components": "login-page|form|button|notification",
+          "notes": "הרשאות ציבוריות בלבד; risk_level=Low; needs_review=no"
+        },
+        {
+          "role_name": "admin",
+          "description": "מנהל מערכת",
+          "can_view": "פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|עמודי ורכיבי ניהול",
+          "can_create": "העלאת מדיה",
+          "can_edit": "הגדרות כלליות|סיסמת המשתמש",
+          "can_delete": "מחיקת מדיה",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_media_upload|admin_media_list|admin_media_delete|public_settings_get|media_get",
+          "allowed_components": "login-page|change-password-page|admin-general-page|admin-media-page|navbar|sidebar|form|button|notification|modal",
+          "notes": "הרשאות ניהול מפורשות ללא הרשאה גורפת; risk_level=High; needs_review=yes"
+        }
+      ]
+    },
+    "agents/db/info/tables-index.csv": {
+      "path": "agents/db/info/tables-index.csv",
+      "hash": "ba7f54f36de30c513bf26051283895b3eba1f890e71bfe739b464bda21492a08",
+      "data": [
+        {
+          "table_name": "users",
+          "csv_file": "users.csv",
+          "description": "משתמשים ונתוני אימות מגובבים",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "media_assets",
+          "csv_file": "media_assets.csv",
+          "description": "מטא-דאטה של קבצים שהועלו ומחיקה רכה",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "site_settings",
+          "csv_file": "site_settings.csv",
+          "description": "רשומת הגדרות האתר הכלליות",
+          "risk_level": "High"
+        }
+      ]
+    },
+    "agents/db/info/users.csv": {
+      "path": "agents/db/info/users.csv",
+      "hash": "5d96a21341996f31f385621f0506ff5cb47e2aa46ed36570fdb2e08126abe883",
+      "data": [
+        {
+          "table_name": "users",
+          "field_name": "id",
+          "type": "BIGINT UNSIGNED AUTO_INCREMENT",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "מזהה פנימי של המשתמש",
+          "used_by_api": "Authentication; Users",
+          "notes": "Primary key"
+        },
+        {
+          "table_name": "users",
+          "field_name": "username",
+          "type": "VARCHAR(191)",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "שם המשתמש להתחברות",
+          "used_by_api": "Authentication",
+          "notes": "Normalized and unique"
+        },
+        {
+          "table_name": "users",
+          "field_name": "password_hash",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "גיבוב הסיסמה בפורמט hexadecimal",
+          "used_by_api": "Authentication",
+          "notes": "Never stores a plain password"
+        },
+        {
+          "table_name": "users",
+          "field_name": "password_salt",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "Salt אקראי בפורמט hexadecimal",
+          "used_by_api": "Authentication",
+          "notes": "Generated independently for every password"
+        },
+        {
+          "table_name": "users",
+          "field_name": "role_name",
+          "type": "VARCHAR(50)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "admin",
+          "description": "שם התפקיד לפי מקור האמת של ההרשאות",
+          "used_by_api": "Authentication; Users",
+          "notes": "Initial infrastructure supports admin"
+        },
+        {
+          "table_name": "users",
+          "field_name": "is_active",
+          "type": "BOOLEAN",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "true",
+          "description": "האם החשבון פעיל",
+          "used_by_api": "Authentication",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "must_change_password",
+          "type": "BOOLEAN",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "true",
+          "description": "האם נדרשת החלפת סיסמה לפני פעולות ניהול",
+          "used_by_api": "Authentication",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "last_login_at",
+          "type": "DATETIME(3)",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "מועד התחברות מוצלחת אחרונה",
+          "used_by_api": "Authentication",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירת המשתמש",
+          "used_by_api": "Users",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד עדכון המשתמש",
+          "used_by_api": "Users",
+          "notes": "Updated automatically"
+        }
+      ]
+    },
+    "agents/db/info/site_settings.csv": {
+      "path": "agents/db/info/site_settings.csv",
+      "hash": "821cbc3f72f1da46dd6491a774216fc1432cfe8a05f9a7ebc5ac156884d01239",
+      "data": [
+        {
+          "table_name": "site_settings",
+          "field_name": "id",
+          "type": "TINYINT UNSIGNED",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "1",
+          "description": "מזהה קבוע של רשומת ההגדרות",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": "Primary key with CHECK id=1"
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "site_name",
+          "type": "VARCHAR(191)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "שם האתר",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "slogan",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "סלוגן האתר",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "phone",
+          "type": "VARCHAR(50)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "מספר טלפון",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "address",
+          "type": "VARCHAR(500)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "כתובת",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "whatsapp",
+          "type": "VARCHAR(100)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "מספר או קישור WhatsApp",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "instagram",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "שם משתמש או קישור Instagram",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "email",
+          "type": "VARCHAR(254)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "כתובת אימייל",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "logo_media_asset_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "נכס המדיה המשמש כלוגו",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": "FK media_assets.id ON DELETE SET NULL"
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "additional_media_asset_ids",
+          "type": "JSON",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "רשימת מזהי מדיה לתמונות כלליות",
+          "used_by_api": "General Settings; Public Settings",
+          "notes": "API must validate active media IDs"
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "updated_by_user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "מזהה המשתמש שביצע את העדכון האחרון",
+          "used_by_api": "General Settings",
+          "notes": "FK users.id ON DELETE RESTRICT; NULL only for bootstrap"
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירת הרשומה",
+          "used_by_api": "General Settings",
+          "notes": ""
+        },
+        {
+          "table_name": "site_settings",
+          "field_name": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד העדכון האחרון",
+          "used_by_api": "General Settings",
+          "notes": "Updated automatically"
+        }
+      ]
+    },
+    "agents/db/info/media_assets.csv": {
+      "path": "agents/db/info/media_assets.csv",
+      "hash": "c2d4e511ed5f612d29111fc2ef1a91a0a2964483ab346a5b56475b9c67ced3a9",
+      "data": [
+        {
+          "table_name": "media_assets",
+          "field_name": "id",
+          "type": "BIGINT UNSIGNED AUTO_INCREMENT",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "מזהה נכס המדיה",
+          "used_by_api": "Media",
+          "notes": "Primary key"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "original_name",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "שם הקובץ המקורי לתצוגה בלבד",
+          "used_by_api": "Media",
+          "notes": "Must not be used as server path"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "storage_name",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "שם אחסון אקראי בשרת",
+          "used_by_api": "Media",
+          "notes": ""
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "storage_path",
+          "type": "VARCHAR(1024)",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "נתיב אחסון פנימי",
+          "used_by_api": "Media",
+          "notes": "Must never be exposed by public API"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "mime_type",
+          "type": "VARCHAR(100)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "MIME type שאומת בצד השרת",
+          "used_by_api": "Media",
+          "notes": "CHECK allows image/png image/jpeg image/webp"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "extension",
+          "type": "VARCHAR(20)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "סיומת מנורמלת שאומתה",
+          "used_by_api": "Media",
+          "notes": "CHECK allows png jpg jpeg webp"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "size_bytes",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "גודל הקובץ בבתים",
+          "used_by_api": "Media",
+          "notes": "CHECK range 1-5242880 bytes"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "sha256",
+          "type": "CHAR(64)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "SHA-256 של תוכן הקובץ",
+          "used_by_api": "Media",
+          "notes": "Lowercase hexadecimal"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "alt_text",
+          "type": "VARCHAR(500)",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "טקסט חלופי לתמונה",
+          "used_by_api": "Media",
+          "notes": ""
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "uploaded_by_user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "מזהה המשתמש שהעלה את הקובץ",
+          "used_by_api": "Media",
+          "notes": "FK users.id ON DELETE RESTRICT"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירת הרשומה",
+          "used_by_api": "Media",
+          "notes": ""
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "deleted_at",
+          "type": "DATETIME(3)",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "מועד מחיקה רכה",
+          "used_by_api": "Media",
+          "notes": "NULL means active"
+        },
+        {
+          "table_name": "media_assets",
+          "field_name": "deleted_by_user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "מזהה המשתמש שביצע מחיקה רכה",
+          "used_by_api": "Media",
+          "notes": "FK users.id ON DELETE RESTRICT"
+        }
+      ]
+    },
+    "agents/api/info/api_list.csv": {
+      "path": "agents/api/info/api_list.csv",
+      "hash": "416dcb648c08dd7ffe07ec7348ae346a88dad63129d11a7fd3381a26535ad692",
+      "data": [
+        {
+          "api_name": "auth_login",
+          "method": "POST",
+          "path": "/api/auth/login",
+          "required_role": "guest",
+          "middleware": "sameOrigin|loginRateLimit",
+          "request_body": "username:string;password:string",
+          "response_body": "user:{id;username;role;mustChangePassword};mustChangePassword:boolean;HttpOnly cookie",
+          "related_db_tables": "users",
+          "description": "התחברות מנהל פעיל והנפקת JWT",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "auth_logout",
+          "method": "POST",
+          "path": "/api/auth/logout",
+          "required_role": "admin",
+          "middleware": "sameOrigin|requireAdmin",
+          "request_body": "none",
+          "response_body": "loggedOut:boolean;clear HttpOnly cookie",
+          "related_db_tables": "users",
+          "description": "ניתוק ומחיקת עוגיית ההתחברות",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "auth_me",
+          "method": "GET",
+          "path": "/api/auth/me",
+          "required_role": "admin",
+          "middleware": "requireAdmin",
+          "request_body": "none",
+          "response_body": "user:{id;username;role;mustChangePassword}",
+          "related_db_tables": "users",
+          "description": "פרטי המנהל המחובר",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "auth_change_password",
+          "method": "POST",
+          "path": "/api/auth/change-password",
+          "required_role": "admin",
+          "middleware": "requireAdmin",
+          "request_body": "currentPassword:string;newPassword:string",
+          "response_body": "user:{id;username;role;mustChangePassword};renewed HttpOnly cookie",
+          "related_db_tables": "users",
+          "description": "החלפת סיסמה והסרת חובת ההחלפה",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_general_get",
+          "method": "GET",
+          "path": "/api/admin/settings/general",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "none",
+          "response_body": "settings:{siteName;slogan;phone;address;whatsapp;instagram;email;logoMediaAssetId;logoUrl;additionalMediaAssetIds;additionalMediaUrls;updatedAt;updatedByUserId}",
+          "related_db_tables": "site_settings|media_assets",
+          "description": "קריאת הגדרות כלליות למנהל",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_general_update",
+          "method": "PUT",
+          "path": "/api/admin/settings/general",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "siteName?;slogan?;phone?;address?;whatsapp?;instagram?;email?;logoMediaAssetId?;additionalMediaAssetIds?",
+          "response_body": "settings:{siteName;slogan;phone;address;whatsapp;instagram;email;logoMediaAssetId;logoUrl;additionalMediaAssetIds;additionalMediaUrls;updatedAt;updatedByUserId}",
+          "related_db_tables": "site_settings|media_assets",
+          "description": "עדכון הגדרות כלליות לאחר אימות מדיה פעילה",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_media_upload",
+          "method": "POST",
+          "path": "/api/admin/media",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "binary application/octet-stream;X-File-Name;X-Alt-Text?",
+          "response_body": "media:{id;originalName;mimeType;extension;sizeBytes;sha256;altText;uploadedByUserId;createdAt;url}",
+          "related_db_tables": "media_assets|users",
+          "description": "העלאת תמונה מאובטחת עד 5MB",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_media_list",
+          "method": "GET",
+          "path": "/api/admin/media",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "none",
+          "response_body": "media:[{id;originalName;mimeType;extension;sizeBytes;sha256;altText;uploadedByUserId;createdAt;url}]",
+          "related_db_tables": "media_assets",
+          "description": "רשימת נכסי מדיה פעילים",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_media_delete",
+          "method": "DELETE",
+          "path": "/api/admin/media/:id",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "none",
+          "response_body": "deleted:boolean;id:number",
+          "related_db_tables": "media_assets|site_settings",
+          "description": "מחיקה רכה של מדיה שאינה מקושרת",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "public_settings_get",
+          "method": "GET",
+          "path": "/api/public/settings",
+          "required_role": "guest",
+          "middleware": "securityHeaders",
+          "request_body": "none",
+          "response_body": "settings:{siteName;slogan;phone;address;whatsapp;instagram;email;logoMediaAssetId;logoUrl;additionalMediaAssetIds;additionalMediaUrls;updatedAt}",
+          "related_db_tables": "site_settings|media_assets",
+          "description": "הגדרות אתר ציבוריות ללא מזהה המשתמש המעדכן",
+          "risk_level": "Low"
+        },
+        {
+          "api_name": "media_get",
+          "method": "GET",
+          "path": "/api/media/:id",
+          "required_role": "guest",
+          "middleware": "securityHeaders",
+          "request_body": "none",
+          "response_body": "binary image with MIME cache headers and ETag",
+          "related_db_tables": "media_assets",
+          "description": "הגשת נכס מדיה פעיל",
+          "risk_level": "Low"
+        }
+      ]
+    },
+    "agents/components/info/components_list.csv": {
+      "path": "agents/components/info/components_list.csv",
+      "hash": "37abab9b82dc7573a41fa324c9ca11365516148e54b05d7ca0ad117f604c0606",
+      "data": [
+        {
+          "component_name": "login-page",
+          "visible_to": "guest",
+          "used_by": "router",
+          "api_used": "auth_login|auth_me",
+          "description": "עמוד התחברות למנהל המערכת",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "change-password-page",
+          "visible_to": "admin",
+          "used_by": "router",
+          "api_used": "auth_me|auth_change_password",
+          "description": "עמוד החלפה מחייבת של סיסמת המנהל",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "admin-general-page",
+          "visible_to": "admin",
+          "used_by": "router",
+          "api_used": "auth_me|admin_general_get|admin_general_update|admin_media_list",
+          "description": "ניהול פרטי האתר ובחירת לוגו ותמונות",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "admin-media-page",
+          "visible_to": "admin",
+          "used_by": "router",
+          "api_used": "auth_me|admin_media_upload|admin_media_list|admin_media_delete",
+          "description": "העלאה ניהול ומחיקה של תמונות עד 5MB",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "navbar",
+          "visible_to": "admin",
+          "used_by": "admin-general-page|admin-media-page",
+          "api_used": "auth_logout",
+          "description": "סרגל עליון עם זיהוי מנהל והתנתקות",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "sidebar",
+          "visible_to": "admin",
+          "used_by": "admin-general-page|admin-media-page",
+          "api_used": "none",
+          "description": "ניווט בין עמודי ממשק הניהול",
+          "risk_level": "Low"
+        },
+        {
+          "component_name": "form",
+          "visible_to": "guest|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "api_used": "none",
+          "description": "מבנה וטיפול במצבי טפסים",
+          "risk_level": "Low"
+        },
+        {
+          "component_name": "button",
+          "visible_to": "guest|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "api_used": "none",
+          "description": "כפתורי פעולה עקביים ונגישים",
+          "risk_level": "Low"
+        },
+        {
+          "component_name": "notification",
+          "visible_to": "guest|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "api_used": "none",
+          "description": "הודעות הצלחה שגיאה ומידע נגישות",
+          "risk_level": "Low"
+        },
+        {
+          "component_name": "modal",
+          "visible_to": "admin",
+          "used_by": "admin-media-page",
+          "api_used": "none",
+          "description": "חלון אישור למחיקת קובץ מדיה",
+          "risk_level": "Low"
+        }
+      ]
+    },
+    "design-system/project-profile.json": {
+      "path": "design-system/project-profile.json",
+      "hash": "fde6ab9281c119cce62b6da13546ce6163a84e3aebac1d5a49afcca828ccdb9d",
+      "data": {
+        "schemaVersion": 1,
+        "profileId": "base-infrastructure-reference",
+        "projectName": "תשתית בסיס",
+        "status": "reference",
+        "audience": "מפתחים שמקימים פרויקט חדש",
+        "visualConcept": "ממשק תפעולי ניטרלי שנועד להחלפה ואינו זהות מותג",
+        "differentiation": "אין להשתמש בפרופיל זה בפרודקשן; לכל פרויקט נדרש קונספט חזותי עצמאי",
+        "navigationPattern": "sidebar",
+        "density": "comfortable",
+        "shapeLanguage": "soft-rectangular",
+        "typographyStrategy": "system-sans",
+        "colorStrategy": "neutral-blue-reference",
+        "motionStrategy": "minimal-functional",
+        "changedDimensions": [],
+        "referenceOnly": true
+      }
+    },
+    "design-system/reference-design.json": {
+      "path": "design-system/reference-design.json",
+      "hash": "1ba9a37fa3ea65d384029862b7f6393d4711feb668e09b6fd163723f1b39e3bf",
+      "data": {
+        "profile": {
+          "navigationPattern": "sidebar",
+          "density": "comfortable"
+        },
+        "dimensions": {
+          "typography": {
+            "--design-font-body": "Arial, \"Noto Sans Hebrew\", sans-serif",
+            "--design-font-heading": "Arial, \"Noto Sans Hebrew\", sans-serif",
+            "--design-font-size-display": "2rem",
+            "--design-font-size-heading": "1.5rem",
+            "--design-font-size-body": "1rem",
+            "--design-font-size-small": "0.875rem",
+            "--design-font-weight-body": "400",
+            "--design-font-weight-heading": "700",
+            "--design-line-height": "1.5"
+          },
+          "shape-language": {
+            "--design-radius-control": "0.5rem",
+            "--design-radius-surface": "0.75rem",
+            "--design-border-width": "1px"
+          },
+          "surfaces": {
+            "--design-color-background": "#f8fafc",
+            "--design-color-surface": "#ffffff",
+            "--design-color-surface-raised": "#ffffff",
+            "--design-color-border": "#cbd5e1",
+            "--design-shadow-surface": "0 10px 25px rgb(15 23 42 / 10%)"
+          },
+          "auth-composition": {
+            "--design-auth-background": "radial-gradient( circle at top right, #dbeafe, transparent 45% ), var(--design-color-background)",
+            "--design-auth-card-width": "28.75rem"
+          },
+          "color-hierarchy": {
+            "--design-color-action": "#2563eb",
+            "--design-color-action-hover": "#1d4ed8",
+            "--design-color-text": "#0f172a",
+            "--design-color-muted": "#475569",
+            "--design-color-selected-surface": "#dbeafe",
+            "--design-color-selected-text": "#1d4ed8"
+          },
+          "motion": {
+            "--design-motion-duration": "160ms",
+            "--design-motion-easing": "ease"
+          }
+        }
+      }
+    },
+    "design-system/naming_rules.md": {
+      "path": "design-system/naming_rules.md",
+      "hash": "ea21469a38637174ded208383d7de5be3ec374c1b209ab529e04c30d00d2c0ad",
+      "data": "# Naming Rules\r\n\r\n## CSS Classes\r\n\r\nשמות CSS יהיו באנגלית, באותיות קטנות, עם מקף:\r\n\r\ncustomer-list\r\nprimary-button\r\nmain-sidebar\r\n\r\nאסור:\r\n\r\ncustomerList\r\nCustomerList\r\nbtnPrimary\r\n\r\n## Components\r\n\r\nשם קומפוננטה:\r\n\r\ncomponent-name\r\n\r\nדוגמאות:\r\n\r\nnavbar\r\nsidebar\r\ncustomer-table\r\nconfirm-modal\r\n\r\n## Pages\r\n\r\nשם עמוד:\r\n\r\npage-name\r\n\r\nדוגמאות:\r\n\r\nhome\r\ncustomers\r\nsettings\r\nlesson-calendar\r\n\r\n## Files\r\n\r\nכל עמוד חייב להכיל:\r\n\r\nindex.html\r\nscript.ts\r\nstyle.css\r\n\r\n## Rule\n\nאסור ליצור שם חדש אם קיימת מוסכמה קיימת.\n\n## Design Profiles\n\nמזהה פרופיל יהיה באנגלית וב־kebab-case:\n\n```txt\nclinic-calm-organic\nlegal-editorial-dark\neducation-playful-modular\n```\n\nאסור להשתמש בשם כללי כגון:\n\n```txt\ndefault\ntheme-one\nblue-theme\nnew-design\n```\n\nטוקן חזותי מתחיל ב־`--design-`.\n\nטוקן סמנטי פנימי של התשתית מתחיל ב־`--ui-`.\n\nאסור להגדיר צבעי מותג, font family, shadow או radius ישירות בקובץ CSS\nשל page או component.\n"
+    },
+    "design-system/profile_schema.md": {
+      "path": "design-system/profile_schema.md",
+      "hash": "8059fc9550f24059d3b2102159ed5ea984de8fef4462a781d7a5c8b3ee9b44f9",
+      "data": "# Design Profile Contract\n\nכל פרויקט שנוצר מהתשתית חייב להגדיר זהות חזותית עצמאית.\n\n## מקור אמת\n\n- `design-system/project-profile.json`: החלטות העיצוב וה־brief.\n- `src/design/active-profile.css`: טוקנים חזותיים פעילים.\n\nאין להגדיר צבעי מותג או טיפוגרפיית מותג בקובצי רכיבים.\n\n## שדות חובה\n\n- `profileId`: מזהה ייחודי לפרויקט, באנגלית וב־kebab-case.\n- `projectName`: שם הפרויקט.\n- `status`: הערך `custom` בפרויקט אמיתי.\n- `audience`: קהל היעד.\n- `visualConcept`: הרעיון החזותי המרכזי.\n- `differentiation`: במה העיצוב שונה מפרויקטים אחרים.\n- `navigationPattern`: אחד מהערכים `sidebar`, `topbar`, `rail`.\n- `density`: אחד מהערכים `compact`, `comfortable`, `spacious`.\n- `shapeLanguage`: שפת הצורות.\n- `typographyStrategy`: אסטרטגיית הטיפוגרפיה.\n- `colorStrategy`: אסטרטגיית הצבע.\n- `motionStrategy`: אסטרטגיית התנועה.\n- `changedDimensions`: לפחות ארבעה ממדים שונים מתוך הרשימה המאושרת.\n- `referenceOnly`: חייב להיות `false` בפרויקט אמיתי.\n\nערכי `changedDimensions`:\n\n- `typography`\n- `navigation`\n- `density`\n- `shape-language`\n- `surfaces`\n- `auth-composition`\n- `color-hierarchy`\n- `motion`\n\n## טוקנים חובה\n\n`active-profile.css` חייב להגדיר:\n\n- צבעי רקע, משטח, טקסט, גבול, פעולה, מצבים ו־focus.\n- משפחות פונטים לגוף ולכותרות.\n- סולם ריווח.\n- רדיוסים או שפת צורה אחרת.\n- צללים או חלופה חזותית.\n- רוחב תוכן, גובה header ורוחב navigation.\n- מראה כרטיס, שדה, כפתור, modal ועמוד authentication.\n\n## כלל שונות\n\nשינוי palette בלבד אינו נחשב Design Profile חדש.\n\nלפחות ארבעה מהתחומים הבאים חייבים להשתנות לעומת פרופיל המקור:\n\n1. טיפוגרפיה.\n2. פריסת ניווט.\n3. צפיפות וריווח.\n4. שפת צורות ורדיוסים.\n5. טיפול במשטחים, גבולות וצללים.\n6. קומפוזיציית עמוד הכניסה.\n7. היררכיית צבעים.\n8. תנועה ומשוב.\n\n## חסימת Build\n\n`npm run design:check` נכשל כאשר:\n\n- ה־brief חסר או משתמש בערכי placeholder.\n- `profileId` נשאר `base-infrastructure-reference` ללא אישור פיתוח מפורש.\n- פרופיל reference נבנה עם `NODE_ENV=production`.\n- חסרים טוקנים נדרשים.\n- ממד הוצהר כמשתנה אך ערכיו זהים ל־reference.\n- פחות מארבעה ממדים השתנו בפועל.\n\n## פקודת אתחול\n\n```powershell\nnpm run design:init -- --id=project-identity --name=\"Project Name\" --audience=\"Target audience\" --concept=\"Visual concept\" --differentiation=\"How it differs\" --navigation=topbar --density=spacious --shape=\"Geometric\" --typography=\"Editorial\" --colors=\"High contrast\" --motion=\"Subtle\" --dimensions=typography,navigation,density,color-hierarchy\n```\n\nהפקודה מעדכנת את ה־brief בלבד. לאחר מכן חובה לשנות את\n`src/design/active-profile.css`.\n"
+    },
+    "design-system/project_design_checklist.md": {
+      "path": "design-system/project_design_checklist.md",
+      "hash": "d71fd532ec8688d35ca6398f2bb914fc4e82430eb3d8ffa9129aaa714bd58192",
+      "data": "# Project Design Checklist\n\nלפני פיתוח ממשק בפרויקט חדש:\n\n- [ ] הוגדר קהל יעד.\n- [ ] הוגדר אופי מותג בשלוש עד חמש מילים.\n- [ ] נבחר קונספט חזותי שאינו מבוסס על פרויקט קודם.\n- [ ] נבחר navigation pattern.\n- [ ] נבחרו טיפוגרפיה, צפיפות ושפת צורות.\n- [ ] הוגדרו צבעים נגישים עם contrast מתאים.\n- [ ] הוחלף `profileId`.\n- [ ] `status` שונה ל־`custom`.\n- [ ] `referenceOnly` שונה ל־`false`.\n- [ ] לפחות ארבעה ממדי שונות תועדו.\n- [ ] `npm run design:check` עבר ללא override.\n- [ ] בוצעה בדיקת mobile ו־desktop.\n- [ ] צולמו מסכי מפתח לצורך Visual QA.\n"
+    },
+    "design-system/colors.csv": {
+      "path": "design-system/colors.csv",
+      "hash": "206c6a0658b6563b79286755823c070452ec3d33d93e964374f7cde0799ffec1",
+      "data": [
+        {
+          "name": "action",
+          "value": "var(--design-color-action)",
+          "usage": "primary actions from active profile"
+        },
+        {
+          "name": "action-hover",
+          "value": "var(--design-color-action-hover)",
+          "usage": "hover and active actions"
+        },
+        {
+          "name": "background",
+          "value": "var(--design-color-background)",
+          "usage": "page background"
+        },
+        {
+          "name": "surface",
+          "value": "var(--design-color-surface)",
+          "usage": "cards forms and navigation"
+        },
+        {
+          "name": "text",
+          "value": "var(--design-color-text)",
+          "usage": "primary text"
+        },
+        {
+          "name": "muted",
+          "value": "var(--design-color-muted)",
+          "usage": "secondary text"
+        },
+        {
+          "name": "border",
+          "value": "var(--design-color-border)",
+          "usage": "borders and separators"
+        },
+        {
+          "name": "success",
+          "value": "var(--design-color-success)",
+          "usage": "success messages"
+        },
+        {
+          "name": "danger",
+          "value": "var(--design-color-danger)",
+          "usage": "error and destructive actions"
+        },
+        {
+          "name": "warning",
+          "value": "var(--design-color-warning)",
+          "usage": "warning messages"
+        },
+        {
+          "name": "focus",
+          "value": "var(--design-color-focus)",
+          "usage": "keyboard focus"
+        }
+      ]
+    },
+    "design-system/typography.csv": {
+      "path": "design-system/typography.csv",
+      "hash": "243843601b02b5985a64e9539b761b4407155f68e76c2b622c0987a6327a6569",
+      "data": [
+        {
+          "name": "display",
+          "size": "var(--design-font-size-display)",
+          "weight": "var(--design-font-weight-heading)",
+          "usage": "page title"
+        },
+        {
+          "name": "heading",
+          "size": "var(--design-font-size-heading)",
+          "weight": "var(--design-font-weight-heading)",
+          "usage": "section title"
+        },
+        {
+          "name": "body",
+          "size": "var(--design-font-size-body)",
+          "weight": "var(--design-font-weight-body)",
+          "usage": "default text"
+        },
+        {
+          "name": "small",
+          "size": "var(--design-font-size-small)",
+          "weight": "var(--design-font-weight-body)",
+          "usage": "helper text"
+        }
+      ]
+    },
+    "design-system/spacing.csv": {
+      "path": "design-system/spacing.csv",
+      "hash": "30c9c476a76c68a9b02cd6decfc1d4d0dd265acfff3e511e2d193b40d8113c80",
+      "data": [
+        {
+          "name": "xs",
+          "value": "var(--design-space-xs)"
+        },
+        {
+          "name": "sm",
+          "value": "var(--design-space-sm)"
+        },
+        {
+          "name": "md",
+          "value": "var(--design-space-md)"
+        },
+        {
+          "name": "lg",
+          "value": "var(--design-space-lg)"
+        },
+        {
+          "name": "xl",
+          "value": "var(--design-space-xl)"
+        }
+      ]
+    },
+    "design-system/components.csv": {
+      "path": "design-system/components.csv",
+      "hash": "9a021f336228373e78a0a7c85173d4df14c81ec20e648b7bd1dd8e2355a88f69",
+      "data": [
+        {
+          "component": "button",
+          "description": "behavioral button styled only through semantic design tokens"
+        },
+        {
+          "component": "input",
+          "description": "form control styled only through semantic design tokens"
+        },
+        {
+          "component": "table",
+          "description": "data table whose density and surfaces come from the active profile"
+        },
+        {
+          "component": "modal",
+          "description": "accessible dialog whose shape and surface come from the active profile"
+        },
+        {
+          "component": "card",
+          "description": "content container whose border radius and shadow come from the active profile"
+        },
+        {
+          "component": "navigation",
+          "description": "sidebar topbar or rail selected by the project profile"
+        }
+      ]
+    },
+    "agents/qa/info/test_cases.csv": {
+      "path": "agents/qa/info/test_cases.csv",
+      "hash": "68377ffa3b9d46a5a7a79c14b15d632112154ac8d0bc1c6f2b6798ca595bdc30",
+      "data": [
+        {
+          "id": "QA-001",
+          "module": "database",
+          "title": "אתחול מנהל ראשוני במסד",
+          "steps": "להריץ db:init מול MySQL נקי; לבדוק משתמש admin; לבדוק שהסיסמה אינה נשמרת כטקסט; לאמת התחברות עם 123123",
+          "expected_result": "נוצר admin פעיל; נשמרים hash ו-salt; must_change_password=true; לא נשמרת סיסמה גלויה",
+          "priority": "critical",
+          "status": "BLOCKED"
+        },
+        {
+          "id": "QA-002",
+          "module": "authentication",
+          "title": "חובת החלפת סיסמה ראשונית",
+          "steps": "להתחבר כמנהל ראשוני; לנסות לגשת לנתיבי /api/admin; להחליף לסיסמה חזקה; לנסות שוב",
+          "expected_result": "לפני ההחלפה מתקבל 403 PASSWORD_CHANGE_REQUIRED; לאחר ההחלפה הגישה מותרת וה-JWT מתחדש",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-003",
+          "module": "authentication",
+          "title": "התחברות תקינה",
+          "steps": "לשלוח admin ו-123123 ל-/api/auth/login מול מסד מאותחל",
+          "expected_result": "מתקבלת תשובת הצלחה עם משתמש admin ועוגיית התחברות; mustChangePassword=true",
+          "priority": "critical",
+          "status": "BLOCKED"
+        },
+        {
+          "id": "QA-004",
+          "module": "authentication",
+          "title": "התחברות עם פרטים שגויים",
+          "steps": "לשלוח שם משתמש לא קיים וסיסמה שגויה בנפרד",
+          "expected_result": "מתקבלת 401 עם הודעה כללית שאינה חושפת אם המשתמש קיים",
+          "priority": "critical",
+          "status": "BLOCKED"
+        },
+        {
+          "id": "QA-005",
+          "module": "authentication",
+          "title": "הגבלת ניסיונות התחברות",
+          "steps": "לבצע 5 ניסיונות שגויים מאותו IP ושם משתמש; לבצע ניסיון נוסף בחלון של 15 דקות",
+          "expected_result": "הניסיון הבא נחסם ב-429 TOO_MANY_LOGIN_ATTEMPTS; הצלחה מנקה את המונה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-006",
+          "module": "authentication",
+          "title": "עוגיית JWT מאובטחת",
+          "steps": "לבצע התחברות; לבדוק Set-Cookie; להתנתק ולבדוק מחיקה",
+          "expected_result": "העוגייה admin_session מוגדרת HttpOnly SameSite=Strict Path=/; Secure בפרודקשיין; התנתקות מוחקת אותה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-007",
+          "module": "permissions",
+          "title": "הרשאות אורח ומנהל",
+          "steps": "לגשת ללא עוגייה לנתיבי auth/me ו-admin; לגשת ל-public/settings ול-media/:id; לחזור עם JWT מנהל",
+          "expected_result": "נתיבי ניהול מחזירים 401 לאורח; נתיבים ציבוריים זמינים; מנהל תקין מורשה לפי החוזה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-008",
+          "module": "settings",
+          "title": "אימות קלט הגדרות כלליות",
+          "steps": "לשלוח גוף לא תקין; שדה לא מוכר; אימייל לא תקין; מחרוזות ארוכות; מזהי מדיה לא תקינים; קלט תקין",
+          "expected_result": "קלט שגוי נדחה ב-400; כפילויות מדיה מוסרות; קלט תקין מנורמל ונשמר",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-009",
+          "module": "settings",
+          "title": "פרטיות הגדרות ציבוריות",
+          "steps": "לקרוא /api/public/settings ולהשוות לתשובת המנהל",
+          "expected_result": "התשובה הציבורית אינה כוללת updatedByUserId נתוני משתמש או נתיבי אחסון בשרת",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-010",
+          "module": "media",
+          "title": "העלאת תמונה תקינה",
+          "steps": "להעלות PNG JPEG ו-WebP קטנים מ-5MB עם application/octet-stream וכותרות תקינות",
+          "expected_result": "הקובץ מזוהה לפי תוכן; נשמר בשם UUID; המטא-דאטה נשמר; התשובה אינה חושפת storagePath",
+          "priority": "critical",
+          "status": "BLOCKED"
+        },
+        {
+          "id": "QA-011",
+          "module": "media",
+          "title": "דחיית קובץ מעל 5MB",
+          "steps": "לשלוח Content-Length מעל 5242880 וגם זרם ללא אורך שחוצה את המגבלה",
+          "expected_result": "השרת מחזיר 413 FILE_TOO_LARGE ומסיר קובץ זמני",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-012",
+          "module": "media",
+          "title": "דחיית magic bytes שגויים",
+          "steps": "לשלוח קובץ עם שם וסיומת PNG אך תוכן שאינו PNG JPEG או WebP",
+          "expected_result": "השרת מחזיר 415 UNSUPPORTED_FILE ואינו יוצר נכס מדיה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-013",
+          "module": "media",
+          "title": "שם קובץ וטקסט חלופי בעברית",
+          "steps": "להעלות כותרות URI-encoded עבור לוגו.png ולוגו האתר",
+          "expected_result": "השם והטקסט מפוענחים ונשמרים בעברית ללא קידוד גולמי",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-014",
+          "module": "media",
+          "title": "מחיקה רכה של מדיה",
+          "steps": "למחוק נכס פעיל שאינו בשימוש; לקרוא רשימה ונתיב מדיה לאחר המחיקה; לבדוק רשומת DB",
+          "expected_result": "deleted_at ו-deleted_by_user_id מתעדכנים; הנכס אינו מופיע ואינו מוגש; הקובץ והרשומה אינם נמחקים פיזית",
+          "priority": "critical",
+          "status": "BLOCKED"
+        },
+        {
+          "id": "QA-015",
+          "module": "media",
+          "title": "מניעת מחיקת מדיה בשימוש",
+          "steps": "לקשר מדיה כלוגו או כתמונה נוספת; לנסות למחוק אותה",
+          "expected_result": "המחיקה נדחית ב-409 MEDIA_IN_USE והנכס נשאר פעיל",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-016",
+          "module": "frontend",
+          "title": "אריזת SPA וניתוב URL",
+          "steps": "להריץ build; לבדוק נכסי dist/public; לפתוח ישירות /login /change-password /admin/general /admin/media ולנווט קדימה ואחורה",
+          "expected_result": "כל הנכסים נארזים; השרת מחזיר index.html לנתיבי SPA; History API והגנות הנתיב פועלים",
+          "priority": "high",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "QA-017",
+          "module": "frontend",
+          "title": "RTL ותצוגת מובייל",
+          "steps": "לפתוח בדפדפן ברוחב 320 375 768 ו-1440 פיקסלים; לבדוק טפסים תפריטים גלריה ומודל",
+          "expected_result": "המסמך בעברית וב-RTL; אין גלישה אופקית; הממשק שימושי בכל רוחב",
+          "priority": "high",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "QA-018",
+          "module": "frontend",
+          "title": "אין אחסון JWT בדפדפן",
+          "steps": "לסרוק את קוד הלקוח ולבדוק Application Storage בזמן התחברות",
+          "expected_result": "אין שימוש ב-localStorage או sessionStorage; האימות נשען על HttpOnly Cookie בלבד",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-019",
+          "module": "security",
+          "title": "גיבוב סיסמה ושלמות JWT",
+          "steps": "להריץ npm test; להשוות שני גיבובים לאותה סיסמה; לאמת סיסמה נכונה ושגויה; לשנות חתימת JWT",
+          "expected_result": "המלחים והגיבובים שונים; האימות מדויק; JWT ששונה נדחה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-020",
+          "module": "design-profile",
+          "title": "פרופיל reference מותר בפיתוח תשתית",
+          "steps": "להגדיר NODE_ENV=development ו-ALLOW_REFERENCE_DESIGN=true; להריץ npm run design:check",
+          "expected_result": "הבדיקה עוברת ומדווחת שהפרופיל base-infrastructure-reference תקין",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-021",
+          "module": "design-profile",
+          "title": "פרופיל reference חסום בפרודקשן",
+          "steps": "להגדיר NODE_ENV=production ו-ALLOW_REFERENCE_DESIGN=true; להריץ npm run design:check",
+          "expected_result": "הבדיקה נכשלת בכוונה עם הודעה שפרופיל התשתית אסור בפרודקשן",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-022",
+          "module": "design-profile",
+          "title": "טוקני עיצוב נדרשים",
+          "steps": "להשוות את רשימת requiredTokens בסקריפט הבדיקה להגדרות src/design/active-profile.css",
+          "expected_result": "כל 29 הטוקנים הנדרשים מוגדרים; טוקן חסר מוסיף שגיאת missing design token",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-023",
+          "module": "design-profile",
+          "title": "פרופיל custom דורש ארבעה ממדי שינוי ייחודיים ואמיתיים",
+          "steps": "להריץ בדיקה עם פחות מארבעה changedDimensions; עם כפילויות; עם ממד לא מוכר; עם ממד מוצהר שלא השתנה; ועם ארבעה ממדים סמנטיים ששונו",
+          "expected_result": "כפילויות אינן נספרות; פחות מארבעה ממדים ייחודיים או ממד לא מוכר נחסמים; כל ממד מוצהר חייב להשתנות בפועל; פרופיל עם ארבעה שינויים סמנטיים עובר",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-024",
+          "module": "design-profile",
+          "title": "שינוי metadata או comments בלבד אינו עוקף את פרופיל reference",
+          "steps": "ליצור פרופיל custom שמצהיר על ארבעה ממדים אך משתמש בערכי reference; להוסיף ל-CSS הערה בלבד; להריץ design:check מול design-system/reference-design.json",
+          "expected_result": "ההשוואה הסמנטית מזהה אפס ממדים ששונו; שינוי comment בלבד אינו נספר; וכל ממד מוצהר שלא השתנה מדווח ונחסם",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-025",
+          "module": "build",
+          "title": "העתקת פרופיל העיצוב ל-dist",
+          "steps": "להריץ build; להשוות hash של design-system/project-profile.json מול dist/public/design/project-profile.json",
+          "expected_result": "קובץ הפרופיל מועתק ל-dist ללא שינוי",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-026",
+          "module": "design-profile",
+          "title": "אין צבעי מותג קשיחים מחוץ לפרופיל הפעיל",
+          "steps": "לסרוק קובצי CSS תחת src עבור hex rgb rgba hsl ו-hsla; להחריג src/design/active-profile.css",
+          "expected_result": "לא נמצאו ערכי צבע קשיחים מחוץ למקור האמת של הפרופיל הפעיל",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-027",
+          "module": "frontend",
+          "title": "אימות סטטי של דפוסי ניווט ועמידות rail",
+          "steps": "לסרוק טיפוסים dataset וסלקטורי CSS עבור sidebar topbar ו-rail; לבדוק קישורי rail ארוכים",
+          "expected_result": "שלושת הדפוסים מוגדרים בחוזה ונטענים ל-dataset; rail משתמש ב-overflow hidden וב-ellipsis ומספק title מלא לכל קישור",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-028",
+          "module": "frontend",
+          "title": "אימות סטטי של צפיפות מורחבת",
+          "steps": "לסרוק טיפוסים dataset וסלקטורי CSS עבור compact comfortable ו-spacious; לבדוק את כל משתני ה-UI המושפעים",
+          "expected_result": "compact ו-spacious משנים xs עד xl, גובה פקד, גדלי display heading body small ו-line-height; comfortable משתמשת בערכי הבסיס",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-029",
+          "module": "frontend",
+          "title": "בדיקה חזותית של Design Profiles בדפדפן",
+          "steps": "להפעיל כל דפוס ניווט וכל צפיפות ברוחבי 320 768 ו-1440 פיקסלים; לבדוק RTL גלישה היררכיה וייחוד חזותי",
+          "expected_result": "כל שילוב שמיש ונגיש; אין גלישה; והפרופיל החזותי מיושם בעקביות",
+          "priority": "high",
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    "agents/qa/info/test_results.csv": {
+      "path": "agents/qa/info/test_results.csv",
+      "hash": "a861134fe4e110d387d7b2e4e9a584fc62699204b2de4c369e5b3b12242ddc98",
+      "data": [
+        {
+          "id": "QAR-001",
+          "test_case_id": "QA-001",
+          "date": "2026-06-09",
+          "result": "BLOCKED",
+          "tester": "AI QA",
+          "notes": "לא הופעל MySQL ייעודי. אימות סטטי בלבד: agents/db/domain/start.ts יוצר admin מה-env עם scrypt salt אקראי ו-must_change_password=true."
+        },
+        {
+          "id": "QAR-002",
+          "test_case_id": "QA-002",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: src/server/routes/admin-routes.ts מפעיל requireAdmin ו-requirePasswordChanged; middleware מחזיר 403; router מפנה ל-change-password. בדיקת JWT עם הדגל עברה ב-npm test. לא בוצע E2E מול DB."
+        },
+        {
+          "id": "QAR-003",
+          "test_case_id": "QA-003",
+          "date": "2026-06-09",
+          "result": "BLOCKED",
+          "tester": "AI QA",
+          "notes": "נדרשים MySQL מאותחל ושרת HTTP פעיל כדי לאמת התחברות אמיתית ועוגייה."
+        },
+        {
+          "id": "QAR-004",
+          "test_case_id": "QA-004",
+          "date": "2026-06-09",
+          "result": "BLOCKED",
+          "tester": "AI QA",
+          "notes": "השירות מחזיר הודעת INVALID_CREDENTIALS אחידה סטטית; לא הורץ תרחיש HTTP מול MySQL."
+        },
+        {
+          "id": "QAR-005",
+          "test_case_id": "QA-005",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: login-rate-limiter.ts מגדיר 5 ניסיונות בחלון 15 דקות ומחזיר 429; auth-controller רושם רק כשלי INVALID_CREDENTIALS ומנקה לאחר הצלחה. לא בוצע E2E."
+        },
+        {
+          "id": "QAR-006",
+          "test_case_id": "QA-006",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: cookies.ts מגדיר httpOnly=true sameSite=strict path=/ ו-secure בפרודקשיין; logout מפעיל clearAuthCookie. לא נבדק בדפדפן."
+        },
+        {
+          "id": "QAR-007",
+          "test_case_id": "QA-007",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי מול routes ו-permissions.csv: נתיבי admin מוגנים; public/settings ו-media/:id ציבוריים; auth/me מוגן. לא בוצע E2E."
+        },
+        {
+          "id": "QAR-008",
+          "test_case_id": "QA-008",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: validators/settings.ts מגביל מפתחות אורכים אימייל ומזהי מדיה ומסיר כפילויות. שמירה בפועל לא נבדקה מול MySQL."
+        },
+        {
+          "id": "QAR-009",
+          "test_case_id": "QA-009",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: getPublicSettings קורא toResponse עם includeUpdatedBy=false; מבנה התשובה אינו כולל storagePath או נתוני משתמש."
+        },
+        {
+          "id": "QAR-010",
+          "test_case_id": "QA-010",
+          "date": "2026-06-09",
+          "result": "BLOCKED",
+          "tester": "AI QA",
+          "notes": "נדרשים שרת HTTP MySQL ותיקיית העלאות מבודדת כדי לאמת שמירה מלאה של PNG JPEG ו-WebP."
+        },
+        {
+          "id": "QAR-011",
+          "test_case_id": "QA-011",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: config אוסר מגבלה מעל 5MB; uploadMedia בודק Content-Length וגם סופר את הזרם ומחזיר 413; finally מסיר קובץ זמני."
+        },
+        {
+          "id": "QAR-012",
+          "test_case_id": "QA-012",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: detectImage מאמת חתימות PNG JPEG ו-WebP בלבד ומחזיר 415 כאשר התוכן אינו תואם. לא בוצעה העלאת HTTP."
+        },
+        {
+          "id": "QAR-013",
+          "test_case_id": "QA-013",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ npm test: הבדיקה upload headers decode Hebrew file name and alt text עברה עבור לוגו.png ולוגו האתר."
+        },
+        {
+          "id": "QAR-014",
+          "test_case_id": "QA-014",
+          "date": "2026-06-09",
+          "result": "BLOCKED",
+          "tester": "AI QA",
+          "notes": "ה-repo מבצע UPDATE ל-deleted_at ול-deleted_by_user_id ומסנן מחוקים סטטית; לא אומתה התנהגות בפועל מול MySQL והגשת קובץ."
+        },
+        {
+          "id": "QAR-015",
+          "test_case_id": "QA-015",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: deleteMedia בודק logoMediaAssetId ו-additionalMediaAssetIds ומחזיר 409 MEDIA_IN_USE לפני softDelete. לא בוצע E2E."
+        },
+        {
+          "id": "QAR-016",
+          "test_case_id": "QA-016",
+          "date": "2026-06-09",
+          "result": "NOT_RUN",
+          "tester": "AI QA",
+          "notes": "npm test הפעיל build בהצלחה ואומתו נכסי dist/public המרכזיים. ניתוב ישיר History API ו-fallback לא נבדקו בדפדפן ובשרת פעיל."
+        },
+        {
+          "id": "QAR-017",
+          "test_case_id": "QA-017",
+          "date": "2026-06-09",
+          "result": "NOT_RUN",
+          "tester": "AI QA",
+          "notes": "אימות סטטי מצא dir=rtl ב-index.html והגדרה ב-main.ts וכן media query ב-768px ומינימום 320px; לא בוצעה בדיקת תצוגה בדפדפן אמיתי."
+        },
+        {
+          "id": "QAR-018",
+          "test_case_id": "QA-018",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "סריקת rg תחת src לא מצאה localStorage או sessionStorage; api.ts משתמש credentials=same-origin בלבד. לא נבדק Application Storage בדפדפן."
+        },
+        {
+          "id": "QAR-019",
+          "test_case_id": "QA-019",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test עבר: 6 בדיקות מתוך 6; גיבוב עם salt אקראי אימות סיסמה מדיניות סיסמה JWT תקין JWT ששונה וכותרות העלאה."
+        },
+        {
+          "id": "QAR-020",
+          "test_case_id": "QA-020",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ npm run design:check עם NODE_ENV=development ו-ALLOW_REFERENCE_DESIGN=true; התקבל Design profile valid: base-infrastructure-reference."
+        },
+        {
+          "id": "QAR-021",
+          "test_case_id": "QA-021",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ npm run design:check עם NODE_ENV=production ו-ALLOW_REFERENCE_DESIGN=true; התהליך נחסם כמצופה עם production builds cannot use the infrastructure reference profile."
+        },
+        {
+          "id": "QAR-022",
+          "test_case_id": "QA-022",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי מצא 29 טוקנים נדרשים כולל motion duration ו-easing; כולם קיימים ב-active-profile.css וה-validator מדווח על כל טוקן חסר."
+        },
+        {
+          "id": "QAR-023",
+          "test_case_id": "QA-023",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "ה-validator מסיר כפילויות באמצעות Set ודורש לפחות ארבעה ממדים ייחודיים ותקינים; הוא משווה כל ממד ל-reference-design.json וחוסם ממד מוצהר שלא השתנה. בדיקת custom עם typography shape-language surfaces ו-color-hierarchy שעברו שינוי סמנטי עברה."
+        },
+        {
+          "id": "QAR-024",
+          "test_case_id": "QA-024",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "בדיקת custom metadata cannot bypass unchanged reference design עברה: הוספת comment בלבד ל-CSS זוהתה כאפס ממדים ששונו והחזירה גם declared dimension has not changed."
+        },
+        {
+          "id": "QAR-025",
+          "test_case_id": "QA-025",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test הפעיל build; hash המקור והקובץ dist/public/design/project-profile.json זהים: FDE6AB9281C119CCE62B6DA13546CE6163A84E3AEBAC1D5A49AFCCA828CCDB9D."
+        },
+        {
+          "id": "QAR-026",
+          "test_case_id": "QA-026",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "סריקת כל קובצי CSS תחת src לא מצאה hex rgb rgba hsl או hsla מחוץ ל-src/design/active-profile.css."
+        },
+        {
+          "id": "QAR-027",
+          "test_case_id": "QA-027",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: sidebar topbar ו-rail מוגדרים בטיפוס וב-validator ונכתבים ל-data-navigation. קישורי rail כוללים min-width:0, overflow:hidden, text-overflow:ellipsis, white-space:nowrap ו-title עם התווית המלאה."
+        },
+        {
+          "id": "QAR-028",
+          "test_case_id": "QA-028",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי: compact ו-spacious משנים space-xs עד space-xl, control height, ארבעה גדלי טיפוגרפיה ו-line-height; comfortable נשענת על ערכי הפרופיל. npm test עבר 10 מתוך 10."
+        },
+        {
+          "id": "QAR-029",
+          "test_case_id": "QA-029",
+          "date": "2026-06-09",
+          "result": "NOT_RUN",
+          "tester": "AI QA",
+          "notes": "לא קיים דפדפן בדיקה פעיל בסביבה; לא בוצעה בדיקה חזותית של שילובי ניווט צפיפות ורוחבי מסך."
+        }
+      ]
+    },
+    "agents/qa/info/regression_tests.csv": {
+      "path": "agents/qa/info/regression_tests.csv",
+      "hash": "fa81952cb9c3f43e82021416e94d23f7c6d87c718cc1f1cf8d221c95f1ab4967",
+      "data": [
+        {
+          "id": "REG-001",
+          "module": "database",
+          "test_name": "אתחול חוזר אינו דורס מנהל קיים",
+          "expected_result": "הרצת db:init נוספת אינה משנה סיסמה או משתמש admin קיים",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-002",
+          "module": "authentication",
+          "test_name": "חובת החלפת סיסמה נשמרת לאורך רענון",
+          "expected_result": "מנהל עם JWT זמני מופנה תמיד להחלפת סיסמה ונתיבי ניהול נשארים חסומים",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-003",
+          "module": "authentication",
+          "test_name": "התחברות שגויה אינה חושפת קיום משתמש",
+          "expected_result": "שם לא קיים וסיסמה שגויה מחזירים אותה הודעה ואותו סטטוס",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-004",
+          "module": "authentication",
+          "test_name": "Rate limit מתאפס לאחר הצלחה או תום חלון",
+          "expected_result": "הצלחה מנקה מונה וחלון שפג אינו ממשיך לחסום",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-005",
+          "module": "authentication",
+          "test_name": "עוגיית אימות נשארת HttpOnly",
+          "expected_result": "כל הנפקה חידוש ומחיקה של admin_session שומרים על HttpOnly SameSite ו-Secure בפרודקשיין",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-006",
+          "module": "permissions",
+          "test_name": "אורח אינו ניגש לנתיבי ניהול",
+          "expected_result": "כל API תחת /api/admin ו-/api/auth/me מחזיר 401 ללא JWT תקין",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-007",
+          "module": "settings",
+          "test_name": "הגדרות ציבוריות נשארות מצומצמות",
+          "expected_result": "ה-API הציבורי אינו חושף updatedByUserId storagePath hash או פרטי משתמש",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-008",
+          "module": "settings",
+          "test_name": "מדיה לא פעילה אינה ניתנת לשיוך",
+          "expected_result": "מזהה מדיה חסר או מחוק נדחה ב-400 MEDIA_NOT_ACTIVE",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-009",
+          "module": "media",
+          "test_name": "מגבלת העלאה נשארת 5MB",
+          "expected_result": "Content-Length וזרם בפועל מעל 5242880 נדחים ב-413 ללא שאריות זמניות",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-010",
+          "module": "media",
+          "test_name": "זיהוי סוג נעשה לפי magic bytes",
+          "expected_result": "שינוי שם או MIME בצד לקוח אינו מאפשר תוכן שאינו PNG JPEG או WebP",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-011",
+          "module": "media",
+          "test_name": "עברית בכותרות העלאה נשמרת תקינה",
+          "expected_result": "שם קובץ וטקסט חלופי URI-encoded מפוענחים במלואם",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-012",
+          "module": "media",
+          "test_name": "מחיקה נשארת רכה",
+          "expected_result": "מחיקה מעדכנת deleted_at ו-deleted_by_user_id ואינה מוחקת פיזית רשומה או קובץ",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-013",
+          "module": "media",
+          "test_name": "מדיה בשימוש אינה נמחקת",
+          "expected_result": "לוגו ותמונות נוספות מקושרות מחזירות 409 ונשארות פעילות",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-014",
+          "module": "frontend",
+          "test_name": "כל נתיבי SPA נארזים ועובדים ברענון",
+          "expected_result": "build כולל HTML CSS ו-JavaScript לכל העמודים והשרת מחזיר index.html בנתיב ישיר",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-015",
+          "module": "frontend",
+          "test_name": "RTL ומובייל אינם נשברים",
+          "expected_result": "המסמך נשאר RTL ושימושי החל מרוחב 320px ללא גלישה אופקית",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-016",
+          "module": "security",
+          "test_name": "אין JWT באחסון דפדפן",
+          "expected_result": "אין שימוש ב-localStorage או sessionStorage והאימות נעשה בעוגיית HttpOnly בלבד",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-017",
+          "module": "security",
+          "test_name": "JWT ששונה נדחה",
+          "expected_result": "שינוי payload או signature גורם ל-verifyToken להחזיר null",
+          "critical": "yes"
+        }
+      ]
+    },
+    "shared-info/environment_contract.csv": {
+      "path": "shared-info/environment_contract.csv",
+      "hash": "9d76cc00c6deef454f2f65d69bae9a7142f93f080630d9bfd27d5efc87989d62",
+      "data": [
+        {
+          "name": "NODE_ENV",
+          "required": "yes",
+          "secret": "no",
+          "scope": "runtime",
+          "default_example": "development",
+          "description": "מצב הרצה development test production",
+          "used_by": "server;build"
+        },
+        {
+          "name": "PORT",
+          "required": "yes",
+          "secret": "no",
+          "scope": "server",
+          "default_example": "3000",
+          "description": "פורט שרת HTTP",
+          "used_by": "server"
+        },
+        {
+          "name": "APP_ORIGIN",
+          "required": "yes",
+          "secret": "no",
+          "scope": "security",
+          "default_example": "http://localhost:3000",
+          "description": "Origin מורשה לבקשות משנות מצב",
+          "used_by": "server"
+        },
+        {
+          "name": "DB_HOST",
+          "required": "yes",
+          "secret": "no",
+          "scope": "database",
+          "default_example": "127.0.0.1",
+          "description": "כתובת שרת MySQL",
+          "used_by": "db;server"
+        },
+        {
+          "name": "DB_PORT",
+          "required": "yes",
+          "secret": "no",
+          "scope": "database",
+          "default_example": "3306",
+          "description": "פורט MySQL",
+          "used_by": "db;server"
+        },
+        {
+          "name": "DB_USER",
+          "required": "yes",
+          "secret": "no",
+          "scope": "database",
+          "default_example": "root",
+          "description": "משתמש MySQL",
+          "used_by": "db;server"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "required": "yes",
+          "secret": "yes",
+          "scope": "database",
+          "default_example": "replace-me",
+          "description": "סיסמת MySQL",
+          "used_by": "db;server"
+        },
+        {
+          "name": "DB_NAME",
+          "required": "yes",
+          "secret": "no",
+          "scope": "database",
+          "default_example": "ai_dev_company_base",
+          "description": "שם מסד הנתונים",
+          "used_by": "db;server"
+        },
+        {
+          "name": "JWT_SECRET",
+          "required": "yes",
+          "secret": "yes",
+          "scope": "authentication",
+          "default_example": "replace-with-at-least-32-random-characters",
+          "description": "מפתח חתימת JWT",
+          "used_by": "server"
+        },
+        {
+          "name": "JWT_TTL_SECONDS",
+          "required": "yes",
+          "secret": "no",
+          "scope": "authentication",
+          "default_example": "28800",
+          "description": "משך חיי session בשניות",
+          "used_by": "server"
+        },
+        {
+          "name": "ADMIN_INITIAL_USERNAME",
+          "required": "yes",
+          "secret": "no",
+          "scope": "bootstrap",
+          "default_example": "admin",
+          "description": "שם מנהל ראשוני",
+          "used_by": "db"
+        },
+        {
+          "name": "ADMIN_INITIAL_PASSWORD",
+          "required": "yes",
+          "secret": "yes",
+          "scope": "bootstrap",
+          "default_example": "replace-me",
+          "description": "סיסמה ראשונית המחייבת החלפה",
+          "used_by": "db"
+        },
+        {
+          "name": "UPLOAD_DIR",
+          "required": "yes",
+          "secret": "no",
+          "scope": "media",
+          "default_example": "storage/uploads",
+          "description": "תיקיית אחסון קבצים",
+          "used_by": "server"
+        },
+        {
+          "name": "MAX_UPLOAD_BYTES",
+          "required": "yes",
+          "secret": "no",
+          "scope": "media",
+          "default_example": "5242880",
+          "description": "מגבלת העלאה קשיחה של 5MB",
+          "used_by": "server"
+        },
+        {
+          "name": "ALLOW_REFERENCE_DESIGN",
+          "required": "yes",
+          "secret": "no",
+          "scope": "design",
+          "default_example": "false",
+          "description": "מאפשר reference design בפיתוח התשתית בלבד",
+          "used_by": "build"
+        }
+      ]
+    },
+    "shared-info/modules.csv": {
+      "path": "shared-info/modules.csv",
+      "hash": "23005f70d3b4f7cc45723c11142ef44e148bfa8d84bb5e2e3ba96bbc20d2209e",
+      "data": [
+        {
+          "module": "authentication",
+          "owner": "AI API",
+          "status": "implemented",
+          "source_of_truth": "agents/api/info/api_list.csv",
+          "runtime_path": "src/server",
+          "depends_on": "users;permissions;environment",
+          "notes": "JWT HttpOnly Cookie"
+        },
+        {
+          "module": "users",
+          "owner": "AI DB",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/users.csv",
+          "runtime_path": "agents/db/domain",
+          "depends_on": "environment;permissions",
+          "notes": "bootstrap admin"
+        },
+        {
+          "module": "general-settings",
+          "owner": "AI DB;AI API;AI Components",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/site_settings.csv",
+          "runtime_path": "src",
+          "depends_on": "users;media",
+          "notes": "singleton id=1"
+        },
+        {
+          "module": "media",
+          "owner": "AI DB;AI API;AI Components",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/media_assets.csv",
+          "runtime_path": "src",
+          "depends_on": "users;environment",
+          "notes": "PNG JPEG WebP up to 5MB"
+        },
+        {
+          "module": "admin-spa",
+          "owner": "AI Components",
+          "status": "implemented",
+          "source_of_truth": "agents/components/info/components_list.csv",
+          "runtime_path": "src",
+          "depends_on": "authentication;api;design",
+          "notes": "RTL responsive"
+        },
+        {
+          "module": "design-profiles",
+          "owner": "AI Components",
+          "status": "implemented",
+          "source_of_truth": "design-system/project-profile.json",
+          "runtime_path": "src/design",
+          "depends_on": "build;qa",
+          "notes": "reference blocked in production"
+        },
+        {
+          "module": "context-bootstrap",
+          "owner": "AI Manager",
+          "status": "implemented",
+          "source_of_truth": "shared-info/system_manifest.json",
+          "runtime_path": "shared-info",
+          "depends_on": "all sources of truth",
+          "notes": "mandatory before every task"
+        }
+      ]
+    },
+    "shared-info/project_status.json": {
+      "path": "shared-info/project_status.json",
+      "hash": "7aaf0b910828ad52ede728af418352c0724cdcb411ab509ecc76c4faef3c7de3",
+      "data": {
+        "schemaVersion": 1,
+        "projectPhase": "infrastructure-ready-with-environmental-qa-blockers",
+        "lastUpdated": "2026-06-09",
+        "implementedModules": [
+          "authentication",
+          "users",
+          "general-settings",
+          "media",
+          "admin-spa",
+          "design-profiles",
+          "context-bootstrap"
+        ],
+        "activeBlockers": [
+          {
+            "id": "QA-MYSQL-E2E",
+            "severity": "High",
+            "reason": "MySQL is not listening on 127.0.0.1:3306",
+            "blocks": "Full database and HTTP E2E approval",
+            "source": "shared-info/contradictions.csv"
+          },
+          {
+            "id": "QA-VISUAL",
+            "severity": "Medium",
+            "reason": "Browser visual QA has not been executed",
+            "blocks": "Visual approval for navigation and density combinations",
+            "source": "agents/qa/info/test_results.csv"
+          }
+        ],
+        "automatedTests": {
+          "command": "npm test",
+          "lastResult": "10/10 PASS"
+        },
+        "nextRequiredActions": [
+          "Start a MySQL 8 server and run npm run db:init",
+          "Run database and HTTP E2E scenarios",
+          "Run browser visual QA for responsive and design profile variants"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "roles": 2,
+    "tables": 3,
+    "apis": 11,
+    "components": 10,
+    "features": 10,
+    "userStories": 11,
+    "qaCases": 29,
+    "openContradictions": 1
+  }
+}

@@ -1,0 +1,11 @@
+table_name,field_name,type,required,unique,default_value,description,used_by_api,notes
+users,id,BIGINT UNSIGNED AUTO_INCREMENT,yes,yes,,מזהה פנימי של המשתמש,Authentication; Users,Primary key
+users,username,VARCHAR(191),yes,yes,,שם המשתמש להתחברות,Authentication,Normalized and unique
+users,password_hash,VARCHAR(255),yes,no,,גיבוב הסיסמה בפורמט hexadecimal,Authentication,Never stores a plain password
+users,password_salt,VARCHAR(255),yes,no,,Salt אקראי בפורמט hexadecimal,Authentication,Generated independently for every password
+users,role_name,VARCHAR(50),yes,no,admin,שם התפקיד לפי מקור האמת של ההרשאות,Authentication; Users,Initial infrastructure supports admin
+users,is_active,BOOLEAN,yes,no,true,האם החשבון פעיל,Authentication,
+users,must_change_password,BOOLEAN,yes,no,true,האם נדרשת החלפת סיסמה לפני פעולות ניהול,Authentication,
+users,last_login_at,DATETIME(3),no,no,NULL,מועד התחברות מוצלחת אחרונה,Authentication,
+users,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירת המשתמש,Users,
+users,updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד עדכון המשתמש,Users,Updated automatically

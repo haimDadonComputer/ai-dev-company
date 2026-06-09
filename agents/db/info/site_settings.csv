@@ -1,0 +1,14 @@
+table_name,field_name,type,required,unique,default_value,description,used_by_api,notes
+site_settings,id,TINYINT UNSIGNED,yes,yes,1,מזהה קבוע של רשומת ההגדרות,General Settings; Public Settings,Primary key with CHECK id=1
+site_settings,site_name,VARCHAR(191),yes,no,"",שם האתר,General Settings; Public Settings,
+site_settings,slogan,VARCHAR(255),yes,no,"",סלוגן האתר,General Settings; Public Settings,
+site_settings,phone,VARCHAR(50),yes,no,"",מספר טלפון,General Settings; Public Settings,
+site_settings,address,VARCHAR(500),yes,no,"",כתובת,General Settings; Public Settings,
+site_settings,whatsapp,VARCHAR(100),yes,no,"",מספר או קישור WhatsApp,General Settings; Public Settings,
+site_settings,instagram,VARCHAR(255),yes,no,"",שם משתמש או קישור Instagram,General Settings; Public Settings,
+site_settings,email,VARCHAR(254),yes,no,"",כתובת אימייל,General Settings; Public Settings,
+site_settings,logo_media_asset_id,BIGINT UNSIGNED,no,no,NULL,נכס המדיה המשמש כלוגו,General Settings; Public Settings,FK media_assets.id ON DELETE SET NULL
+site_settings,additional_media_asset_ids,JSON,no,no,NULL,רשימת מזהי מדיה לתמונות כלליות,General Settings; Public Settings,API must validate active media IDs
+site_settings,updated_by_user_id,BIGINT UNSIGNED,no,no,NULL,מזהה המשתמש שביצע את העדכון האחרון,General Settings,FK users.id ON DELETE RESTRICT; NULL only for bootstrap
+site_settings,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירת הרשומה,General Settings,
+site_settings,updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד העדכון האחרון,General Settings,Updated automatically

@@ -1,5 +1,5 @@
 name,size,weight,usage
-h1,32,700,page title
-h2,24,700,section title
-body,16,400,default text
-small,14,400,helper text
+display,var(--design-font-size-display),var(--design-font-weight-heading),page title
+heading,var(--design-font-size-heading),var(--design-font-weight-heading),section title
+body,var(--design-font-size-body),var(--design-font-weight-body),default text
+small,var(--design-font-size-small),var(--design-font-weight-body),helper text

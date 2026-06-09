@@ -1,1 +1,4 @@
-id,feature_name,affected_modules,affected_roles,affected_tables,affected_apis,risk_level,statusid,date,feature_name,affected_modules,affected_roles,affected_tables,affected_apis,affected_components,risk_level,status
+id,date,feature_name,affected_modules,affected_roles,affected_tables,affected_apis,affected_components,risk_level,status
+1,2026-06-09,תשתית בסיס לאפליקציות ניהול,"Product;Permissions;DB;API;Components;QA;Contracts;Contradictions","admin;guest","users;site_settings;media_assets","auth;admin-settings;admin-media;public-settings;media","login;change-password;admin-general;admin-media;sidebar;navbar;form;button;notification;modal",High,implemented_pending_full_qa
+2,2026-06-09,Design Profiles,"Design System;Components;Build;QA","none","none","none","all frontend pages and shared components",High,implemented_pending_visual_qa
+3,2026-06-09,Manager Bootstrap,"Management;All Agents;Build;QA;Product","all","all","all","all",High,implemented_pending_context_qa

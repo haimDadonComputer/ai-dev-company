@@ -1,3 +1,3 @@
 role_name,description,can_view,can_create,can_edit,can_delete,allowed_api,allowed_components,notes
-guest,משתמש לא מחובר,public pages בלבד,none,none,none,none,public components,ברירת מחדל
-admin,מנהל מערכת,all,all,all,all,all,all,High Risk role
+guest,משתמש לא מחובר,"הגדרות אתר ציבוריות|קובצי מדיה ציבוריים|עמוד התחברות",none,none,none,"public_settings_get|media_get","login-page|form|button|notification","הרשאות ציבוריות בלבד; risk_level=Low; needs_review=no"
+admin,מנהל מערכת,"פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|עמודי ורכיבי ניהול","העלאת מדיה","הגדרות כלליות|סיסמת המשתמש","מחיקת מדיה","auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_media_upload|admin_media_list|admin_media_delete|public_settings_get|media_get","login-page|change-password-page|admin-general-page|admin-media-page|navbar|sidebar|form|button|notification|modal","הרשאות ניהול מפורשות ללא הרשאה גורפת; risk_level=High; needs_review=yes"

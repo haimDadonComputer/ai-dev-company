@@ -1,0 +1,37 @@
+.button-component {
+  min-height: var(--ui-control-height);
+  padding: var(--ui-space-sm) var(--ui-space-md);
+  border: 1px solid transparent;
+  border-radius: var(--ui-radius-control);
+  font-weight: var(--design-font-weight-heading);
+  cursor: pointer;
+  transition:
+    background-color var(--design-motion-duration) var(--design-motion-easing),
+    border-color var(--design-motion-duration) var(--design-motion-easing),
+    color var(--design-motion-duration) var(--design-motion-easing);
+}
+
+.button-component:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.button-component--primary {
+  color: var(--ui-action-contrast);
+  background: var(--ui-action);
+}
+
+.button-component--primary:hover:not(:disabled) {
+  background: var(--ui-action-hover);
+}
+
+.button-component--secondary {
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+}
+
+.button-component--danger {
+  color: var(--ui-action-contrast);
+  background: var(--ui-danger);
+}

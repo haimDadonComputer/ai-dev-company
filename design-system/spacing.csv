@@ -1,6 +1,6 @@
 name,value
-xs,4
-sm,8
-md,16
-lg,24
-xl,32
+xs,var(--design-space-xs)
+sm,var(--design-space-sm)
+md,var(--design-space-md)
+lg,var(--design-space-lg)
+xl,var(--design-space-xl)

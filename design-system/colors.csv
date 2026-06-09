@@ -1,6 +1,12 @@
 name,value,usage
-primary,#2563eb,primary actions
-secondary,#64748b,secondary actions
-success,#16a34a,success messages
-danger,#dc2626,error messages
-warning,#f59e0b,warning messages
+action,var(--design-color-action),primary actions from active profile
+action-hover,var(--design-color-action-hover),hover and active actions
+background,var(--design-color-background),page background
+surface,var(--design-color-surface),cards forms and navigation
+text,var(--design-color-text),primary text
+muted,var(--design-color-muted),secondary text
+border,var(--design-color-border),borders and separators
+success,var(--design-color-success),success messages
+danger,var(--design-color-danger),error and destructive actions
+warning,var(--design-color-warning),warning messages
+focus,var(--design-color-focus),keyboard focus
