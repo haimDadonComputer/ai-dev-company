@@ -1,11 +1,12 @@
 component_name,visible_to,used_by,api_used,description,risk_level
-login-page,guest,router,"auth_login|auth_me","עמוד התחברות למנהל המערכת",High
-change-password-page,admin,router,"auth_me|auth_change_password","עמוד החלפה מחייבת של סיסמת המנהל",High
+login-page,"guest|student|instructor|admin",router,"auth_login|auth_me","עמוד התחברות למשתמשי המערכת",High
+change-password-page,"student|instructor|admin",router,"auth_me|auth_change_password","עמוד החלפת סיסמה למשתמש מחובר",High
 admin-general-page,admin,router,"auth_me|admin_general_get|admin_general_update|admin_media_list","ניהול פרטי האתר ובחירת לוגו ותמונות",High
+admin-users-page,admin,router,"auth_me|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status","ניהול משתמשים למנהל כולל יצירה עריכה איפוס סיסמה ושינוי סטטוס",High
 admin-media-page,admin,router,"auth_me|admin_media_upload|admin_media_list|admin_media_delete","העלאה ניהול ומחיקה של תמונות עד 5MB",High
-navbar,admin,"admin-general-page|admin-media-page",auth_logout,"סרגל עליון עם זיהוי מנהל והתנתקות",High
-sidebar,admin,"admin-general-page|admin-media-page",none,"ניווט בין עמודי ממשק הניהול",Low
-form,"guest|admin","login-page|change-password-page|admin-general-page|admin-media-page",none,"מבנה וטיפול במצבי טפסים",Low
-button,"guest|admin","login-page|change-password-page|admin-general-page|admin-media-page",none,"כפתורי פעולה עקביים ונגישים",Low
-notification,"guest|admin","login-page|change-password-page|admin-general-page|admin-media-page",none,"הודעות הצלחה שגיאה ומידע נגישות",Low
+navbar,admin,"admin-general-page|admin-users-page|admin-media-page",auth_logout,"סרגל עליון עם זיהוי מנהל והתנתקות",High
+sidebar,admin,"admin-general-page|admin-users-page|admin-media-page",none,"ניווט בין עמודי ממשק הניהול",Low
+form,"guest|student|instructor|admin","login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",none,"מבנה וטיפול במצבי טפסים",Low
+button,"guest|student|instructor|admin","login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",none,"כפתורי פעולה עקביים ונגישים",Low
+notification,"guest|student|instructor|admin","login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",none,"הודעות הצלחה שגיאה ומידע נגישות",Low
 modal,admin,admin-media-page,none,"חלון אישור למחיקת קובץ מדיה",Low

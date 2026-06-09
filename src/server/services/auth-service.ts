@@ -5,29 +5,47 @@ import {
   type UserRecord,
 } from "../../../agents/db/domain/repo.js";
 import { createToken } from "../utils/jwt.js";
+import type { UserRole } from "../utils/jwt.js";
 import { hashPassword, verifyPassword } from "../utils/password.js";
 import { ServiceError } from "./service-error.js";
 
 export interface AuthUser {
   id: number;
   username: string;
-  role: "admin";
+  role: UserRole;
+  firstName: string;
+  lastName: string;
   mustChangePassword: boolean;
 }
 
 function toAuthUser(user: UserRecord): AuthUser {
+  const role = toUserRole(user.roleName);
   return {
     id: user.id,
     username: user.username,
-    role: "admin",
+    role,
+    firstName: user.firstName,
+    lastName: user.lastName,
     mustChangePassword: user.mustChangePassword,
   };
 }
 
-function assertActiveAdmin(user: UserRecord | null): UserRecord {
-  if (!user || !user.isActive || user.roleName !== "admin") {
+function toUserRole(roleName: string): UserRole {
+  if (
+    roleName !== "student" &&
+    roleName !== "instructor" &&
+    roleName !== "admin"
+  ) {
     throw new ServiceError(401, "INVALID_CREDENTIALS", "שם המשתמש או הסיסמה שגויים");
   }
+  return roleName;
+}
+
+function assertActiveUser(user: UserRecord | null): UserRecord {
+  if (!user || !user.isActive || user.status !== "active") {
+    throw new ServiceError(401, "INVALID_CREDENTIALS", "שם המשתמש או הסיסמה שגויים");
+  }
+  toUserRole(user.roleName);
   return user;
 }
 
@@ -35,19 +53,19 @@ export async function login(
   username: string,
   password: string,
 ): Promise<{ token: string; user: AuthUser }> {
-  const user = assertActiveAdmin(await findUserByUsername(username));
+  const user = assertActiveUser(await findUserByUsername(username));
   if (!(await verifyPassword(password, user.passwordHash, user.passwordSalt))) {
     throw new ServiceError(401, "INVALID_CREDENTIALS", "שם המשתמש או הסיסמה שגויים");
   }
 
   return {
-    token: createToken(user.id, "admin", user.mustChangePassword),
+    token: createToken(user.id, toUserRole(user.roleName), user.mustChangePassword),
     user: toAuthUser(user),
   };
 }
 
 export async function getAuthenticatedUser(userId: number): Promise<AuthUser> {
-  const user = assertActiveAdmin(await findUserById(userId));
+  const user = assertActiveUser(await findUserById(userId));
   return toAuthUser(user);
 }
 
@@ -56,7 +74,7 @@ export async function changePassword(
   currentPassword: string,
   newPassword: string,
 ): Promise<{ token: string; user: AuthUser }> {
-  const user = assertActiveAdmin(await findUserById(userId));
+  const user = assertActiveUser(await findUserById(userId));
   if (
     !(await verifyPassword(currentPassword, user.passwordHash, user.passwordSalt))
   ) {
@@ -73,14 +91,17 @@ export async function changePassword(
     throw new ServiceError(500, "PASSWORD_UPDATE_FAILED", "עדכון הסיסמה נכשל");
   }
 
+  const role = toUserRole(user.roleName);
   const authenticatedUser: AuthUser = {
     id: user.id,
     username: user.username,
-    role: "admin",
+    role,
+    firstName: user.firstName,
+    lastName: user.lastName,
     mustChangePassword: false,
   };
   return {
-    token: createToken(user.id, "admin", false),
+    token: createToken(user.id, role, false),
     user: authenticatedUser,
   };
 }

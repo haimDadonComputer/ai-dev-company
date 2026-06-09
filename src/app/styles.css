@@ -8,6 +8,7 @@
 @import url("../pages/login/style.css");
 @import url("../pages/change-password/style.css");
 @import url("../pages/admin-general/style.css");
+@import url("../pages/admin-users/style.css");
 @import url("../pages/admin-media/style.css");
 
 :root {

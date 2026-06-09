@@ -1,11 +1,11 @@
 import { apiRequest } from "./api.js";
-import type { AuthUser } from "../types/app.js";
+import type { AuthUser, UserRole } from "../types/app.js";
 
 interface LoginResponse {
   user?: AuthUser;
   id?: number;
   username?: string;
-  role?: "admin";
+  role?: UserRole;
   mustChangePassword?: boolean;
   must_change_password?: boolean;
 }

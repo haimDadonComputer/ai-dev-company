@@ -3,9 +3,15 @@ users,id,BIGINT UNSIGNED AUTO_INCREMENT,yes,yes,,מזהה פנימי של המש
 users,username,VARCHAR(191),yes,yes,,שם המשתמש להתחברות,Authentication,Normalized and unique
 users,password_hash,VARCHAR(255),yes,no,,גיבוב הסיסמה בפורמט hexadecimal,Authentication,Never stores a plain password
 users,password_salt,VARCHAR(255),yes,no,,Salt אקראי בפורמט hexadecimal,Authentication,Generated independently for every password
-users,role_name,VARCHAR(50),yes,no,admin,שם התפקיד לפי מקור האמת של ההרשאות,Authentication; Users,Initial infrastructure supports admin
+users,role_name,VARCHAR(50),yes,no,admin,שם התפקיד לפי מקור האמת של ההרשאות,Authentication; Users,Allowed values: student instructor admin
+users,first_name,VARCHAR(100),yes,no,"",שם פרטי,Users,Required for business users; bootstrap admin may start empty
+users,last_name,VARCHAR(100),yes,no,"",שם משפחה,Users,Required for business users; bootstrap admin may start empty
+users,phone,VARCHAR(50),yes,no,"",טלפון,Users,
+users,email,VARCHAR(254),yes,no,"",מייל,Users,
+users,status,VARCHAR(20),yes,no,active,סטטוס עסקי של המשתמש,Authentication; Users,active inactive archived
 users,is_active,BOOLEAN,yes,no,true,האם החשבון פעיל,Authentication,
 users,must_change_password,BOOLEAN,yes,no,true,האם נדרשת החלפת סיסמה לפני פעולות ניהול,Authentication,
+users,notes,TEXT,no,no,NULL,הערות פנימיות על המשתמש,Users,
 users,last_login_at,DATETIME(3),no,no,NULL,מועד התחברות מוצלחת אחרונה,Authentication,
 users,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירת המשתמש,Users,
 users,updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד עדכון המשתמש,Users,Updated automatically

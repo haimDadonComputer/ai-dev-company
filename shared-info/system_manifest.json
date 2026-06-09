@@ -29,6 +29,8 @@
     "database": [
       "agents/db/info/tables-index.csv",
       "agents/db/info/users.csv",
+      "agents/db/info/students.csv",
+      "agents/db/info/instructors.csv",
       "agents/db/info/site_settings.csv",
       "agents/db/info/media_assets.csv"
     ],

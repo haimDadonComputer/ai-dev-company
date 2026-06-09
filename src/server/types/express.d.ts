@@ -3,7 +3,7 @@ declare global {
     interface Request {
       auth?: {
         userId: number;
-        role: "admin";
+        role: "student" | "instructor" | "admin";
         mustChangePassword: boolean;
       };
     }

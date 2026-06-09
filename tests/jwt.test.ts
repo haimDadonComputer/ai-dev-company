@@ -17,3 +17,14 @@ test("JWT verification rejects a modified signature", () => {
 
   assert.equal(verifyToken(modified), null);
 });
+
+test("JWT round trip supports all CRM user roles", () => {
+  for (const role of ["student", "instructor", "admin"] as const) {
+    const token = createToken(12, role, false);
+    const payload = verifyToken(token);
+
+    assert.equal(payload?.sub, 12);
+    assert.equal(payload?.role, role);
+    assert.equal(payload?.mustChangePassword, false);
+  }
+});

@@ -1,4 +1,5 @@
 import {
+  PoolConnection,
   createPool,
   Pool,
   ResultSetHeader,
@@ -17,11 +18,99 @@ export interface UserRecord {
   passwordHash: string;
   passwordSalt: string;
   roleName: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  status: string;
   isActive: boolean;
   mustChangePassword: boolean;
+  notes: string | null;
   lastLoginAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export type UserRole = "student" | "instructor" | "admin";
+export type UserStatus = "active" | "inactive" | "archived";
+
+export interface StudentRecord {
+  id: number;
+  userId: number;
+  nationalId: string | null;
+  birthDate: Date | null;
+  fullAddress: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface InstructorRecord {
+  id: number;
+  userId: number;
+  expertiseAreas: string | null;
+  biography: string | null;
+  resumeFileId: number | null;
+  certificationFileIds: number[] | null;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateUserInput {
+  username: string;
+  passwordHash: string;
+  passwordSalt: string;
+  roleName: UserRole;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  notes: string | null;
+  student?: {
+    nationalId: string | null;
+    birthDate: string | null;
+    fullAddress: string;
+  };
+  instructor?: {
+    expertiseAreas: string | null;
+    biography: string | null;
+    resumeFileId: number | null;
+    certificationFileIds: number[] | null;
+    notes: string | null;
+  };
+}
+
+export interface UserUpdateInput {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email?: string;
+  notes?: string | null;
+  student?: {
+    nationalId?: string | null;
+    birthDate?: string | null;
+    fullAddress?: string;
+  };
+  instructor?: {
+    expertiseAreas?: string | null;
+    biography?: string | null;
+    resumeFileId?: number | null;
+    certificationFileIds?: number[] | null;
+    notes?: string | null;
+  };
+}
+
+export interface UserListOptions {
+  limit?: number;
+  offset?: number;
+  roleName?: UserRole;
+  status?: UserStatus;
+}
+
+export interface UserWithProfile {
+  user: UserRecord;
+  student: StudentRecord | null;
+  instructor: InstructorRecord | null;
 }
 
 export interface SiteSettingsRecord {
@@ -92,8 +181,14 @@ interface UserRow extends RowDataPacket {
   password_hash: string;
   password_salt: string;
   role_name: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  status: string;
   is_active: number;
   must_change_password: number;
+  notes: string | null;
   last_login_at: Date | null;
   created_at: Date;
   updated_at: Date;
@@ -131,6 +226,28 @@ interface MediaAssetRow extends RowDataPacket {
   deleted_by_user_id: number | null;
 }
 
+interface StudentRow extends RowDataPacket {
+  id: number;
+  user_id: number;
+  national_id: string | null;
+  birth_date: Date | null;
+  full_address: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+interface InstructorRow extends RowDataPacket {
+  id: number;
+  user_id: number;
+  expertise_areas: string | null;
+  biography: string | null;
+  resume_file_id: number | null;
+  certification_file_ids: string | number[] | null;
+  notes: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
 const requiredEnvironmentVariables = [
   "DB_HOST",
   "DB_USER",
@@ -166,8 +283,14 @@ function mapUser(row: UserRow): UserRecord {
     passwordHash: row.password_hash,
     passwordSalt: row.password_salt,
     roleName: row.role_name,
+    firstName: row.first_name,
+    lastName: row.last_name,
+    phone: row.phone,
+    email: row.email,
+    status: row.status,
     isActive: Boolean(row.is_active),
     mustChangePassword: Boolean(row.must_change_password),
+    notes: row.notes,
     lastLoginAt: row.last_login_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -227,15 +350,83 @@ function mapMediaAsset(row: MediaAssetRow): MediaAssetRecord {
   };
 }
 
+function mapStudent(row: StudentRow): StudentRecord {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    nationalId: row.national_id,
+    birthDate: row.birth_date,
+    fullAddress: row.full_address,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapInstructor(row: InstructorRow): InstructorRecord {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    expertiseAreas: row.expertise_areas,
+    biography: row.biography,
+    resumeFileId: row.resume_file_id,
+    certificationFileIds: parseMediaIds(row.certification_file_ids),
+    notes: row.notes,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+const userSelect = `SELECT id, username, password_hash, password_salt, role_name,
+          is_active, first_name, last_name, phone, email, status,
+          must_change_password, notes, last_login_at, created_at, updated_at
+     FROM users`;
+
+async function findUserByIdWithConnection(
+  connection: PoolConnection,
+  id: number,
+): Promise<UserRecord | null> {
+  const [rows] = await connection.execute<UserRow[]>(
+    `${userSelect} WHERE id = ? LIMIT 1`,
+    [id],
+  );
+  return rows[0] ? mapUser(rows[0]) : null;
+}
+
+async function findStudentByUserId(
+  connection: PoolConnection | Pool,
+  userId: number,
+): Promise<StudentRecord | null> {
+  const [rows] = await connection.execute<StudentRow[]>(
+    `SELECT id, user_id, national_id, birth_date, full_address,
+            created_at, updated_at
+       FROM students
+      WHERE user_id = ?
+      LIMIT 1`,
+    [userId],
+  );
+  return rows[0] ? mapStudent(rows[0]) : null;
+}
+
+async function findInstructorByUserId(
+  connection: PoolConnection | Pool,
+  userId: number,
+): Promise<InstructorRecord | null> {
+  const [rows] = await connection.execute<InstructorRow[]>(
+    `SELECT id, user_id, expertise_areas, biography, resume_file_id,
+            certification_file_ids, notes, created_at, updated_at
+       FROM instructors
+      WHERE user_id = ?
+      LIMIT 1`,
+    [userId],
+  );
+  return rows[0] ? mapInstructor(rows[0]) : null;
+}
+
 export async function findUserByUsername(
   username: string,
 ): Promise<UserRecord | null> {
   const [rows] = await pool.execute<UserRow[]>(
-    `SELECT id, username, password_hash, password_salt, role_name, is_active,
-            must_change_password, last_login_at, created_at, updated_at
-       FROM users
-      WHERE username = ?
-      LIMIT 1`,
+    `${userSelect} WHERE username = ? LIMIT 1`,
     [username],
   );
 
@@ -244,15 +435,276 @@ export async function findUserByUsername(
 
 export async function findUserById(id: number): Promise<UserRecord | null> {
   const [rows] = await pool.execute<UserRow[]>(
-    `SELECT id, username, password_hash, password_salt, role_name, is_active,
-            must_change_password, last_login_at, created_at, updated_at
-       FROM users
-      WHERE id = ?
-      LIMIT 1`,
+    `${userSelect} WHERE id = ? LIMIT 1`,
     [id],
   );
 
   return rows[0] ? mapUser(rows[0]) : null;
+}
+
+export async function findUserWithProfileById(
+  id: number,
+): Promise<UserWithProfile | null> {
+  const user = await findUserById(id);
+  if (!user) {
+    return null;
+  }
+  const [student, instructor] = await Promise.all([
+    user.roleName === "student" ? findStudentByUserId(pool, id) : null,
+    user.roleName === "instructor" ? findInstructorByUserId(pool, id) : null,
+  ]);
+  return { user, student, instructor };
+}
+
+export async function listUsers(
+  options: UserListOptions = {},
+): Promise<UserRecord[]> {
+  const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+  const offset = Math.max(options.offset ?? 0, 0);
+  const filters: string[] = [];
+  const values: Array<string | number> = [];
+
+  if (options.roleName) {
+    filters.push("role_name = ?");
+    values.push(options.roleName);
+  }
+  if (options.status) {
+    filters.push("status = ?");
+    values.push(options.status);
+  }
+
+  const where = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
+  const [rows] = await pool.query<UserRow[]>(
+    `${userSelect}
+       ${where}
+      ORDER BY id DESC
+      LIMIT ? OFFSET ?`,
+    [...values, limit, offset],
+  );
+
+  return rows.map(mapUser);
+}
+
+export async function createUserWithProfile(
+  input: CreateUserInput,
+): Promise<UserWithProfile> {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const [result] = await connection.execute<ResultSetHeader>(
+      `INSERT INTO users (
+         username, password_hash, password_salt, role_name,
+         first_name, last_name, phone, email, status,
+         is_active, must_change_password, notes
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', TRUE, TRUE, ?)`,
+      [
+        input.username,
+        input.passwordHash,
+        input.passwordSalt,
+        input.roleName,
+        input.firstName,
+        input.lastName,
+        input.phone,
+        input.email,
+        input.notes,
+      ],
+    );
+
+    const userId = result.insertId;
+    if (input.roleName === "student") {
+      await connection.execute<ResultSetHeader>(
+        `INSERT INTO students (user_id, national_id, birth_date, full_address)
+         VALUES (?, ?, ?, ?)`,
+        [
+          userId,
+          input.student?.nationalId ?? null,
+          input.student?.birthDate ?? null,
+          input.student?.fullAddress ?? "",
+        ],
+      );
+    }
+    if (input.roleName === "instructor") {
+      await connection.execute<ResultSetHeader>(
+        `INSERT INTO instructors (
+           user_id, expertise_areas, biography, resume_file_id,
+           certification_file_ids, notes
+         ) VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          userId,
+          input.instructor?.expertiseAreas ?? null,
+          input.instructor?.biography ?? null,
+          input.instructor?.resumeFileId ?? null,
+          input.instructor?.certificationFileIds
+            ? JSON.stringify(input.instructor.certificationFileIds)
+            : null,
+          input.instructor?.notes ?? null,
+        ],
+      );
+    }
+
+    const user = await findUserByIdWithConnection(connection, userId);
+    if (!user) {
+      throw new Error("Created user could not be loaded");
+    }
+    const student =
+      user.roleName === "student" ? await findStudentByUserId(connection, userId) : null;
+    const instructor =
+      user.roleName === "instructor"
+        ? await findInstructorByUserId(connection, userId)
+        : null;
+    await connection.commit();
+    return { user, student, instructor };
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
+export async function updateUserIdentity(
+  userId: number,
+  input: UserUpdateInput,
+): Promise<UserWithProfile | null> {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const assignments: string[] = [];
+    const values: Array<string | number | null> = [];
+
+    if (input.firstName !== undefined) {
+      assignments.push("first_name = ?");
+      values.push(input.firstName);
+    }
+    if (input.lastName !== undefined) {
+      assignments.push("last_name = ?");
+      values.push(input.lastName);
+    }
+    if (input.phone !== undefined) {
+      assignments.push("phone = ?");
+      values.push(input.phone);
+    }
+    if (input.email !== undefined) {
+      assignments.push("email = ?");
+      values.push(input.email);
+    }
+    if (input.notes !== undefined) {
+      assignments.push("notes = ?");
+      values.push(input.notes);
+    }
+
+    if (assignments.length) {
+      assignments.push("updated_at = CURRENT_TIMESTAMP(3)");
+      await connection.execute<ResultSetHeader>(
+        `UPDATE users SET ${assignments.join(", ")} WHERE id = ?`,
+        [...values, userId],
+      );
+    }
+
+    const user = await findUserByIdWithConnection(connection, userId);
+    if (!user) {
+      await connection.rollback();
+      return null;
+    }
+
+    if (user.roleName === "student" && input.student) {
+      const studentAssignments: string[] = [];
+      const studentValues: Array<string | number | null> = [];
+      if (input.student.nationalId !== undefined) {
+        studentAssignments.push("national_id = ?");
+        studentValues.push(input.student.nationalId);
+      }
+      if (input.student.birthDate !== undefined) {
+        studentAssignments.push("birth_date = ?");
+        studentValues.push(input.student.birthDate);
+      }
+      if (input.student.fullAddress !== undefined) {
+        studentAssignments.push("full_address = ?");
+        studentValues.push(input.student.fullAddress);
+      }
+      if (studentAssignments.length) {
+        studentAssignments.push("updated_at = CURRENT_TIMESTAMP(3)");
+        await connection.execute<ResultSetHeader>(
+          `UPDATE students SET ${studentAssignments.join(", ")} WHERE user_id = ?`,
+          [...studentValues, userId],
+        );
+      }
+    }
+
+    if (user.roleName === "instructor" && input.instructor) {
+      const instructorAssignments: string[] = [];
+      const instructorValues: Array<string | number | null> = [];
+      if (input.instructor.expertiseAreas !== undefined) {
+        instructorAssignments.push("expertise_areas = ?");
+        instructorValues.push(input.instructor.expertiseAreas);
+      }
+      if (input.instructor.biography !== undefined) {
+        instructorAssignments.push("biography = ?");
+        instructorValues.push(input.instructor.biography);
+      }
+      if (input.instructor.resumeFileId !== undefined) {
+        instructorAssignments.push("resume_file_id = ?");
+        instructorValues.push(input.instructor.resumeFileId);
+      }
+      if (input.instructor.certificationFileIds !== undefined) {
+        instructorAssignments.push("certification_file_ids = ?");
+        instructorValues.push(
+          input.instructor.certificationFileIds === null
+            ? null
+            : JSON.stringify(input.instructor.certificationFileIds),
+        );
+      }
+      if (input.instructor.notes !== undefined) {
+        instructorAssignments.push("notes = ?");
+        instructorValues.push(input.instructor.notes);
+      }
+      if (instructorAssignments.length) {
+        instructorAssignments.push("updated_at = CURRENT_TIMESTAMP(3)");
+        await connection.execute<ResultSetHeader>(
+          `UPDATE instructors SET ${instructorAssignments.join(", ")} WHERE user_id = ?`,
+          [...instructorValues, userId],
+        );
+      }
+    }
+
+    const updated = await findUserByIdWithConnection(connection, userId);
+    if (!updated) {
+      throw new Error("Updated user could not be loaded");
+    }
+    const student =
+      updated.roleName === "student"
+        ? await findStudentByUserId(connection, userId)
+        : null;
+    const instructor =
+      updated.roleName === "instructor"
+        ? await findInstructorByUserId(connection, userId)
+        : null;
+    await connection.commit();
+    return { user: updated, student, instructor };
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
+export async function updateUserStatus(
+  userId: number,
+  status: UserStatus,
+): Promise<UserRecord | null> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `UPDATE users
+        SET status = ?,
+            is_active = ?,
+            updated_at = CURRENT_TIMESTAMP(3)
+      WHERE id = ?`,
+    [status, status === "active", userId],
+  );
+  if (result.affectedRows !== 1) {
+    return null;
+  }
+  return findUserById(userId);
 }
 
 export async function updateUserPassword(

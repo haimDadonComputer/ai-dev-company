@@ -16,3 +16,8 @@ REG-014,frontend,"כל נתיבי SPA נארזים ועובדים ברענון",
 REG-015,frontend,"RTL ומובייל אינם נשברים","המסמך נשאר RTL ושימושי החל מרוחב 320px ללא גלישה אופקית",yes
 REG-016,security,"אין JWT באחסון דפדפן","אין שימוש ב-localStorage או sessionStorage והאימות נעשה בעוגיית HttpOnly בלבד",yes
 REG-017,security,"JWT ששונה נדחה","שינוי payload או signature גורם ל-verifyToken להחזיר null",yes
+REG-018,permissions,"משתמש שאינו מנהל אינו ניגש לנתיבי admin","JWT תקין של student או instructor מחזיר 403 ADMIN_REQUIRED בכל נתיב /api/admin",yes
+REG-019,database,"סכמת זהויות CRM נשמרת באתחול חוזר","db:init יוצר ומשמר users students instructors ואת עמודות first_name last_name phone email status notes ללא דריסת משתמש קיים",yes
+REG-020,users,"ניהול משתמשים אינו מבצע מחיקה פיזית","שינוי סטטוס ל-archived מעדכן users.status ו-is_active=false ואינו מוחק users students או instructors",yes
+REG-021,users,"יצירת משתמש עסקי יוצרת הרחבה תואמת","role student יוצר students בלבד ו-role instructor יוצר instructors בלבד באותה טרנזקציה",yes
+REG-022,frontend,"עמוד ניהול משתמשים נשאר חלק מה-SPA","build כולל pages/admin-users וניווט /admin/users, sidebar מפנה אליו, והלקוח אינו שומר JWT ב-localStorage או sessionStorage",yes

@@ -1,0 +1,2 @@
+component_name,visible_to,used_by,api_used,description,risk_level
+admin-users-page,admin,router,"auth_me|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status","עמוד ניהול משתמשים למנהל: יצירה עריכה איפוס סיסמה ושינוי סטטוס",High

@@ -1,0 +1,163 @@
+<section class="admin-users-page">
+  <header class="page-header">
+    <h1>ניהול משתמשים</h1>
+    <p>יצירה, עריכה וניהול גישה של תלמידים, מדריכים ומנהלים.</p>
+  </header>
+
+  <section class="admin-users-page__toolbar card" aria-label="סינון משתמשים">
+    <div class="form-component__field">
+      <label for="users-role-filter">תפקיד</label>
+      <select id="users-role-filter" name="role">
+        <option value="">כל התפקידים</option>
+        <option value="student">תלמיד</option>
+        <option value="instructor">מדריך</option>
+        <option value="admin">מנהל</option>
+      </select>
+    </div>
+    <div class="form-component__field">
+      <label for="users-status-filter">סטטוס</label>
+      <select id="users-status-filter" name="status">
+        <option value="">כל הסטטוסים</option>
+        <option value="active">פעיל</option>
+        <option value="inactive">לא פעיל</option>
+        <option value="archived">בארכיון</option>
+      </select>
+    </div>
+    <button class="button-component button-component--secondary admin-users-page__refresh" type="button">רענון</button>
+  </section>
+
+  <div class="admin-users-page__grid">
+    <section class="admin-users-page__list card" aria-labelledby="users-list-title">
+      <div class="admin-users-page__section-header">
+        <h2 id="users-list-title">משתמשים</h2>
+        <span class="admin-users-page__count" role="status"></span>
+      </div>
+      <div class="admin-users-page__table-wrap">
+        <table class="admin-users-page__table">
+          <thead>
+            <tr>
+              <th scope="col">משתמש</th>
+              <th scope="col">תפקיד</th>
+              <th scope="col">פרטים</th>
+              <th scope="col">סטטוס</th>
+              <th scope="col">סיסמה</th>
+            </tr>
+          </thead>
+          <tbody class="admin-users-page__rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-users-page__details card" aria-labelledby="user-form-title">
+      <div class="admin-users-page__section-header">
+        <h2 id="user-form-title">משתמש חדש</h2>
+        <button class="button-component button-component--secondary admin-users-page__new" type="button">ניקוי בחירה</button>
+      </div>
+
+      <form class="form-component admin-users-page__form" novalidate>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__grid">
+          <div class="form-component__field admin-users-page__create-only">
+            <label for="user-username">שם משתמש</label>
+            <input id="user-username" name="username" type="text" maxlength="191" autocomplete="off" required>
+          </div>
+          <div class="form-component__field admin-users-page__create-only">
+            <label for="user-password">סיסמה ראשונית</label>
+            <input id="user-password" name="password" type="password" minlength="8" autocomplete="new-password" required>
+          </div>
+          <div class="form-component__field admin-users-page__create-only">
+            <label for="user-role">תפקיד</label>
+            <select id="user-role" name="role" required>
+              <option value="student">תלמיד</option>
+              <option value="instructor">מדריך</option>
+              <option value="admin">מנהל</option>
+            </select>
+          </div>
+          <div class="form-component__field">
+            <label for="user-first-name">שם פרטי</label>
+            <input id="user-first-name" name="firstName" type="text" maxlength="100" required>
+          </div>
+          <div class="form-component__field">
+            <label for="user-last-name">שם משפחה</label>
+            <input id="user-last-name" name="lastName" type="text" maxlength="100" required>
+          </div>
+          <div class="form-component__field">
+            <label for="user-phone">טלפון</label>
+            <input id="user-phone" name="phone" type="tel" maxlength="50">
+          </div>
+          <div class="form-component__field">
+            <label for="user-email">אימייל</label>
+            <input id="user-email" name="email" type="email" maxlength="254">
+          </div>
+        </div>
+
+        <div class="form-component__field">
+          <label for="user-notes">הערות</label>
+          <textarea id="user-notes" name="notes" maxlength="5000"></textarea>
+        </div>
+
+        <fieldset class="admin-users-page__profile admin-users-page__student">
+          <legend>פרטי תלמיד</legend>
+          <div class="form-component__grid">
+            <div class="form-component__field">
+              <label for="student-national-id">תעודת זהות</label>
+              <input id="student-national-id" name="nationalId" type="text" maxlength="30">
+            </div>
+            <div class="form-component__field">
+              <label for="student-birth-date">תאריך לידה</label>
+              <input id="student-birth-date" name="birthDate" type="date">
+            </div>
+          </div>
+          <div class="form-component__field">
+            <label for="student-address">כתובת מלאה</label>
+            <textarea id="student-address" name="fullAddress" maxlength="500"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="admin-users-page__profile admin-users-page__instructor" hidden>
+          <legend>פרטי מדריך</legend>
+          <div class="form-component__field">
+            <label for="instructor-expertise">תחומי מומחיות</label>
+            <textarea id="instructor-expertise" name="expertiseAreas" maxlength="5000"></textarea>
+          </div>
+          <div class="form-component__field">
+            <label for="instructor-bio">ביוגרפיה</label>
+            <textarea id="instructor-bio" name="biography" maxlength="10000"></textarea>
+          </div>
+          <div class="form-component__field">
+            <label for="instructor-notes">הערות מדריך</label>
+            <textarea id="instructor-notes" name="instructorNotes" maxlength="5000"></textarea>
+          </div>
+        </fieldset>
+
+        <div class="form-component__actions">
+          <button class="button-component button-component--primary" type="submit">שמירה</button>
+        </div>
+      </form>
+
+      <form class="form-component admin-users-page__password" novalidate hidden>
+        <h3>איפוס סיסמה</h3>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__field">
+          <label for="user-new-password">סיסמה חדשה</label>
+          <input id="user-new-password" name="newPassword" type="password" minlength="8" autocomplete="new-password" required>
+        </div>
+        <button class="button-component button-component--secondary" type="submit">איפוס סיסמה</button>
+      </form>
+
+      <form class="form-component admin-users-page__status" novalidate hidden>
+        <h3>סטטוס משתמש</h3>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__field">
+          <label for="user-status">סטטוס</label>
+          <select id="user-status" name="status" required>
+            <option value="active">פעיל</option>
+            <option value="inactive">לא פעיל</option>
+            <option value="archived">בארכיון</option>
+          </select>
+        </div>
+        <button class="button-component button-component--secondary" type="submit">עדכון סטטוס</button>
+      </form>
+    </section>
+  </div>
+</section>

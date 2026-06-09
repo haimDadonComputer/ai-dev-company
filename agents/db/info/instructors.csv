@@ -1,0 +1,10 @@
+table_name,field_name,type,required,unique,default_value,description,used_by_api,notes
+instructors,id,BIGINT UNSIGNED AUTO_INCREMENT,yes,yes,,מזהה פנימי של הרחבת מדריך,Instructors,Primary key
+instructors,user_id,BIGINT UNSIGNED,yes,yes,,קישור למשתמש בעל role instructor,Instructors,Foreign key users.id
+instructors,expertise_areas,TEXT,no,no,NULL,תחומי התמחות,Instructors,
+instructors,biography,TEXT,no,no,NULL,ביוגרפיה,Instructors,
+instructors,resume_file_id,BIGINT UNSIGNED,no,no,NULL,קובץ קורות חיים,Instructors,Future FK to media/files
+instructors,certification_file_ids,JSON,no,no,NULL,תעודות הסמכה,Instructors,Future file ids list
+instructors,notes,TEXT,no,no,NULL,הערות,Instructors,
+instructors,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירה,Instructors,
+instructors,updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד עדכון,Instructors,Updated automatically

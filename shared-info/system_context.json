@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-09T15:33:53.344Z",
+  "generatedAt": "2026-06-09T16:20:46.984Z",
   "manifest": {
     "path": "shared-info/system_manifest.json",
-    "hash": "243a401f5958ce9b7243daaf58ac4519cf5c3ef538f58c8fbc3b0ec280298d2a",
+    "hash": "86521137944980fd427c2b7fe62d210917840c73860368a568ee96cca5f18f35",
     "data": {
       "schemaVersion": 1,
       "systemId": "ai-development-company-base",
@@ -44,6 +44,8 @@
         "database": [
           "agents/db/info/tables-index.csv",
           "agents/db/info/users.csv",
+          "agents/db/info/students.csv",
+          "agents/db/info/instructors.csv",
           "agents/db/info/site_settings.csv",
           "agents/db/info/media_assets.csv"
         ],
@@ -829,7 +831,7 @@
     },
     "shared-info/decisions.csv": {
       "path": "shared-info/decisions.csv",
-      "hash": "8862dd3ec76e850c9a140d4b841c5a429fa7d367351b779c206003716c2bea03",
+      "hash": "b0ce547b5659d6d7a70566765cd73f31d537c2195ae317444f56801d9ce98e65",
       "data": [
         {
           "id": "1",
@@ -960,12 +962,32 @@
           "status": "active",
           "related_files": "agents/qa/info;qa;shared-info/system_manifest.json",
           "notes": "qa mirrors נוצרים אוטומטית"
+        },
+        {
+          "id": "14",
+          "date": "2026-06-09",
+          "decision": "Expand CRM identity roles to student instructor admin",
+          "reason": "נדרש לאפיון המרכז הדיגיטלי ולכל אזורי המשתמשים העתידיים",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "agents/permissions/info/permissions.csv;agents/db/info/users.csv;src/server/utils/jwt.ts",
+          "notes": "אושר על ידי המשתמש במסגרת המשך לפי המלצת AI Manager"
+        },
+        {
+          "id": "15",
+          "date": "2026-06-09",
+          "decision": "Allow multi-role required_role validation in API contracts",
+          "reason": "auth APIs משותפים לכל משתמש מחובר ולכן required_role צריך לתמוך ביותר מתפקיד אחד",
+          "approved_by": "Haim",
+          "status": "active",
+          "related_files": "scripts/check-system-context.mjs;agents/api/info/api_list.csv",
+          "notes": "כל role ברשימה חייב להופיע ב-permissions.csv"
         }
       ]
     },
     "shared-info/action_log.csv": {
       "path": "shared-info/action_log.csv",
-      "hash": "ef1ef9df0a625a61ddaa415c335e686fa30c6342762e6dc3661f396b46dbc069",
+      "hash": "d5f632c94d26e2b03f24c5b6c966d15f86edef3c02d2a339d37cc4fd8c2f5fbd",
       "data": [
         {
           "id": "1",
@@ -1266,12 +1288,132 @@
           "summary": "נסרק האפיון החדש: אין High או Critical פתוחים; הפער בין האפיון ל-roles/tables/apis הקיימים מסווג כ-planned לפני מימוש",
           "risk_level": "Medium",
           "needs_review": "no"
+        },
+        {
+          "id": "26",
+          "date": "2026-06-09",
+          "agent": "AI Permissions",
+          "action_type": "crm_identity_foundation",
+          "domain_files_changed": "agents/permissions/info/permissions.csv;agents/api/info/api_list.csv;agents/components/info/components_list.csv;shared-info/contracts.csv;shared-info/decisions.csv",
+          "external_domain_used": "product/project_definition.md;scripts/check-system-context.mjs",
+          "tools_used": "apply_patch;npm test;node E2E",
+          "summary": "הורחבו תפקידי CRM ל-student instructor admin ונוספה ולידציה לחוזי API מרובי roles",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "27",
+          "date": "2026-06-09",
+          "agent": "AI DB",
+          "action_type": "crm_identity_schema",
+          "domain_files_changed": "agents/db/domain/start.ts;agents/db/domain/repo.ts;agents/db/info/users.csv;agents/db/info/students.csv;agents/db/info/instructors.csv;agents/db/info/tables-index.csv;shared-info/system_manifest.json",
+          "external_domain_used": "product/project_definition.md;permissions",
+          "tools_used": "apply_patch;npm test;node MySQL check",
+          "summary": "users הורחבה בפרטי זהות ונוצרו טבלאות students ו-instructors עם בדיקת db:init במסד זמני",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "28",
+          "date": "2026-06-09",
+          "agent": "AI API",
+          "action_type": "crm_identity_auth",
+          "domain_files_changed": "src/server/utils/jwt.ts;src/server/types/express.d.ts;src/server/middlewares/auth.ts;src/server/routes/auth-routes.ts;src/server/services/auth-service.ts;tests/jwt.test.ts",
+          "external_domain_used": "permissions;api;db",
+          "tools_used": "apply_patch;npm test;node HTTP E2E",
+          "summary": "JWT ואימות תומכים בתפקידי CRM; נתיבי admin נשארים חסומים למי שאינו admin",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "29",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "crm_identity_qa",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;agents/qa/info/regression_tests.csv",
+          "external_domain_used": "db;api;permissions;tests",
+          "tools_used": "npm test;node MySQL check;node HTTP E2E;apply_patch",
+          "summary": "נוספו תרחישי QA ורגרסיה לזהויות CRM; 14 בדיקות אוטומטיות ו-E2E נקודתי עברו",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "30",
+          "date": "2026-06-09",
+          "agent": "AI API",
+          "action_type": "admin_user_management",
+          "domain_files_changed": "src/server/controllers/users-controller.ts;src/server/services/users-service.ts;src/server/validators/users.ts;src/server/routes/admin-routes.ts;agents/db/domain/repo.ts;agents/api/info/api_list.csv;agents/permissions/info/permissions.csv",
+          "external_domain_used": "crm identity foundation;product specification",
+          "tools_used": "apply_patch;npm test;node HTTP E2E",
+          "summary": "מומשו API ניהול משתמשים למנהל: יצירה רשימה צפייה עריכה איפוס סיסמה ושינוי סטטוס ללא מחיקה פיזית",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "31",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "admin_user_management_qa",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;agents/qa/info/regression_tests.csv;shared-info/project_status.json",
+          "external_domain_used": "src/server;MySQL",
+          "tools_used": "npm test;node HTTP E2E;apply_patch",
+          "summary": "ניהול משתמשים עבר E2E מול MySQL ושרת זמניים כולל יצירת תלמיד מדריך עדכון איפוס סיסמה וארכיון",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "32",
+          "date": "2026-06-09",
+          "agent": "AI Components",
+          "action_type": "admin_user_management_ui",
+          "domain_files_changed": "src/pages/admin-users;src/services/users-service.ts;src/app/router.ts;src/app/config.ts;src/components/sidebar/script.ts;src/types/app.ts;src/app/styles.css",
+          "external_domain_used": "agents/components/info/components_list.csv;agents/permissions/info/permissions.csv;shared-info/contracts.csv",
+          "tools_used": "apply_patch;npm test;rg",
+          "summary": "נוסף עמוד ניהול משתמשים למנהל ב-SPA עם רשימה סינון יצירה עריכה איפוס סיסמה ושינוי סטטוס דרך APIs קיימים",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "33",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "admin_user_management_ui_qa",
+          "domain_files_changed": "agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;agents/qa/info/regression_tests.csv;shared-info/project_status.json",
+          "external_domain_used": "dist/public;src",
+          "tools_used": "npm test;rg;context:check",
+          "summary": "עמוד ניהול משתמשים עבר build context design check ו-14 טסטים; לא נמצא localStorage או sessionStorage; Visual QA נשאר Medium",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "34",
+          "date": "2026-06-09",
+          "agent": "AI Contradictions",
+          "action_type": "admin_user_management_ui_scan",
+          "domain_files_changed": "shared-info/contradictions.csv",
+          "external_domain_used": "components;permissions;contracts;qa",
+          "tools_used": "context:check;npm test",
+          "summary": "לא נמצאו High או Critical פתוחים לאחר הוספת UI ניהול המשתמשים; החסם היחיד שנותר הוא Visual QA ברמת Medium",
+          "risk_level": "Medium",
+          "needs_review": "no"
+        },
+        {
+          "id": "35",
+          "date": "2026-06-09",
+          "agent": "AI QA",
+          "action_type": "visual_responsive_qa",
+          "domain_files_changed": "src/pages/admin-users/style.css;src/pages/admin-users/script.ts;qa/visual-screenshots;agents/qa/info/test_results.csv;shared-info/project_status.json",
+          "external_domain_used": "dist/public;Chrome headless",
+          "tools_used": "npm run build;Chrome CDP;screenshots;apply_patch",
+          "summary": "בוצע Visual QA ב-Chrome ל-36 קומבינציות של עמודי ניהול רוחבים navigation density; תוקנה גלישת טבלת משתמשים ב-768px rail והחסם QA-VISUAL נסגר",
+          "risk_level": "High",
+          "needs_review": "yes"
         }
       ]
     },
     "shared-info/contracts.csv": {
       "path": "shared-info/contracts.csv",
-      "hash": "bcc9c6b69669403a18bba1a185f4fca853bd38a83caf6fafe943424547505978",
+      "hash": "30b7325367ffcd054b075d7fa9df74a5c456328c893bc5a0cd78446df3cd4156",
       "data": [
         {
           "source_agent": "AI Permissions",
@@ -1282,11 +1424,43 @@
           "risk_level": "High"
         },
         {
+          "source_agent": "AI Permissions",
+          "target_agent": "AI API",
+          "resource": "crm user roles",
+          "contract_type": "authorization",
+          "description": "student instructor admin הם תפקידי משתמש תקינים; auth APIs זמינים למשתמש מחובר אך נתיבי admin דורשים admin בלבד",
+          "risk_level": "High"
+        },
+        {
           "source_agent": "AI DB",
           "target_agent": "AI API",
           "resource": "users table",
           "contract_type": "data",
           "description": "Authentication משתמש ב-username password_hash password_salt is_active must_change_password",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "crm identity tables",
+          "contract_type": "data",
+          "description": "users כולל פרטי זהות בסיסיים ותפקיד יחיד; students ו-instructors הם הרחבות 1:1 של users",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI DB",
+          "resource": "admin user management",
+          "contract_type": "data",
+          "description": "יצירת student או instructor חייבת ליצור גם רשומת הרחבה תואמת באותה טרנזקציה; שינוי סטטוס הוא ארכיון לוגי ולא מחיקה",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI Permissions",
+          "target_agent": "AI API",
+          "resource": "admin user management authorization",
+          "contract_type": "authorization",
+          "description": "רק admin לאחר החלפת סיסמה רשאי ליצור לערוך לאפס סיסמה או לארכב משתמשים",
           "risk_level": "High"
         },
         {
@@ -1327,6 +1501,14 @@
           "resource": "media upload API",
           "contract_type": "http",
           "description": "הקובץ נשלח כ-body בינארי עם X-File-Name ו-X-Alt-Text ועד 5MB",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "admin user management APIs",
+          "contract_type": "http",
+          "description": "עמוד ניהול המשתמשים משתמש ב-admin_users_list create get update reset_password update_status דרך credentials same-origin ואינו שומר JWT בצד לקוח",
           "risk_level": "High"
         },
         {
@@ -1386,6 +1568,14 @@
           "risk_level": "High"
         },
         {
+          "source_agent": "System Context",
+          "target_agent": "Build",
+          "resource": "Multi-role API validation",
+          "contract_type": "validation",
+          "description": "required_role ב-api_list.csv יכול להכיל רשימת roles מופרדת בקו אנכי וכל role חייב להופיע ב-permissions.csv",
+          "risk_level": "High"
+        },
+        {
           "source_agent": "AI QA",
           "target_agent": "QA Mirrors",
           "resource": "Compatibility snapshot",
@@ -1405,7 +1595,7 @@
     },
     "shared-info/contradictions.csv": {
       "path": "shared-info/contradictions.csv",
-      "hash": "4b3411eb3a18bdb15c3fd4affc90dcd8cb99b0d406860be79cbdd32fcaabc142",
+      "hash": "5a8bd23035dfc0048620c8d0f7e32a785b4dc33cef3b15069684ec55d93be66a",
       "data": [
         {
           "id": "1",
@@ -1458,7 +1648,7 @@
           "source_file": "agents/qa/info/test_results.csv",
           "problem": "AI QA לא אישר QA מלא: 5 תרחישים מסומנים BLOCKED ו-3 תרחישים מסומנים NOT_RUN",
           "impact": "Definition Of Done לא התקיים ללא הוכחת E2E למסד הנתונים וללא Visual QA בדפדפן עבור ניתוב רספונסיבי ו-Design Profiles",
-          "recommended_fix": "תרחישי MySQL ו-HTTP E2E הורצו במסדי QA זמניים ותועדו כ-PASS; Visual QA נותר כחסם Medium ב-project_status.json",
+          "recommended_fix": "תרחישי MySQL ו-HTTP E2E הורצו במסדי QA זמניים ותועדו כ-PASS; Visual QA הורץ ב-Chrome headless ותועד כ-PASS ב-QAR-017 וב-QAR-029",
           "status": "fixed",
           "blocks_work": "no"
         },
@@ -1477,7 +1667,7 @@
     },
     "agents/permissions/info/permissions.csv": {
       "path": "agents/permissions/info/permissions.csv",
-      "hash": "c7bf12f0be181c28cbfc60b2acdfb271d05198852847529a6f9f61fead4c7c05",
+      "hash": "ee7925814da9c27572c8e507c20b7ee90c6a01327844489c07f7db3441bc7f8b",
       "data": [
         {
           "role_name": "guest",
@@ -1491,26 +1681,60 @@
           "notes": "הרשאות ציבוריות בלבד; risk_level=Low; needs_review=no"
         },
         {
+          "role_name": "student",
+          "description": "תלמיד",
+          "can_view": "פרטי משתמש מחובר|אזור תלמיד עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים",
+          "can_create": "none",
+          "can_edit": "סיסמת המשתמש",
+          "can_delete": "none",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|media_get",
+          "allowed_components": "login-page|change-password-page|form|button|notification",
+          "notes": "תפקיד עסקי מתוכנן; בשלב זה ללא נתיבי CRM ייעודיים; risk_level=High; needs_review=yes"
+        },
+        {
+          "role_name": "instructor",
+          "description": "מדריך",
+          "can_view": "פרטי משתמש מחובר|אזור מדריך עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים",
+          "can_create": "none",
+          "can_edit": "סיסמת המשתמש",
+          "can_delete": "none",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|media_get",
+          "allowed_components": "login-page|change-password-page|form|button|notification",
+          "notes": "תפקיד עסקי מתוכנן; הרשאות קבוצתיות יוגדרו בשלב הבא; risk_level=High; needs_review=yes"
+        },
+        {
           "role_name": "admin",
           "description": "מנהל מערכת",
-          "can_view": "פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|עמודי ורכיבי ניהול",
-          "can_create": "העלאת מדיה",
-          "can_edit": "הגדרות כלליות|סיסמת המשתמש",
-          "can_delete": "מחיקת מדיה",
-          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_media_upload|admin_media_list|admin_media_delete|public_settings_get|media_get",
-          "allowed_components": "login-page|change-password-page|admin-general-page|admin-media-page|navbar|sidebar|form|button|notification|modal",
+          "can_view": "פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|משתמשים|תלמידים|מדריכים|עמודי ורכיבי ניהול",
+          "can_create": "העלאת מדיה|יצירת משתמשים",
+          "can_edit": "הגדרות כלליות|סיסמת המשתמש|משתמשים|תלמידים|מדריכים",
+          "can_delete": "מחיקת מדיה|ארכיון משתמשים",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status|admin_media_upload|admin_media_list|admin_media_delete|public_settings_get|media_get",
+          "allowed_components": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page|navbar|sidebar|form|button|notification|modal",
           "notes": "הרשאות ניהול מפורשות ללא הרשאה גורפת; risk_level=High; needs_review=yes"
         }
       ]
     },
     "agents/db/info/tables-index.csv": {
       "path": "agents/db/info/tables-index.csv",
-      "hash": "ba7f54f36de30c513bf26051283895b3eba1f890e71bfe739b464bda21492a08",
+      "hash": "7f5233e3b0cc65d59018341bd2eedacd2cc714751e055c1544ca69a3dbf67790",
       "data": [
         {
           "table_name": "users",
           "csv_file": "users.csv",
           "description": "משתמשים ונתוני אימות מגובבים",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "students",
+          "csv_file": "students.csv",
+          "description": "הרחבת משתמש עבור תלמידים",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "instructors",
+          "csv_file": "instructors.csv",
+          "description": "הרחבת משתמש עבור מדריכים",
           "risk_level": "High"
         },
         {
@@ -1529,7 +1753,7 @@
     },
     "agents/db/info/users.csv": {
       "path": "agents/db/info/users.csv",
-      "hash": "5d96a21341996f31f385621f0506ff5cb47e2aa46ed36570fdb2e08126abe883",
+      "hash": "386ff0de5e0657ec86c2e21e4e149531512444ba7f3032bf1d2de26aa78d6a0f",
       "data": [
         {
           "table_name": "users",
@@ -1584,7 +1808,62 @@
           "default_value": "admin",
           "description": "שם התפקיד לפי מקור האמת של ההרשאות",
           "used_by_api": "Authentication; Users",
-          "notes": "Initial infrastructure supports admin"
+          "notes": "Allowed values: student instructor admin"
+        },
+        {
+          "table_name": "users",
+          "field_name": "first_name",
+          "type": "VARCHAR(100)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "שם פרטי",
+          "used_by_api": "Users",
+          "notes": "Required for business users; bootstrap admin may start empty"
+        },
+        {
+          "table_name": "users",
+          "field_name": "last_name",
+          "type": "VARCHAR(100)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "שם משפחה",
+          "used_by_api": "Users",
+          "notes": "Required for business users; bootstrap admin may start empty"
+        },
+        {
+          "table_name": "users",
+          "field_name": "phone",
+          "type": "VARCHAR(50)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "טלפון",
+          "used_by_api": "Users",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "email",
+          "type": "VARCHAR(254)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "מייל",
+          "used_by_api": "Users",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "status",
+          "type": "VARCHAR(20)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "active",
+          "description": "סטטוס עסקי של המשתמש",
+          "used_by_api": "Authentication; Users",
+          "notes": "active inactive archived"
         },
         {
           "table_name": "users",
@@ -1606,6 +1885,17 @@
           "default_value": "true",
           "description": "האם נדרשת החלפת סיסמה לפני פעולות ניהול",
           "used_by_api": "Authentication",
+          "notes": ""
+        },
+        {
+          "table_name": "users",
+          "field_name": "notes",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "הערות פנימיות על המשתמש",
+          "used_by_api": "Users",
           "notes": ""
         },
         {
@@ -1639,6 +1929,194 @@
           "default_value": "CURRENT_TIMESTAMP(3)",
           "description": "מועד עדכון המשתמש",
           "used_by_api": "Users",
+          "notes": "Updated automatically"
+        }
+      ]
+    },
+    "agents/db/info/students.csv": {
+      "path": "agents/db/info/students.csv",
+      "hash": "b81d42c4fdcc9c41b79dfae7f87dec509ac97064a55cc52230e9d3a513976103",
+      "data": [
+        {
+          "table_name": "students",
+          "field_name": "id",
+          "type": "BIGINT UNSIGNED AUTO_INCREMENT",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "מזהה פנימי של הרחבת תלמיד",
+          "used_by_api": "Students",
+          "notes": "Primary key"
+        },
+        {
+          "table_name": "students",
+          "field_name": "user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "קישור למשתמש בעל role student",
+          "used_by_api": "Students",
+          "notes": "Foreign key users.id"
+        },
+        {
+          "table_name": "students",
+          "field_name": "national_id",
+          "type": "VARCHAR(30)",
+          "required": "no",
+          "unique": "yes",
+          "default_value": "NULL",
+          "description": "תעודת זהות",
+          "used_by_api": "Students",
+          "notes": "Unique when provided"
+        },
+        {
+          "table_name": "students",
+          "field_name": "birth_date",
+          "type": "DATE",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "תאריך לידה",
+          "used_by_api": "Students",
+          "notes": ""
+        },
+        {
+          "table_name": "students",
+          "field_name": "full_address",
+          "type": "VARCHAR(500)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "",
+          "description": "כתובת מלאה",
+          "used_by_api": "Students",
+          "notes": ""
+        },
+        {
+          "table_name": "students",
+          "field_name": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירה",
+          "used_by_api": "Students",
+          "notes": ""
+        },
+        {
+          "table_name": "students",
+          "field_name": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד עדכון",
+          "used_by_api": "Students",
+          "notes": "Updated automatically"
+        }
+      ]
+    },
+    "agents/db/info/instructors.csv": {
+      "path": "agents/db/info/instructors.csv",
+      "hash": "d58fe16f8fb16602860385e3ebd31f23abcbf1d20ad86b5cff602e1069821fca",
+      "data": [
+        {
+          "table_name": "instructors",
+          "field_name": "id",
+          "type": "BIGINT UNSIGNED AUTO_INCREMENT",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "מזהה פנימי של הרחבת מדריך",
+          "used_by_api": "Instructors",
+          "notes": "Primary key"
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "yes",
+          "default_value": "",
+          "description": "קישור למשתמש בעל role instructor",
+          "used_by_api": "Instructors",
+          "notes": "Foreign key users.id"
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "expertise_areas",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "תחומי התמחות",
+          "used_by_api": "Instructors",
+          "notes": ""
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "biography",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "ביוגרפיה",
+          "used_by_api": "Instructors",
+          "notes": ""
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "resume_file_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "קובץ קורות חיים",
+          "used_by_api": "Instructors",
+          "notes": "Future FK to media/files"
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "certification_file_ids",
+          "type": "JSON",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "תעודות הסמכה",
+          "used_by_api": "Instructors",
+          "notes": "Future file ids list"
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "notes",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default_value": "NULL",
+          "description": "הערות",
+          "used_by_api": "Instructors",
+          "notes": ""
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירה",
+          "used_by_api": "Instructors",
+          "notes": ""
+        },
+        {
+          "table_name": "instructors",
+          "field_name": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default_value": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד עדכון",
+          "used_by_api": "Instructors",
           "notes": "Updated automatically"
         }
       ]
@@ -1943,7 +2421,7 @@
     },
     "agents/api/info/api_list.csv": {
       "path": "agents/api/info/api_list.csv",
-      "hash": "416dcb648c08dd7ffe07ec7348ae346a88dad63129d11a7fd3381a26535ad692",
+      "hash": "e41fa04658ba89b0df078ec1e826bfc1c5abaf051c6004f975aca48c5b9e6978",
       "data": [
         {
           "api_name": "auth_login",
@@ -1952,17 +2430,17 @@
           "required_role": "guest",
           "middleware": "sameOrigin|loginRateLimit",
           "request_body": "username:string;password:string",
-          "response_body": "user:{id;username;role;mustChangePassword};mustChangePassword:boolean;HttpOnly cookie",
+          "response_body": "user:{id;username;role;mustChangePassword;firstName;lastName};mustChangePassword:boolean;HttpOnly cookie",
           "related_db_tables": "users",
-          "description": "התחברות מנהל פעיל והנפקת JWT",
+          "description": "התחברות משתמש פעיל והנפקת JWT",
           "risk_level": "High"
         },
         {
           "api_name": "auth_logout",
           "method": "POST",
           "path": "/api/auth/logout",
-          "required_role": "admin",
-          "middleware": "sameOrigin|requireAdmin",
+          "required_role": "student|instructor|admin",
+          "middleware": "sameOrigin|requireAuthenticated",
           "request_body": "none",
           "response_body": "loggedOut:boolean;clear HttpOnly cookie",
           "related_db_tables": "users",
@@ -1973,22 +2451,22 @@
           "api_name": "auth_me",
           "method": "GET",
           "path": "/api/auth/me",
-          "required_role": "admin",
-          "middleware": "requireAdmin",
+          "required_role": "student|instructor|admin",
+          "middleware": "requireAuthenticated",
           "request_body": "none",
-          "response_body": "user:{id;username;role;mustChangePassword}",
+          "response_body": "user:{id;username;role;mustChangePassword;firstName;lastName}",
           "related_db_tables": "users",
-          "description": "פרטי המנהל המחובר",
+          "description": "פרטי המשתמש המחובר",
           "risk_level": "High"
         },
         {
           "api_name": "auth_change_password",
           "method": "POST",
           "path": "/api/auth/change-password",
-          "required_role": "admin",
-          "middleware": "requireAdmin",
+          "required_role": "student|instructor|admin",
+          "middleware": "requireAuthenticated",
           "request_body": "currentPassword:string;newPassword:string",
-          "response_body": "user:{id;username;role;mustChangePassword};renewed HttpOnly cookie",
+          "response_body": "user:{id;username;role;mustChangePassword;firstName;lastName};renewed HttpOnly cookie",
           "related_db_tables": "users",
           "description": "החלפת סיסמה והסרת חובת ההחלפה",
           "risk_level": "High"
@@ -2015,6 +2493,78 @@
           "response_body": "settings:{siteName;slogan;phone;address;whatsapp;instagram;email;logoMediaAssetId;logoUrl;additionalMediaAssetIds;additionalMediaUrls;updatedAt;updatedByUserId}",
           "related_db_tables": "site_settings|media_assets",
           "description": "עדכון הגדרות כלליות לאחר אימות מדיה פעילה",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_list",
+          "method": "GET",
+          "path": "/api/admin/users",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "query:limit?;offset?;role?;status?",
+          "response_body": "users:[{id;username;role;firstName;lastName;phone;email;status;mustChangePassword;notes;createdAt;updatedAt}]",
+          "related_db_tables": "users",
+          "description": "רשימת משתמשים למנהל עם סינון בסיסי",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_create",
+          "method": "POST",
+          "path": "/api/admin/users",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "username;password;role;firstName;lastName;phone?;email?;notes?;student?;instructor?",
+          "response_body": "user:{...};student?;instructor?",
+          "related_db_tables": "users|students|instructors",
+          "description": "יצירת משתמש CRM עם הרחבת תלמיד או מדריך לפי תפקיד",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_get",
+          "method": "GET",
+          "path": "/api/admin/users/:id",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "none",
+          "response_body": "user:{...};student?;instructor?",
+          "related_db_tables": "users|students|instructors",
+          "description": "צפייה בפרטי משתמש ופרופיל עסקי",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_update",
+          "method": "PUT",
+          "path": "/api/admin/users/:id",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "firstName?;lastName?;phone?;email?;notes?;student?;instructor?",
+          "response_body": "user:{...};student?;instructor?",
+          "related_db_tables": "users|students|instructors",
+          "description": "עריכת פרטי זהות בסיסיים ופרופיל תואם תפקיד",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_reset_password",
+          "method": "POST",
+          "path": "/api/admin/users/:id/reset-password",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "newPassword:string",
+          "response_body": "user:{id;username;role;mustChangePassword}",
+          "related_db_tables": "users",
+          "description": "איפוס סיסמה על ידי מנהל והפעלת mustChangePassword",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_users_update_status",
+          "method": "PATCH",
+          "path": "/api/admin/users/:id/status",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "status:active|inactive|archived",
+          "response_body": "user:{id;username;role;status}",
+          "related_db_tables": "users",
+          "description": "שינוי סטטוס משתמש ללא מחיקה פיזית",
           "risk_level": "High"
         },
         {
@@ -2081,22 +2631,22 @@
     },
     "agents/components/info/components_list.csv": {
       "path": "agents/components/info/components_list.csv",
-      "hash": "37abab9b82dc7573a41fa324c9ca11365516148e54b05d7ca0ad117f604c0606",
+      "hash": "1a10bae39d3ddebaed2be0613da5967080727aea86e2425d20d6fdc2df0b3146",
       "data": [
         {
           "component_name": "login-page",
-          "visible_to": "guest",
+          "visible_to": "guest|student|instructor|admin",
           "used_by": "router",
           "api_used": "auth_login|auth_me",
-          "description": "עמוד התחברות למנהל המערכת",
+          "description": "עמוד התחברות למשתמשי המערכת",
           "risk_level": "High"
         },
         {
           "component_name": "change-password-page",
-          "visible_to": "admin",
+          "visible_to": "student|instructor|admin",
           "used_by": "router",
           "api_used": "auth_me|auth_change_password",
-          "description": "עמוד החלפה מחייבת של סיסמת המנהל",
+          "description": "עמוד החלפת סיסמה למשתמש מחובר",
           "risk_level": "High"
         },
         {
@@ -2105,6 +2655,14 @@
           "used_by": "router",
           "api_used": "auth_me|admin_general_get|admin_general_update|admin_media_list",
           "description": "ניהול פרטי האתר ובחירת לוגו ותמונות",
+          "risk_level": "High"
+        },
+        {
+          "component_name": "admin-users-page",
+          "visible_to": "admin",
+          "used_by": "router",
+          "api_used": "auth_me|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status",
+          "description": "ניהול משתמשים למנהל כולל יצירה עריכה איפוס סיסמה ושינוי סטטוס",
           "risk_level": "High"
         },
         {
@@ -2118,7 +2676,7 @@
         {
           "component_name": "navbar",
           "visible_to": "admin",
-          "used_by": "admin-general-page|admin-media-page",
+          "used_by": "admin-general-page|admin-users-page|admin-media-page",
           "api_used": "auth_logout",
           "description": "סרגל עליון עם זיהוי מנהל והתנתקות",
           "risk_level": "High"
@@ -2126,31 +2684,31 @@
         {
           "component_name": "sidebar",
           "visible_to": "admin",
-          "used_by": "admin-general-page|admin-media-page",
+          "used_by": "admin-general-page|admin-users-page|admin-media-page",
           "api_used": "none",
           "description": "ניווט בין עמודי ממשק הניהול",
           "risk_level": "Low"
         },
         {
           "component_name": "form",
-          "visible_to": "guest|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "visible_to": "guest|student|instructor|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
           "api_used": "none",
           "description": "מבנה וטיפול במצבי טפסים",
           "risk_level": "Low"
         },
         {
           "component_name": "button",
-          "visible_to": "guest|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "visible_to": "guest|student|instructor|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
           "api_used": "none",
           "description": "כפתורי פעולה עקביים ונגישים",
           "risk_level": "Low"
         },
         {
           "component_name": "notification",
-          "visible_to": "guest|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-media-page",
+          "visible_to": "guest|student|instructor|admin",
+          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
           "api_used": "none",
           "description": "הודעות הצלחה שגיאה ומידע נגישות",
           "risk_level": "Low"
@@ -2401,7 +2959,7 @@
     },
     "agents/qa/info/test_cases.csv": {
       "path": "agents/qa/info/test_cases.csv",
-      "hash": "2fc0db64868ea82b86928d6c41d435cf10416f9efd4ac7753ee91196deeedb97",
+      "hash": "80970b4808bfae842ff5e04c3b8171c85c29ec64921624acc6e8c9dd70814569",
       "data": [
         {
           "id": "QA-001",
@@ -2663,12 +3221,48 @@
           "expected_result": "כל שילוב שמיש ונגיש; אין גלישה; והפרופיל החזותי מיושם בעקביות",
           "priority": "high",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "QA-030",
+          "module": "database",
+          "title": "סכמת זהויות CRM",
+          "steps": "להריץ db:init מול MySQL נקי; לבדוק עמודות users החדשות וטבלאות students instructors",
+          "expected_result": "users כולל first_name last_name phone email status notes; הטבלאות students ו-instructors נוצרות עם FK ל-users",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-031",
+          "module": "permissions",
+          "title": "תפקידי CRM ונתיבי admin",
+          "steps": "להריץ npm test עבור JWT לכל התפקידים; להפעיל שרת זמני; לגשת ל-/api/admin/settings/general עם token student",
+          "expected_result": "JWT תומך student instructor admin; token student נחסם מנתיב admin ב-403 ADMIN_REQUIRED; admin ממשיך להיחסם עד החלפת סיסמה",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-032",
+          "module": "users",
+          "title": "ניהול משתמשים בסיסי למנהל",
+          "steps": "להפעיל MySQL ושרת זמניים; להתחבר כמנהל; ליצור student ו-instructor; לרשום לסנן לעדכן לאפס סיסמה ולארכב תלמיד",
+          "expected_result": "מנהל יוצר student עם students profile ו-instructor עם instructors profile; רשימה וסינון עובדים; עדכון נשמר; איפוס סיסמה מפעיל mustChangePassword; ארכיון חוסם התחברות",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-033",
+          "module": "frontend",
+          "title": "עמוד ניהול משתמשים בממשק המנהל",
+          "steps": "להריץ build; לבדוק שקבצי admin-users נארזים; לפתוח ישירות /admin/users בשרת SPA; לוודא שה-route sidebar והשירות משתמשים קיימים",
+          "expected_result": "העמוד /admin/users נטען דרך ה-SPA, מופיע בתפריט הניהול, ומשתמש ב-admin user management APIs דרך credentials same-origin ללא אחסון JWT",
+          "priority": "high",
+          "status": "READY"
         }
       ]
     },
     "agents/qa/info/test_results.csv": {
       "path": "agents/qa/info/test_results.csv",
-      "hash": "f2a4bfb64449f8b8c196a5c820d4e25ee23c95960d7fd6cdcfaf01be35935150",
+      "hash": "5cfca7c405a37d69e43bb5a6a096b229c76c08d30a1dcd876b1c72a261c2b7b2",
       "data": [
         {
           "id": "QAR-001",
@@ -2802,9 +3396,9 @@
           "id": "QAR-017",
           "test_case_id": "QA-017",
           "date": "2026-06-09",
-          "result": "NOT_RUN",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "אימות סטטי מצא dir=rtl ב-index.html והגדרה ב-main.ts וכן media query ב-768px ומינימום 320px; לא בוצעה בדיקת תצוגה בדפדפן אמיתי."
+          "notes": "בוצעה בדיקת Chrome headless ברוחבי 320 768 ו-1440 עבור /admin/users /admin/general /admin/media. לאחר תיקון טבלת המשתמשים לכרטיסים עד 900px לא נמצאה גלישה אופקית או alert גלוי; screenshots נשמרו תחת qa/visual-screenshots."
         },
         {
           "id": "QAR-018",
@@ -2898,15 +3492,47 @@
           "id": "QAR-029",
           "test_case_id": "QA-029",
           "date": "2026-06-09",
-          "result": "NOT_RUN",
+          "result": "PASS",
           "tester": "AI QA",
-          "notes": "נמצא Chrome מקומי, אך טרם בוצעה בדיקה חזותית מלאה לכל שילובי navigation density ורוחבי 320 768 ו-1440. נדרש סבב Visual QA נפרד."
+          "notes": "בוצעה בדיקת Chrome headless עם mock API זמני. נבדקו 36 קומבינציות: שלושת עמודי הניהול ברוחבי 320 768 1440 ושלושת מצבי density, ובנוסף admin-users בכל navigation pattern ברוחב 1440. לא נמצאה גלישה אופקית או alert גלוי."
+        },
+        {
+          "id": "QAR-030",
+          "test_case_id": "QA-030",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ db:init מול MySQL במסד זמני. אומתו טבלאות users students instructors, עמודות זהות חדשות ב-users, ו-admin פעיל עם role admin ו-status active."
+        },
+        {
+          "id": "QAR-031",
+          "test_case_id": "QA-031",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test עבר 14/14 כולל JWT לכל תפקידי CRM. בבדיקת HTTP מול שרת זמני admin התחבר, נתיב admin נחסם עד החלפת סיסמה, ו-token student נחסם ב-403 ADMIN_REQUIRED."
+        },
+        {
+          "id": "QAR-032",
+          "test_case_id": "QA-032",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ E2E מול MySQL ושרת HTTP זמניים. נוצרו student ו-instructor, רשימת משתמשים עם role filter החזירה את התלמיד, עדכון פרופיל תלמיד נשמר, איפוס סיסמה הפעיל mustChangePassword, וארכיון חסם התחברות."
+        },
+        {
+          "id": "QAR-033",
+          "test_case_id": "QA-033",
+          "date": "2026-06-09",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "הורץ npm test כולל build, context:check ו-design:check. ה-SPA נארז עם pages/admin-users, context מזהה 11 רכיבים, ולא נמצא שימוש ב-localStorage או sessionStorage."
         }
       ]
     },
     "agents/qa/info/regression_tests.csv": {
       "path": "agents/qa/info/regression_tests.csv",
-      "hash": "fa81952cb9c3f43e82021416e94d23f7c6d87c718cc1f1cf8d221c95f1ab4967",
+      "hash": "8a4c2add178463dd8618424121d56760ada5187b72bc4a73c7cb85691ab68c0b",
       "data": [
         {
           "id": "REG-001",
@@ -3025,6 +3651,41 @@
           "module": "security",
           "test_name": "JWT ששונה נדחה",
           "expected_result": "שינוי payload או signature גורם ל-verifyToken להחזיר null",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-018",
+          "module": "permissions",
+          "test_name": "משתמש שאינו מנהל אינו ניגש לנתיבי admin",
+          "expected_result": "JWT תקין של student או instructor מחזיר 403 ADMIN_REQUIRED בכל נתיב /api/admin",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-019",
+          "module": "database",
+          "test_name": "סכמת זהויות CRM נשמרת באתחול חוזר",
+          "expected_result": "db:init יוצר ומשמר users students instructors ואת עמודות first_name last_name phone email status notes ללא דריסת משתמש קיים",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-020",
+          "module": "users",
+          "test_name": "ניהול משתמשים אינו מבצע מחיקה פיזית",
+          "expected_result": "שינוי סטטוס ל-archived מעדכן users.status ו-is_active=false ואינו מוחק users students או instructors",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-021",
+          "module": "users",
+          "test_name": "יצירת משתמש עסקי יוצרת הרחבה תואמת",
+          "expected_result": "role student יוצר students בלבד ו-role instructor יוצר instructors בלבד באותה טרנזקציה",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-022",
+          "module": "frontend",
+          "test_name": "עמוד ניהול משתמשים נשאר חלק מה-SPA",
+          "expected_result": "build כולל pages/admin-users וניווט /admin/users, sidebar מפנה אליו, והלקוח אינו שומר JWT ב-localStorage או sessionStorage",
           "critical": "yes"
         }
       ]
@@ -3172,7 +3833,7 @@
     },
     "shared-info/modules.csv": {
       "path": "shared-info/modules.csv",
-      "hash": "23005f70d3b4f7cc45723c11142ef44e148bfa8d84bb5e2e3ba96bbc20d2209e",
+      "hash": "a3fd17453a5478e620336956ac937f338db5ca1bc874aa1a23777e45c546678f",
       "data": [
         {
           "module": "authentication",
@@ -3191,6 +3852,33 @@
           "runtime_path": "agents/db/domain",
           "depends_on": "environment;permissions",
           "notes": "bootstrap admin"
+        },
+        {
+          "module": "crm-identity-foundation",
+          "owner": "AI DB;AI API;AI Permissions",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/users.csv",
+          "runtime_path": "src/server",
+          "depends_on": "users;permissions;authentication",
+          "notes": "student instructor admin roles with students and instructors extension tables"
+        },
+        {
+          "module": "admin-user-management",
+          "owner": "AI API;AI DB;AI Permissions",
+          "status": "implemented",
+          "source_of_truth": "agents/api/info/api_list.csv",
+          "runtime_path": "src/server",
+          "depends_on": "crm-identity-foundation;authentication;permissions",
+          "notes": "admin APIs for creating listing updating resetting password and archiving users"
+        },
+        {
+          "module": "admin-user-management-ui",
+          "owner": "AI Components",
+          "status": "implemented",
+          "source_of_truth": "agents/components/info/components_list.csv",
+          "runtime_path": "src",
+          "depends_on": "admin-user-management;admin-spa;authentication",
+          "notes": "admin page for listing creating editing resetting passwords and archiving users"
         },
         {
           "module": "general-settings",
@@ -3241,48 +3929,42 @@
     },
     "shared-info/project_status.json": {
       "path": "shared-info/project_status.json",
-      "hash": "4c7c2e6aacff570a0b1761619d72057d4adf98be1597308bd796ba936b922331",
+      "hash": "566763d0f2d43e7fa911eb7a783b4fe7fb55b92367396b71a5ebb27d3eb7cc60",
       "data": {
         "schemaVersion": 1,
-        "projectPhase": "digital-center-crm-specification-ready-with-visual-qa-pending",
+        "projectPhase": "admin-user-management-ui-visual-qa-approved",
         "lastUpdated": "2026-06-09",
         "implementedModules": [
           "authentication",
           "users",
           "general-settings",
           "media",
+          "crm-identity-foundation",
+          "admin-user-management",
+          "admin-user-management-ui",
           "admin-spa",
           "design-profiles",
           "context-bootstrap"
         ],
-        "activeBlockers": [
-          {
-            "id": "QA-VISUAL",
-            "severity": "Medium",
-            "reason": "Browser visual QA has not been executed",
-            "blocks": "Visual approval for navigation and density combinations",
-            "source": "agents/qa/info/test_results.csv"
-          }
-        ],
+        "activeBlockers": [],
         "automatedTests": {
           "command": "npm test",
-          "lastResult": "13/13 PASS; DB and HTTP E2E PASS for MySQL blocker scenarios"
+          "lastResult": "14/14 PASS; visual QA PASS across 36 Chrome cases"
         },
         "nextRequiredActions": [
-          "Approve the digital center CRM specification and MVP scope",
-          "Run browser visual QA for responsive and design profile variants"
+          "Implement public site and activity foundation"
         ]
       }
     }
   },
   "summary": {
-    "roles": 2,
-    "tables": 3,
-    "apis": 11,
-    "components": 10,
+    "roles": 4,
+    "tables": 5,
+    "apis": 17,
+    "components": 11,
     "features": 32,
     "userStories": 32,
-    "qaCases": 29,
+    "qaCases": 33,
     "openContradictions": 0
   }
 }

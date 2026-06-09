@@ -40,10 +40,10 @@ test("generated system context contains the core contracts", async () => {
     sources?: Record<string, unknown>;
   };
 
-  assert.equal(context.summary?.roles, 2);
-  assert.equal(context.summary?.tables, 3);
-  assert.equal(context.summary?.apis, 11);
-  assert.equal(context.summary?.components, 10);
+  assert.equal(context.summary?.roles, 4);
+  assert.equal(context.summary?.tables, 5);
+  assert.equal(context.summary?.apis, 17);
+  assert.equal(context.summary?.components, 11);
   assert.ok(context.sources?.["shared-info/contracts.csv"]);
   assert.ok(context.sources?.["shared-info/project_status.json"]);
 });

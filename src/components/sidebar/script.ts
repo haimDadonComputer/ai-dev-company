@@ -2,6 +2,7 @@ import { ROUTES } from "../../app/config.js";
 
 const links = [
   { href: ROUTES.adminGeneral, label: "כללי" },
+  { href: ROUTES.adminUsers, label: "משתמשים" },
   { href: ROUTES.adminMedia, label: "מדיה" }
 ];
 

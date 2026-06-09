@@ -6,5 +6,6 @@ export const ROUTES = {
   login: "/login",
   changePassword: "/change-password",
   adminGeneral: "/admin/general",
+  adminUsers: "/admin/users",
   adminMedia: "/admin/media"
 } as const;

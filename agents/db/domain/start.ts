@@ -13,6 +13,10 @@ interface ExistingUserRow extends RowDataPacket {
   id: number;
 }
 
+interface CountRow extends RowDataPacket {
+  count: number;
+}
+
 if (existsSync(".env")) {
   loadEnvFile(".env");
 }
@@ -32,6 +36,74 @@ function validateDatabaseName(databaseName: string): string {
     throw new Error("DB_NAME may contain only letters, numbers, and underscores");
   }
   return databaseName;
+}
+
+async function columnExists(
+  connection: Connection,
+  databaseName: string,
+  tableName: string,
+  columnName: string,
+): Promise<boolean> {
+  const [rows] = await connection.execute<CountRow[]>(
+    `SELECT COUNT(*) AS count
+       FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = ?
+        AND TABLE_NAME = ?
+        AND COLUMN_NAME = ?`,
+    [databaseName, tableName, columnName],
+  );
+
+  return Number(rows[0]?.count ?? 0) > 0;
+}
+
+async function indexExists(
+  connection: Connection,
+  databaseName: string,
+  tableName: string,
+  indexName: string,
+): Promise<boolean> {
+  const [rows] = await connection.execute<CountRow[]>(
+    `SELECT COUNT(*) AS count
+       FROM INFORMATION_SCHEMA.STATISTICS
+      WHERE TABLE_SCHEMA = ?
+        AND TABLE_NAME = ?
+        AND INDEX_NAME = ?`,
+    [databaseName, tableName, indexName],
+  );
+
+  return Number(rows[0]?.count ?? 0) > 0;
+}
+
+async function addColumnIfMissing(
+  connection: Connection,
+  databaseName: string,
+  tableName: string,
+  columnName: string,
+  definition: string,
+): Promise<void> {
+  if (await columnExists(connection, databaseName, tableName, columnName)) {
+    return;
+  }
+
+  await connection.query(
+    `ALTER TABLE \`${tableName}\` ADD COLUMN \`${columnName}\` ${definition}`,
+  );
+}
+
+async function addIndexIfMissing(
+  connection: Connection,
+  databaseName: string,
+  tableName: string,
+  indexName: string,
+  definition: string,
+): Promise<void> {
+  if (await indexExists(connection, databaseName, tableName, indexName)) {
+    return;
+  }
+
+  await connection.query(
+    `ALTER TABLE \`${tableName}\` ADD INDEX \`${indexName}\` ${definition}`,
+  );
 }
 
 async function start(): Promise<void> {
@@ -64,8 +136,14 @@ async function start(): Promise<void> {
         password_hash VARCHAR(255) NOT NULL,
         password_salt VARCHAR(255) NOT NULL,
         role_name VARCHAR(50) NOT NULL DEFAULT 'admin',
+        first_name VARCHAR(100) NOT NULL DEFAULT '',
+        last_name VARCHAR(100) NOT NULL DEFAULT '',
+        phone VARCHAR(50) NOT NULL DEFAULT '',
+        email VARCHAR(254) NOT NULL DEFAULT '',
+        status VARCHAR(20) NOT NULL DEFAULT 'active',
         is_active BOOLEAN NOT NULL DEFAULT TRUE,
         must_change_password BOOLEAN NOT NULL DEFAULT TRUE,
+        notes TEXT NULL,
         last_login_at DATETIME(3) NULL,
         created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
         updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
@@ -73,7 +151,105 @@ async function start(): Promise<void> {
         PRIMARY KEY (id),
         UNIQUE KEY uq_users_username (username),
         KEY idx_users_role_name (role_name),
-        KEY idx_users_is_active (is_active)
+        KEY idx_users_status (status),
+        KEY idx_users_is_active (is_active),
+        CONSTRAINT chk_users_role_name
+          CHECK (role_name IN ('student', 'instructor', 'admin')),
+        CONSTRAINT chk_users_status
+          CHECK (status IN ('active', 'inactive', 'archived'))
+      ) ENGINE=InnoDB
+        DEFAULT CHARSET=utf8mb4
+        COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "first_name",
+      "VARCHAR(100) NOT NULL DEFAULT ''",
+    );
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "last_name",
+      "VARCHAR(100) NOT NULL DEFAULT ''",
+    );
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "phone",
+      "VARCHAR(50) NOT NULL DEFAULT ''",
+    );
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "email",
+      "VARCHAR(254) NOT NULL DEFAULT ''",
+    );
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "status",
+      "VARCHAR(20) NOT NULL DEFAULT 'active'",
+    );
+    await addColumnIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "notes",
+      "TEXT NULL",
+    );
+    await addIndexIfMissing(
+      connection,
+      databaseName,
+      "users",
+      "idx_users_status",
+      "(status)",
+    );
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS students (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        national_id VARCHAR(30) NULL,
+        birth_date DATE NULL,
+        full_address VARCHAR(500) NOT NULL DEFAULT '',
+        created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+        updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+          ON UPDATE CURRENT_TIMESTAMP(3),
+        PRIMARY KEY (id),
+        UNIQUE KEY uq_students_user_id (user_id),
+        UNIQUE KEY uq_students_national_id (national_id),
+        CONSTRAINT fk_students_user
+          FOREIGN KEY (user_id) REFERENCES users (id)
+          ON UPDATE RESTRICT ON DELETE RESTRICT
+      ) ENGINE=InnoDB
+        DEFAULT CHARSET=utf8mb4
+        COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS instructors (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        expertise_areas TEXT NULL,
+        biography TEXT NULL,
+        resume_file_id BIGINT UNSIGNED NULL,
+        certification_file_ids JSON NULL,
+        notes TEXT NULL,
+        created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+        updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+          ON UPDATE CURRENT_TIMESTAMP(3),
+        PRIMARY KEY (id),
+        UNIQUE KEY uq_instructors_user_id (user_id),
+        CONSTRAINT fk_instructors_user
+          FOREIGN KEY (user_id) REFERENCES users (id)
+          ON UPDATE RESTRICT ON DELETE RESTRICT
       ) ENGINE=InnoDB
         DEFAULT CHARSET=utf8mb4
         COLLATE=utf8mb4_unicode_ci
@@ -160,8 +336,8 @@ async function start(): Promise<void> {
       await connection.execute<ResultSetHeader>(
         `INSERT INTO users (
            username, password_hash, password_salt, role_name,
-           is_active, must_change_password
-         ) VALUES (?, ?, ?, 'admin', TRUE, TRUE)`,
+           first_name, last_name, status, is_active, must_change_password
+         ) VALUES (?, ?, ?, 'admin', 'מנהל', 'מערכת', 'active', TRUE, TRUE)`,
         [
           adminUsername,
           derivedKey.toString("hex"),

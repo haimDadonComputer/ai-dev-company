@@ -1,9 +1,12 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { config } from "../config.js";
 
+export type UserRole = "student" | "instructor" | "admin";
+export type UserStatus = "active" | "inactive" | "archived";
+
 interface JwtPayload {
   sub: number;
-  role: "admin";
+  role: UserRole;
   mustChangePassword: boolean;
   iat: number;
   exp: number;
@@ -19,7 +22,7 @@ function sign(input: string): string {
 
 export function createToken(
   userId: number,
-  role: "admin",
+  role: UserRole,
   mustChangePassword: boolean
 ): string {
   const now = Math.floor(Date.now() / 1000);
@@ -58,7 +61,7 @@ export function verifyToken(token: string): JwtPayload | null {
     const now = Math.floor(Date.now() / 1000);
     if (
       !Number.isInteger(parsed.sub) ||
-      parsed.role !== "admin" ||
+      !["student", "instructor", "admin"].includes(parsed.role) ||
       typeof parsed.mustChangePassword !== "boolean" ||
       !Number.isInteger(parsed.exp) ||
       parsed.exp <= now

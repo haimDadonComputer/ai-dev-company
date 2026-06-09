@@ -1,6 +1,9 @@
 module,owner,status,source_of_truth,runtime_path,depends_on,notes
 authentication,AI API,implemented,agents/api/info/api_list.csv,src/server,"users;permissions;environment","JWT HttpOnly Cookie"
 users,AI DB,implemented,agents/db/info/users.csv,agents/db/domain,"environment;permissions","bootstrap admin"
+crm-identity-foundation,AI DB;AI API;AI Permissions,implemented,agents/db/info/users.csv,src/server,"users;permissions;authentication","student instructor admin roles with students and instructors extension tables"
+admin-user-management,AI API;AI DB;AI Permissions,implemented,agents/api/info/api_list.csv,src/server,"crm-identity-foundation;authentication;permissions","admin APIs for creating listing updating resetting password and archiving users"
+admin-user-management-ui,AI Components,implemented,agents/components/info/components_list.csv,src,"admin-user-management;admin-spa;authentication","admin page for listing creating editing resetting passwords and archiving users"
 general-settings,AI DB;AI API;AI Components,implemented,agents/db/info/site_settings.csv,src,"users;media","singleton id=1"
 media,AI DB;AI API;AI Components,implemented,agents/db/info/media_assets.csv,src,"users;environment","PNG JPEG WebP up to 5MB"
 admin-spa,AI Components,implemented,agents/components/info/components_list.csv,src,"authentication;api;design","RTL responsive"

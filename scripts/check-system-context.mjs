@@ -95,8 +95,10 @@ const componentNames = new Set(components.map((item) => item.component_name));
 const tableNames = new Set(tables.map((item) => item.table_name));
 
 for (const api of apis) {
-  if (!roleNames.has(api.required_role)) {
-    errors.push(`API ${api.api_name} references unknown role ${api.required_role}`);
+  for (const role of splitList(api.required_role)) {
+    if (!roleNames.has(role)) {
+      errors.push(`API ${api.api_name} references unknown role ${role}`);
+    }
   }
   for (const table of splitList(api.related_db_tables)) {
     if (!tableNames.has(table)) {

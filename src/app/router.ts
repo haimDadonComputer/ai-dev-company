@@ -4,6 +4,7 @@ import { authService } from "../services/auth-service.js";
 import { mountLoginPage } from "../pages/login/script.js";
 import { mountChangePasswordPage } from "../pages/change-password/script.js";
 import { mountAdminGeneralPage } from "../pages/admin-general/script.js";
+import { mountAdminUsersPage } from "../pages/admin-users/script.js";
 import { mountAdminMediaPage } from "../pages/admin-media/script.js";
 
 type PageMount = (root: HTMLElement) => void | Promise<void>;
@@ -30,6 +31,11 @@ const routes: Record<string, RouteDefinition> = {
     mount: mountAdminGeneralPage,
     protected: true
   },
+  [ROUTES.adminUsers]: {
+    template: "/pages/admin-users/index.html",
+    mount: mountAdminUsersPage,
+    protected: true
+  },
   [ROUTES.adminMedia]: {
     template: "/pages/admin-media/index.html",
     mount: mountAdminMediaPage,
@@ -52,6 +58,7 @@ function setDocumentTitle(path: string): void {
     [ROUTES.login]: "התחברות",
     [ROUTES.changePassword]: "החלפת סיסמה",
     [ROUTES.adminGeneral]: "הגדרות כלליות",
+    [ROUTES.adminUsers]: "ניהול משתמשים",
     [ROUTES.adminMedia]: "ניהול מדיה"
   };
   document.title = `${titles[path] ?? "מערכת ניהול"} | מערכת ניהול`;

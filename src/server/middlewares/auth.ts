@@ -3,7 +3,7 @@ import { AUTH_COOKIE, readCookie } from "../utils/cookies.js";
 import { sendError } from "../utils/http.js";
 import { verifyToken } from "../utils/jwt.js";
 
-export function requireAdmin(
+export function requireAuthenticated(
   request: Request,
   response: Response,
   next: NextFunction
@@ -21,6 +21,20 @@ export function requireAdmin(
     mustChangePassword: payload.mustChangePassword
   };
   next();
+}
+
+export function requireAdmin(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): void {
+  requireAuthenticated(request, response, () => {
+    if (request.auth?.role !== "admin") {
+      sendError(response, 403, "ADMIN_REQUIRED", "נדרשת הרשאת מנהל");
+      return;
+    }
+    next();
+  });
 }
 
 export function requirePasswordChanged(

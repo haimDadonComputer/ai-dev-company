@@ -1,0 +1,8 @@
+table_name,field_name,type,required,unique,default_value,description,used_by_api,notes
+students,id,BIGINT UNSIGNED AUTO_INCREMENT,yes,yes,,מזהה פנימי של הרחבת תלמיד,Students,Primary key
+students,user_id,BIGINT UNSIGNED,yes,yes,,קישור למשתמש בעל role student,Students,Foreign key users.id
+students,national_id,VARCHAR(30),no,yes,NULL,תעודת זהות,Students,Unique when provided
+students,birth_date,DATE,no,no,NULL,תאריך לידה,Students,
+students,full_address,VARCHAR(500),yes,no,"",כתובת מלאה,Students,
+students,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירה,Students,
+students,updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד עדכון,Students,Updated automatically
