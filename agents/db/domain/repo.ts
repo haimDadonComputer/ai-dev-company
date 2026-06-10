@@ -175,6 +175,79 @@ export interface MediaAssetListOptions {
   includeDeleted?: boolean;
 }
 
+export interface ActivityRecord {
+  id: number;
+  name: string;
+  activityType: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  imageMediaAssetId: number | null;
+  priceAmount: string | null;
+  publishOnSite: boolean;
+  status: string;
+  createdByUserId: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface GroupRecord {
+  id: number;
+  activityId: number;
+  name: string;
+  description: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  scheduleText: string;
+  capacity: number | null;
+  registrationStatus: string;
+  publishOnSite: boolean;
+  status: string;
+  instructorUserId: number | null;
+  instructorName: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ActivityWithGroups {
+  activity: ActivityRecord;
+  groups: GroupRecord[];
+}
+
+export type PublicLeadStatus = "new" | "contacted" | "closed" | "archived";
+
+export interface PublicLeadRecord {
+  id: number;
+  activityId: number | null;
+  groupId: number | null;
+  activityName: string | null;
+  groupName: string | null;
+  fullName: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  status: PublicLeadStatus;
+  sourcePath: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreatePublicLeadInput {
+  activityId: number | null;
+  groupId: number | null;
+  fullName: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  sourcePath: string;
+}
+
+export interface PublicLeadListOptions {
+  limit?: number;
+  offset?: number;
+  status?: PublicLeadStatus;
+}
+
 interface UserRow extends RowDataPacket {
   id: number;
   username: string;
@@ -244,6 +317,56 @@ interface InstructorRow extends RowDataPacket {
   resume_file_id: number | null;
   certification_file_ids: string | number[] | null;
   notes: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+interface ActivityRow extends RowDataPacket {
+  id: number;
+  name: string;
+  activity_type: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  image_media_asset_id: number | null;
+  price_amount: string | null;
+  publish_on_site: number;
+  status: string;
+  created_by_user_id: number | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+interface GroupRow extends RowDataPacket {
+  id: number;
+  activity_id: number;
+  name: string;
+  description: string | null;
+  start_date: Date | null;
+  end_date: Date | null;
+  schedule_text: string;
+  capacity: number | null;
+  registration_status: string;
+  publish_on_site: number;
+  status: string;
+  instructor_user_id: number | null;
+  instructor_name: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+interface PublicLeadRow extends RowDataPacket {
+  id: number;
+  activity_id: number | null;
+  group_id: number | null;
+  activity_name: string | null;
+  group_name: string | null;
+  full_name: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  status: PublicLeadStatus;
+  source_path: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -376,10 +499,92 @@ function mapInstructor(row: InstructorRow): InstructorRecord {
   };
 }
 
+function mapActivity(row: ActivityRow): ActivityRecord {
+  return {
+    id: row.id,
+    name: row.name,
+    activityType: row.activity_type,
+    audience: row.audience,
+    summary: row.summary,
+    description: row.description,
+    imageMediaAssetId: row.image_media_asset_id,
+    priceAmount: row.price_amount,
+    publishOnSite: Boolean(row.publish_on_site),
+    status: row.status,
+    createdByUserId: row.created_by_user_id,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapGroup(row: GroupRow): GroupRecord {
+  return {
+    id: row.id,
+    activityId: row.activity_id,
+    name: row.name,
+    description: row.description,
+    startDate: row.start_date,
+    endDate: row.end_date,
+    scheduleText: row.schedule_text,
+    capacity: row.capacity,
+    registrationStatus: row.registration_status,
+    publishOnSite: Boolean(row.publish_on_site),
+    status: row.status,
+    instructorUserId: row.instructor_user_id,
+    instructorName: row.instructor_name,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapPublicLead(row: PublicLeadRow): PublicLeadRecord {
+  return {
+    id: row.id,
+    activityId: row.activity_id,
+    groupId: row.group_id,
+    activityName: row.activity_name,
+    groupName: row.group_name,
+    fullName: row.full_name,
+    phone: row.phone,
+    email: row.email,
+    message: row.message,
+    status: row.status,
+    sourcePath: row.source_path,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 const userSelect = `SELECT id, username, password_hash, password_salt, role_name,
           is_active, first_name, last_name, phone, email, status,
           must_change_password, notes, last_login_at, created_at, updated_at
      FROM users`;
+
+const publicActivitySelect = `SELECT id, name, activity_type, audience, summary,
+          description, image_media_asset_id, CAST(price_amount AS CHAR) AS price_amount,
+          publish_on_site, status, created_by_user_id, created_at, updated_at
+     FROM activities
+    WHERE publish_on_site = TRUE
+      AND status = 'active'`;
+
+const publicGroupSelect = `SELECT g.id, g.activity_id, g.name, g.description,
+          g.start_date, g.end_date, g.schedule_text, g.capacity,
+          g.registration_status, g.publish_on_site, g.status,
+          g.instructor_user_id,
+          NULLIF(CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')), ' ') AS instructor_name,
+          g.created_at, g.updated_at
+     FROM \`groups\` g
+     LEFT JOIN users u ON u.id = g.instructor_user_id
+    WHERE g.publish_on_site = TRUE
+      AND g.status = 'active'`;
+
+const publicLeadSelect = `SELECT l.id, l.activity_id, l.group_id,
+          a.name AS activity_name, g.name AS group_name,
+          l.full_name, l.phone, l.email, l.message, l.status,
+          l.source_path, l.created_at, l.updated_at
+     FROM public_leads l
+     LEFT JOIN activities a ON a.id = l.activity_id
+     LEFT JOIN \`groups\` g ON g.id = l.group_id`;
 
 async function findUserByIdWithConnection(
   connection: PoolConnection,
@@ -902,4 +1107,124 @@ export async function softDeleteMediaAsset(
   );
 
   return result.affectedRows === 1;
+}
+
+export async function listPublicActivities(): Promise<ActivityRecord[]> {
+  const [rows] = await pool.query<ActivityRow[]>(
+    `${publicActivitySelect}
+      ORDER BY id DESC`,
+  );
+
+  return rows.map(mapActivity);
+}
+
+export async function findPublicActivityById(
+  id: number,
+): Promise<ActivityWithGroups | null> {
+  const [activityRows] = await pool.execute<ActivityRow[]>(
+    `${publicActivitySelect}
+      AND id = ?
+      LIMIT 1`,
+    [id],
+  );
+  if (!activityRows[0]) {
+    return null;
+  }
+
+  const [groupRows] = await pool.execute<GroupRow[]>(
+    `${publicGroupSelect}
+      AND g.activity_id = ?
+      ORDER BY g.start_date IS NULL, g.start_date, g.id`,
+    [id],
+  );
+
+  return {
+    activity: mapActivity(activityRows[0]),
+    groups: groupRows.map(mapGroup),
+  };
+}
+
+export async function findPublicGroupById(
+  id: number,
+): Promise<{ group: GroupRecord; activity: ActivityRecord } | null> {
+  const [groupRows] = await pool.execute<GroupRow[]>(
+    `${publicGroupSelect}
+      AND g.id = ?
+      LIMIT 1`,
+    [id],
+  );
+  if (!groupRows[0]) {
+    return null;
+  }
+
+  const [activityRows] = await pool.execute<ActivityRow[]>(
+    `${publicActivitySelect}
+      AND id = ?
+      LIMIT 1`,
+    [groupRows[0].activity_id],
+  );
+  if (!activityRows[0]) {
+    return null;
+  }
+
+  return {
+    group: mapGroup(groupRows[0]),
+    activity: mapActivity(activityRows[0]),
+  };
+}
+
+export async function createPublicLead(
+  input: CreatePublicLeadInput,
+): Promise<PublicLeadRecord> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `INSERT INTO public_leads (
+       activity_id, group_id, full_name, phone, email, message, source_path
+     ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [
+      input.activityId,
+      input.groupId,
+      input.fullName,
+      input.phone,
+      input.email,
+      input.message,
+      input.sourcePath,
+    ],
+  );
+
+  const [rows] = await pool.execute<PublicLeadRow[]>(
+    `${publicLeadSelect}
+      WHERE l.id = ?
+      LIMIT 1`,
+    [result.insertId],
+  );
+
+  if (!rows[0]) {
+    throw new Error("Created public lead could not be loaded");
+  }
+  return mapPublicLead(rows[0]);
+}
+
+export async function listPublicLeads(
+  options: PublicLeadListOptions = {},
+): Promise<PublicLeadRecord[]> {
+  const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+  const offset = Math.max(options.offset ?? 0, 0);
+  const values: Array<string | number> = [];
+  const filters: string[] = [];
+
+  if (options.status) {
+    filters.push("l.status = ?");
+    values.push(options.status);
+  }
+
+  const where = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
+  const [rows] = await pool.query<PublicLeadRow[]>(
+    `${publicLeadSelect}
+      ${where}
+      ORDER BY l.id DESC
+      LIMIT ? OFFSET ?`,
+    [...values, limit, offset],
+  );
+
+  return rows.map(mapPublicLead);
 }

@@ -1,0 +1,14 @@
+field,type,required,unique,default,description
+id,BIGINT UNSIGNED,yes,yes,auto_increment,מזהה פעילות
+name,VARCHAR(191),yes,no,,שם הפעילות
+activity_type,VARCHAR(100),yes,no,,סוג הפעילות
+audience,VARCHAR(255),yes,no,,קהל יעד
+summary,VARCHAR(500),yes,no,,תקציר להצגה באתר
+description,TEXT,no,no,,תיאור מלא
+image_media_asset_id,BIGINT UNSIGNED,no,no,null,תמונת פעילות מתוך media_assets
+price_amount,DECIMAL(10,2),no,no,null,מחיר מוצג ללא סליקה
+publish_on_site,BOOLEAN,yes,no,false,האם לפרסם באתר הציבורי
+status,VARCHAR(20),yes,no,active,סטטוס עסקי
+created_by_user_id,BIGINT UNSIGNED,no,no,null,מנהל שיצר את הפעילות
+created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),תאריך יצירה
+updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),תאריך עדכון

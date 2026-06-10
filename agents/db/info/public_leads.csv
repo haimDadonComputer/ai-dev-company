@@ -1,0 +1,12 @@
+field,type,nullable,key,default,description,risk_level
+id,BIGINT UNSIGNED,no,PK,AUTO_INCREMENT,מזהה פנייה,High
+activity_id,BIGINT UNSIGNED,yes,FK,NULL,פעילות ציבורית משויכת אם קיימת,High
+group_id,BIGINT UNSIGNED,yes,FK,NULL,קבוצה ציבורית משויכת אם קיימת,High
+full_name,VARCHAR(191),no,,,"שם מלא של הפונה",High
+phone,VARCHAR(50),no,,,"טלפון לחזרה",High
+email,VARCHAR(254),yes,,NULL,"אימייל לחזרה אם נמסר",High
+message,TEXT,yes,,NULL,"הודעה חופשית מהפונה",High
+status,VARCHAR(20),no,,new,"סטטוס טיפול new contacted closed archived",High
+source_path,VARCHAR(255),no,,,"נתיב ציבורי שממנו נשלחה הפנייה",Medium
+created_at,DATETIME(3),no,,CURRENT_TIMESTAMP(3),מועד יצירה,High
+updated_at,DATETIME(3),no,,CURRENT_TIMESTAMP(3),מועד עדכון,High

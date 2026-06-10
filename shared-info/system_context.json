@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-09T16:20:46.984Z",
+  "generatedAt": "2026-06-10T12:11:09.844Z",
   "manifest": {
     "path": "shared-info/system_manifest.json",
-    "hash": "86521137944980fd427c2b7fe62d210917840c73860368a568ee96cca5f18f35",
+    "hash": "bce105e2a727e858976ff6f4c976121487d07233a6f945f110799542400c0e7a",
     "data": {
       "schemaVersion": 1,
       "systemId": "ai-development-company-base",
@@ -46,6 +46,9 @@
           "agents/db/info/users.csv",
           "agents/db/info/students.csv",
           "agents/db/info/instructors.csv",
+          "agents/db/info/activities.csv",
+          "agents/db/info/groups.csv",
+          "agents/db/info/public_leads.csv",
           "agents/db/info/site_settings.csv",
           "agents/db/info/media_assets.csv"
         ],
@@ -987,8 +990,32 @@
     },
     "shared-info/action_log.csv": {
       "path": "shared-info/action_log.csv",
-      "hash": "d5f632c94d26e2b03f24c5b6c966d15f86edef3c02d2a339d37cc4fd8c2f5fbd",
+      "hash": "6470fa9723b7c2b373ccd3620c2acc8abf771b6c230e9daec4c501734fd2cd92",
       "data": [
+        {
+          "id": "37",
+          "date": "2026-06-10",
+          "agent": "AI Manager",
+          "action_type": "public_leads_foundation",
+          "domain_files_changed": "agents/db/info/public_leads.csv;agents/api/info/api_list.csv;agents/permissions/info/permissions.csv;agents/components/info/components_list.csv;src/server/controllers/public-leads-controller.ts;src/server/services/public-leads-service.ts;src/pages/admin-leads;src/pages/home;src/pages/activities",
+          "external_domain_used": "MySQL;shared-info/system_context.json",
+          "tools_used": "apply_patch;context:build;context:check;npm test;db:init;INFORMATION_SCHEMA",
+          "summary": "נוסף בסיס פניות ציבוריות: טבלה public_leads, טופסי פנייה ציבוריים, API יצירה, API צפייה לאדמין ועמוד /admin/leads",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
+        {
+          "id": "36",
+          "date": "2026-06-10",
+          "agent": "AI Manager",
+          "action_type": "public_site_activity_foundation",
+          "domain_files_changed": "agents/db/info/activities.csv;agents/db/info/groups.csv;agents/api/info/api_list.csv;agents/components/info/components_list.csv;agents/qa/info/test_cases.csv;agents/qa/info/test_results.csv;src/pages/home;src/pages/activities;src/server/services/public-content-service.ts",
+          "external_domain_used": "MySQL;shared-info/system_context.json",
+          "tools_used": "apply_patch;context:build;context:check;npm test;db:init;INFORMATION_SCHEMA",
+          "summary": "נוסף בסיס אתר ציבורי ופעילויות עם טבלאות activities/groups, API ציבורי read-only ועמודי /home /activities; עבר context, test ו-db:init",
+          "risk_level": "High",
+          "needs_review": "yes"
+        },
         {
           "id": "1",
           "date": "2026-06-09",
@@ -1413,8 +1440,48 @@
     },
     "shared-info/contracts.csv": {
       "path": "shared-info/contracts.csv",
-      "hash": "30b7325367ffcd054b075d7fa9df74a5c456328c893bc5a0cd78446df3cd4156",
+      "hash": "beb103e23399ffe5df7941f45120fe1d79ea9047df2f49ca1aac97a288af1069",
       "data": [
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "public_leads table",
+          "contract_type": "data",
+          "description": "טבלת public_leads שומרת פניות ציבוריות בלבד עם activity_id/group_id אופציונליים וסטטוס טיפול בסיסי",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "public lead APIs",
+          "contract_type": "http",
+          "description": "home-page ו-activities-page שולחים public_leads_create; admin-leads-page צורך admin_public_leads_list דרך credentials same-origin",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI DB",
+          "target_agent": "AI API",
+          "resource": "activities and groups tables",
+          "contract_type": "data",
+          "description": "טבלאות activities ו-groups מספקות רק פעילויות וקבוצות עם publish_on_site=true ו-status=active לנתיבים ציבוריים",
+          "risk_level": "High"
+        },
+        {
+          "source_agent": "AI API",
+          "target_agent": "AI Components",
+          "resource": "public activity APIs",
+          "contract_type": "http",
+          "description": "עמודי home ו-activities צורכים public_activities_list public_activity_get public_group_get דרך מעטפת success/data וללא JWT",
+          "risk_level": "Medium"
+        },
+        {
+          "source_agent": "AI Permissions",
+          "target_agent": "AI Components",
+          "resource": "public site visibility",
+          "contract_type": "authorization",
+          "description": "home-page ו-activities-page גלויים ל-guest student instructor admin ואינם מאפשרים פעולות כתיבה",
+          "risk_level": "Low"
+        },
         {
           "source_agent": "AI Permissions",
           "target_agent": "AI API",
@@ -1667,57 +1734,57 @@
     },
     "agents/permissions/info/permissions.csv": {
       "path": "agents/permissions/info/permissions.csv",
-      "hash": "ee7925814da9c27572c8e507c20b7ee90c6a01327844489c07f7db3441bc7f8b",
+      "hash": "af218c614de9aec7b9c56ac8d65343310664ac878f5f98af14137a27b4602487",
       "data": [
         {
           "role_name": "guest",
           "description": "משתמש לא מחובר",
-          "can_view": "הגדרות אתר ציבוריות|קובצי מדיה ציבוריים|עמוד התחברות",
-          "can_create": "none",
+          "can_view": "הגדרות אתר ציבוריות|קובצי מדיה ציבוריים|פעילויות וקבוצות ציבוריות|עמוד התחברות",
+          "can_create": "פנייה ציבורית",
           "can_edit": "none",
           "can_delete": "none",
-          "allowed_api": "public_settings_get|media_get",
-          "allowed_components": "login-page|form|button|notification",
+          "allowed_api": "public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create|media_get",
+          "allowed_components": "home-page|activities-page|login-page|form|button|notification",
           "notes": "הרשאות ציבוריות בלבד; risk_level=Low; needs_review=no"
         },
         {
           "role_name": "student",
           "description": "תלמיד",
-          "can_view": "פרטי משתמש מחובר|אזור תלמיד עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים",
-          "can_create": "none",
+          "can_view": "פרטי משתמש מחובר|אזור תלמיד עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים|פעילויות וקבוצות ציבוריות",
+          "can_create": "פנייה ציבורית",
           "can_edit": "סיסמת המשתמש",
           "can_delete": "none",
-          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|media_get",
-          "allowed_components": "login-page|change-password-page|form|button|notification",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create|media_get",
+          "allowed_components": "home-page|activities-page|login-page|change-password-page|form|button|notification",
           "notes": "תפקיד עסקי מתוכנן; בשלב זה ללא נתיבי CRM ייעודיים; risk_level=High; needs_review=yes"
         },
         {
           "role_name": "instructor",
           "description": "מדריך",
-          "can_view": "פרטי משתמש מחובר|אזור מדריך עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים",
-          "can_create": "none",
+          "can_view": "פרטי משתמש מחובר|אזור מדריך עתידי|הגדרות ציבוריות|קובצי מדיה ציבוריים|פעילויות וקבוצות ציבוריות",
+          "can_create": "פנייה ציבורית",
           "can_edit": "סיסמת המשתמש",
           "can_delete": "none",
-          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|media_get",
-          "allowed_components": "login-page|change-password-page|form|button|notification",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create|media_get",
+          "allowed_components": "home-page|activities-page|login-page|change-password-page|form|button|notification",
           "notes": "תפקיד עסקי מתוכנן; הרשאות קבוצתיות יוגדרו בשלב הבא; risk_level=High; needs_review=yes"
         },
         {
           "role_name": "admin",
           "description": "מנהל מערכת",
-          "can_view": "פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|משתמשים|תלמידים|מדריכים|עמודי ורכיבי ניהול",
-          "can_create": "העלאת מדיה|יצירת משתמשים",
+          "can_view": "פרטי משתמש מחובר|הגדרות כלליות|רשימת מדיה|משתמשים|תלמידים|מדריכים|פעילויות וקבוצות ציבוריות|פניות ציבוריות|עמודי ורכיבי ניהול",
+          "can_create": "העלאת מדיה|יצירת משתמשים|פנייה ציבורית",
           "can_edit": "הגדרות כלליות|סיסמת המשתמש|משתמשים|תלמידים|מדריכים",
           "can_delete": "מחיקת מדיה|ארכיון משתמשים",
-          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status|admin_media_upload|admin_media_list|admin_media_delete|public_settings_get|media_get",
-          "allowed_components": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page|navbar|sidebar|form|button|notification|modal",
+          "allowed_api": "auth_login|auth_logout|auth_me|auth_change_password|admin_general_get|admin_general_update|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status|admin_media_upload|admin_media_list|admin_media_delete|admin_public_leads_list|public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create|media_get",
+          "allowed_components": "home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page|navbar|sidebar|form|button|notification|modal",
           "notes": "הרשאות ניהול מפורשות ללא הרשאה גורפת; risk_level=High; needs_review=yes"
         }
       ]
     },
     "agents/db/info/tables-index.csv": {
       "path": "agents/db/info/tables-index.csv",
-      "hash": "7f5233e3b0cc65d59018341bd2eedacd2cc714751e055c1544ca69a3dbf67790",
+      "hash": "95e369ad58f81b1d68cd21b639a8412cbbf33ed25c8ce9e9164e2f4cbf3cf1cd",
       "data": [
         {
           "table_name": "users",
@@ -1735,6 +1802,24 @@
           "table_name": "instructors",
           "csv_file": "instructors.csv",
           "description": "הרחבת משתמש עבור מדריכים",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "activities",
+          "csv_file": "activities.csv",
+          "description": "תבניות פעילות ציבוריות וניהוליות",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "groups",
+          "csv_file": "groups.csv",
+          "description": "קבוצות פעילות שניתן לפרסם באתר",
+          "risk_level": "High"
+        },
+        {
+          "table_name": "public_leads",
+          "csv_file": "public_leads.csv",
+          "description": "פניות ציבוריות מהאתר לפעילות או קבוצה",
           "risk_level": "High"
         },
         {
@@ -2121,6 +2206,339 @@
         }
       ]
     },
+    "agents/db/info/activities.csv": {
+      "path": "agents/db/info/activities.csv",
+      "hash": "d999071b9fa1355440e08afd6dac04b4928d8e49f01987a544db55237b4099b4",
+      "data": [
+        {
+          "field": "id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "yes",
+          "default": "auto_increment",
+          "description": "מזהה פעילות"
+        },
+        {
+          "field": "name",
+          "type": "VARCHAR(191)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "שם הפעילות"
+        },
+        {
+          "field": "activity_type",
+          "type": "VARCHAR(100)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "סוג הפעילות"
+        },
+        {
+          "field": "audience",
+          "type": "VARCHAR(255)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "קהל יעד"
+        },
+        {
+          "field": "summary",
+          "type": "VARCHAR(500)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "תקציר להצגה באתר"
+        },
+        {
+          "field": "description",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default": "",
+          "description": "תיאור מלא"
+        },
+        {
+          "field": "image_media_asset_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "תמונת פעילות מתוך media_assets"
+        },
+        {
+          "field": "price_amount",
+          "type": "DECIMAL(10",
+          "required": "2)",
+          "unique": "no",
+          "default": "no",
+          "description": "null"
+        },
+        {
+          "field": "publish_on_site",
+          "type": "BOOLEAN",
+          "required": "yes",
+          "unique": "no",
+          "default": "false",
+          "description": "האם לפרסם באתר הציבורי"
+        },
+        {
+          "field": "status",
+          "type": "VARCHAR(20)",
+          "required": "yes",
+          "unique": "no",
+          "default": "active",
+          "description": "סטטוס עסקי"
+        },
+        {
+          "field": "created_by_user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "מנהל שיצר את הפעילות"
+        },
+        {
+          "field": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "תאריך יצירה"
+        },
+        {
+          "field": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "תאריך עדכון"
+        }
+      ]
+    },
+    "agents/db/info/groups.csv": {
+      "path": "agents/db/info/groups.csv",
+      "hash": "9d8b40e054d4ccfe2ebace2a16de37c99694486e2ff22f8efb2150edd34fe410",
+      "data": [
+        {
+          "field": "id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "yes",
+          "default": "auto_increment",
+          "description": "מזהה קבוצה"
+        },
+        {
+          "field": "activity_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "פעילות אב"
+        },
+        {
+          "field": "name",
+          "type": "VARCHAR(191)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "שם הקבוצה"
+        },
+        {
+          "field": "description",
+          "type": "TEXT",
+          "required": "no",
+          "unique": "no",
+          "default": "",
+          "description": "תיאור הקבוצה"
+        },
+        {
+          "field": "start_date",
+          "type": "DATE",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "תאריך התחלה"
+        },
+        {
+          "field": "end_date",
+          "type": "DATE",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "תאריך סיום"
+        },
+        {
+          "field": "schedule_text",
+          "type": "VARCHAR(500)",
+          "required": "yes",
+          "unique": "no",
+          "default": "",
+          "description": "ימים ושעות להצגה"
+        },
+        {
+          "field": "capacity",
+          "type": "INT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "קיבולת כללית"
+        },
+        {
+          "field": "registration_status",
+          "type": "VARCHAR(20)",
+          "required": "yes",
+          "unique": "no",
+          "default": "open",
+          "description": "סטטוס הרשמה"
+        },
+        {
+          "field": "publish_on_site",
+          "type": "BOOLEAN",
+          "required": "yes",
+          "unique": "no",
+          "default": "false",
+          "description": "האם לפרסם באתר הציבורי"
+        },
+        {
+          "field": "status",
+          "type": "VARCHAR(20)",
+          "required": "yes",
+          "unique": "no",
+          "default": "active",
+          "description": "סטטוס עסקי"
+        },
+        {
+          "field": "instructor_user_id",
+          "type": "BIGINT UNSIGNED",
+          "required": "no",
+          "unique": "no",
+          "default": "null",
+          "description": "מדריך משויך אם קיים"
+        },
+        {
+          "field": "created_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "תאריך יצירה"
+        },
+        {
+          "field": "updated_at",
+          "type": "DATETIME(3)",
+          "required": "yes",
+          "unique": "no",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "תאריך עדכון"
+        }
+      ]
+    },
+    "agents/db/info/public_leads.csv": {
+      "path": "agents/db/info/public_leads.csv",
+      "hash": "599d0ad72ce00295dfeab4362ef5de58449899f0665d927f829ba0436839120f",
+      "data": [
+        {
+          "field": "id",
+          "type": "BIGINT UNSIGNED",
+          "nullable": "no",
+          "key": "PK",
+          "default": "AUTO_INCREMENT",
+          "description": "מזהה פנייה",
+          "risk_level": "High"
+        },
+        {
+          "field": "activity_id",
+          "type": "BIGINT UNSIGNED",
+          "nullable": "yes",
+          "key": "FK",
+          "default": "NULL",
+          "description": "פעילות ציבורית משויכת אם קיימת",
+          "risk_level": "High"
+        },
+        {
+          "field": "group_id",
+          "type": "BIGINT UNSIGNED",
+          "nullable": "yes",
+          "key": "FK",
+          "default": "NULL",
+          "description": "קבוצה ציבורית משויכת אם קיימת",
+          "risk_level": "High"
+        },
+        {
+          "field": "full_name",
+          "type": "VARCHAR(191)",
+          "nullable": "no",
+          "key": "",
+          "default": "",
+          "description": "שם מלא של הפונה",
+          "risk_level": "High"
+        },
+        {
+          "field": "phone",
+          "type": "VARCHAR(50)",
+          "nullable": "no",
+          "key": "",
+          "default": "",
+          "description": "טלפון לחזרה",
+          "risk_level": "High"
+        },
+        {
+          "field": "email",
+          "type": "VARCHAR(254)",
+          "nullable": "yes",
+          "key": "",
+          "default": "NULL",
+          "description": "אימייל לחזרה אם נמסר",
+          "risk_level": "High"
+        },
+        {
+          "field": "message",
+          "type": "TEXT",
+          "nullable": "yes",
+          "key": "",
+          "default": "NULL",
+          "description": "הודעה חופשית מהפונה",
+          "risk_level": "High"
+        },
+        {
+          "field": "status",
+          "type": "VARCHAR(20)",
+          "nullable": "no",
+          "key": "",
+          "default": "new",
+          "description": "סטטוס טיפול new contacted closed archived",
+          "risk_level": "High"
+        },
+        {
+          "field": "source_path",
+          "type": "VARCHAR(255)",
+          "nullable": "no",
+          "key": "",
+          "default": "",
+          "description": "נתיב ציבורי שממנו נשלחה הפנייה",
+          "risk_level": "Medium"
+        },
+        {
+          "field": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": "no",
+          "key": "",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד יצירה",
+          "risk_level": "High"
+        },
+        {
+          "field": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": "no",
+          "key": "",
+          "default": "CURRENT_TIMESTAMP(3)",
+          "description": "מועד עדכון",
+          "risk_level": "High"
+        }
+      ]
+    },
     "agents/db/info/site_settings.csv": {
       "path": "agents/db/info/site_settings.csv",
       "hash": "821cbc3f72f1da46dd6491a774216fc1432cfe8a05f9a7ebc5ac156884d01239",
@@ -2421,8 +2839,68 @@
     },
     "agents/api/info/api_list.csv": {
       "path": "agents/api/info/api_list.csv",
-      "hash": "e41fa04658ba89b0df078ec1e826bfc1c5abaf051c6004f975aca48c5b9e6978",
+      "hash": "af30a79e4561c2fdca41c72dc21e5ed08608cebb722b9a30298464d43dc6f943",
       "data": [
+        {
+          "api_name": "public_leads_create",
+          "method": "POST",
+          "path": "/api/public/leads",
+          "required_role": "guest",
+          "middleware": "securityHeaders|sameOrigin",
+          "request_body": "activityId?;groupId?;fullName:string;phone:string;email?;message?;sourcePath?",
+          "response_body": "lead:{id;activityId;groupId;activityName;groupName;fullName;phone;email;message;status;sourcePath;createdAt;updatedAt}",
+          "related_db_tables": "public_leads|activities|groups",
+          "description": "יצירת פנייה ציבורית מהאתר",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "admin_public_leads_list",
+          "method": "GET",
+          "path": "/api/admin/public-leads",
+          "required_role": "admin",
+          "middleware": "requireAdmin|requirePasswordChanged",
+          "request_body": "query:limit?;offset?;status?",
+          "response_body": "leads:[{id;activityId;groupId;activityName;groupName;fullName;phone;email;message;status;sourcePath;createdAt;updatedAt}]",
+          "related_db_tables": "public_leads|activities|groups",
+          "description": "צפייה בפניות ציבוריות למנהל",
+          "risk_level": "High"
+        },
+        {
+          "api_name": "public_activities_list",
+          "method": "GET",
+          "path": "/api/public/activities",
+          "required_role": "guest",
+          "middleware": "securityHeaders",
+          "request_body": "none",
+          "response_body": "activities:[{id;name;activityType;audience;summary;description;imageUrl;priceAmount}]",
+          "related_db_tables": "activities|media_assets",
+          "description": "רשימת פעילויות מפורסמות באתר",
+          "risk_level": "Low"
+        },
+        {
+          "api_name": "public_activity_get",
+          "method": "GET",
+          "path": "/api/public/activities/:activityId",
+          "required_role": "guest",
+          "middleware": "securityHeaders",
+          "request_body": "none",
+          "response_body": "activity:{id;name;activityType;audience;summary;description;imageUrl;priceAmount};groups:[{id;activityId;name;description;startDate;endDate;scheduleText;capacity;registrationStatus;instructorName}]",
+          "related_db_tables": "activities|groups|media_assets|users",
+          "description": "פרטי פעילות ציבורית וקבוצות מפורסמות",
+          "risk_level": "Low"
+        },
+        {
+          "api_name": "public_group_get",
+          "method": "GET",
+          "path": "/api/public/groups/:groupId",
+          "required_role": "guest",
+          "middleware": "securityHeaders",
+          "request_body": "none",
+          "response_body": "activity:{id;name;activityType;audience;summary;description;imageUrl;priceAmount};group:{id;activityId;name;description;startDate;endDate;scheduleText;capacity;registrationStatus;instructorName}",
+          "related_db_tables": "activities|groups|media_assets|users",
+          "description": "פרטי קבוצה ציבורית מפורסמת",
+          "risk_level": "Low"
+        },
         {
           "api_name": "auth_login",
           "method": "POST",
@@ -2631,8 +3109,24 @@
     },
     "agents/components/info/components_list.csv": {
       "path": "agents/components/info/components_list.csv",
-      "hash": "1a10bae39d3ddebaed2be0613da5967080727aea86e2425d20d6fdc2df0b3146",
+      "hash": "da8a0347971cbb52092a14d336bc5a9063fc6a56f8926c250ec8d86bbd564e2b",
       "data": [
+        {
+          "component_name": "home-page",
+          "visible_to": "guest|student|instructor|admin",
+          "used_by": "router",
+          "api_used": "public_settings_get|public_activities_list|public_leads_create",
+          "description": "עמוד בית ציבורי המציג פרטי אתר פעילויות וטופס פנייה",
+          "risk_level": "Low"
+        },
+        {
+          "component_name": "activities-page",
+          "visible_to": "guest|student|instructor|admin",
+          "used_by": "router",
+          "api_used": "public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create",
+          "description": "עמוד פעילויות ציבורי עם בחירת פעילות צפייה בקבוצות וטופס פנייה",
+          "risk_level": "Low"
+        },
         {
           "component_name": "login-page",
           "visible_to": "guest|student|instructor|admin",
@@ -2666,6 +3160,14 @@
           "risk_level": "High"
         },
         {
+          "component_name": "admin-leads-page",
+          "visible_to": "admin",
+          "used_by": "router",
+          "api_used": "auth_me|admin_public_leads_list",
+          "description": "צפייה בפניות שנשלחו מטפסי האתר הציבורי",
+          "risk_level": "High"
+        },
+        {
           "component_name": "admin-media-page",
           "visible_to": "admin",
           "used_by": "router",
@@ -2676,7 +3178,7 @@
         {
           "component_name": "navbar",
           "visible_to": "admin",
-          "used_by": "admin-general-page|admin-users-page|admin-media-page",
+          "used_by": "admin-general-page|admin-users-page|admin-leads-page|admin-media-page",
           "api_used": "auth_logout",
           "description": "סרגל עליון עם זיהוי מנהל והתנתקות",
           "risk_level": "High"
@@ -2684,7 +3186,7 @@
         {
           "component_name": "sidebar",
           "visible_to": "admin",
-          "used_by": "admin-general-page|admin-users-page|admin-media-page",
+          "used_by": "admin-general-page|admin-users-page|admin-leads-page|admin-media-page",
           "api_used": "none",
           "description": "ניווט בין עמודי ממשק הניהול",
           "risk_level": "Low"
@@ -2692,7 +3194,7 @@
         {
           "component_name": "form",
           "visible_to": "guest|student|instructor|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
+          "used_by": "home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",
           "api_used": "none",
           "description": "מבנה וטיפול במצבי טפסים",
           "risk_level": "Low"
@@ -2700,7 +3202,7 @@
         {
           "component_name": "button",
           "visible_to": "guest|student|instructor|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
+          "used_by": "home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",
           "api_used": "none",
           "description": "כפתורי פעולה עקביים ונגישים",
           "risk_level": "Low"
@@ -2708,7 +3210,7 @@
         {
           "component_name": "notification",
           "visible_to": "guest|student|instructor|admin",
-          "used_by": "login-page|change-password-page|admin-general-page|admin-users-page|admin-media-page",
+          "used_by": "home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",
           "api_used": "none",
           "description": "הודעות הצלחה שגיאה ומידע נגישות",
           "risk_level": "Low"
@@ -2959,8 +3461,80 @@
     },
     "agents/qa/info/test_cases.csv": {
       "path": "agents/qa/info/test_cases.csv",
-      "hash": "80970b4808bfae842ff5e04c3b8171c85c29ec64921624acc6e8c9dd70814569",
+      "hash": "3b62c7754c5554b5fa8d685e9c60b3eb4fce62e334b3bc7f41d374450447fab3",
       "data": [
+        {
+          "id": "QA-038",
+          "module": "database",
+          "title": "סכמת public_leads",
+          "steps": "להריץ db:init; לבדוק שהטבלה public_leads קיימת עם קשרים ל-activities ו-groups",
+          "expected_result": "הטבלה נוצרת ללא מחיקה או דריסת נתונים קיימים וכוללת סטטוס טיפול בסיסי",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-039",
+          "module": "public-api",
+          "title": "יצירת פנייה ציבורית",
+          "steps": "להריץ build; לבדוק חוזה public_leads_create ו-validator; לוודא שיוך פעילות/קבוצה עובר דרך פונקציות public",
+          "expected_result": "פנייה ציבורית דורשת שם וטלפון, שומרת רק פעילות או קבוצה מפורסמת, ואינה דורשת JWT",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-040",
+          "module": "admin-api",
+          "title": "צפייה בפניות למנהל",
+          "steps": "להריץ build; לבדוק חוזה admin_public_leads_list והנתיב תחת /api/admin",
+          "expected_result": "רק admin לאחר החלפת סיסמה יכול לצפות בפניות",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-041",
+          "module": "frontend",
+          "title": "טפסי פנייה ועמוד admin leads",
+          "steps": "להריץ npm test; לבדוק שה-SPA נארז עם home activities admin-leads ושהטפסים משתמשים ב-apiRequest ללא localStorage",
+          "expected_result": "הטפסים הציבוריים ועמוד /admin/leads נארזים ועובדים דרך cookies same-origin בלבד",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-034",
+          "module": "database",
+          "title": "סכמת פעילויות וקבוצות ציבוריות",
+          "steps": "להריץ db:init; לבדוק שהטבלאות activities ו-groups קיימות עם FK ל-users media_assets ו-activities",
+          "expected_result": "הטבלאות נוצרות ללא מחיקה או דריסה של נתונים קיימים והקשרים נשמרים",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-035",
+          "module": "public-site",
+          "title": "סינון פעילויות וקבוצות לפרסום ציבורי",
+          "steps": "לקרוא את פונקציות ה-repo הציבוריות מול נתוני בדיקה או לאמת סטטית את תנאי השאילתה",
+          "expected_result": "רק רשומות publish_on_site=true ו-status=active מוחזרות לנתיבים ציבוריים",
+          "priority": "critical",
+          "status": "READY"
+        },
+        {
+          "id": "QA-036",
+          "module": "public-api",
+          "title": "נתיבי פעילויות ציבוריים read-only",
+          "steps": "להריץ build; לבדוק רישום routes ציבוריים ואת חוזי api_list; לקרוא נתיבים ללא JWT כאשר שרת זמין",
+          "expected_result": "GET /api/public/activities /api/public/activities/:activityId /api/public/groups/:groupId אינם דורשים JWT ואינם מאפשרים כתיבה",
+          "priority": "high",
+          "status": "READY"
+        },
+        {
+          "id": "QA-037",
+          "module": "frontend",
+          "title": "עמודי home ו-activities ב-SPA",
+          "steps": "להריץ build; לבדוק שהעמודים נארזים ושה-router מכיר /home ו-/activities",
+          "expected_result": "עמודי האתר הציבורי נטענים כחלק מה-SPA, RTL, ללא אחסון JWT וללא תלות ישירה בין עמודים",
+          "priority": "high",
+          "status": "READY"
+        },
         {
           "id": "QA-001",
           "module": "database",
@@ -3262,8 +3836,72 @@
     },
     "agents/qa/info/test_results.csv": {
       "path": "agents/qa/info/test_results.csv",
-      "hash": "5cfca7c405a37d69e43bb5a6a096b229c76c08d30a1dcd876b1c72a261c2b7b2",
+      "hash": "4f41894ef4c1748b7c1199a44403a38675c20c89b0a678ca4dddc3dd93e5b737",
       "data": [
+        {
+          "id": "QAR-038",
+          "test_case_id": "QA-038",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm run db:init עבר. בדיקת INFORMATION_SCHEMA אישרה שהטבלה public_leads קיימת לאחר האתחול."
+        },
+        {
+          "id": "QAR-039",
+          "test_case_id": "QA-039",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test עבר 14/14. אימות סטטי: submitPublicLead מאמת group/activity מול findPublicGroupById/findPublicActivityById לפני createPublicLead."
+        },
+        {
+          "id": "QAR-040",
+          "test_case_id": "QA-040",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "context:check עבר עם admin_public_leads_list תחת required_role=admin; route מחובר דרך adminRouter שמפעיל requireAdmin ו-requirePasswordChanged."
+        },
+        {
+          "id": "QAR-041",
+          "test_case_id": "QA-041",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test הפעיל build מלא. ה-SPA כולל admin-leads, טפסי home/activities משתמשים ב-leadsService דרך apiRequest credentials same-origin, ולא נוספה שמירת JWT בדפדפן."
+        },
+        {
+          "id": "QAR-034",
+          "test_case_id": "QA-034",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm run db:init עבר מול MySQL. בדיקת INFORMATION_SCHEMA אישרה שהטבלאות activities ו-groups קיימות לאחר האתחול."
+        },
+        {
+          "id": "QAR-035",
+          "test_case_id": "QA-035",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "אימות סטטי של repo ו-context: השאילתות הציבוריות משתמשות ב-publish_on_site = TRUE וב-status = active עבור פעילויות וקבוצות."
+        },
+        {
+          "id": "QAR-036",
+          "test_case_id": "QA-036",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test עבר 14/14 ו-context:check עבר עם 20 APIs. חוזי public_activities_list public_activity_get public_group_get רשומים כ-GET ציבורי read-only."
+        },
+        {
+          "id": "QAR-037",
+          "test_case_id": "QA-037",
+          "date": "2026-06-10",
+          "result": "PASS",
+          "tester": "AI QA",
+          "notes": "npm test הפעיל build מלא. ה-SPA נארז עם /home ו-/activities, context מזהה 13 רכיבים, ולא נוספה שמירת JWT בצד לקוח."
+        },
         {
           "id": "QAR-001",
           "test_case_id": "QA-001",
@@ -3532,8 +4170,36 @@
     },
     "agents/qa/info/regression_tests.csv": {
       "path": "agents/qa/info/regression_tests.csv",
-      "hash": "8a4c2add178463dd8618424121d56760ada5187b72bc4a73c7cb85691ab68c0b",
+      "hash": "5fe427184d704a1adcd574532fc57e1735cb836b31768a7d3428f175d41772c6",
       "data": [
+        {
+          "id": "REG-025",
+          "module": "public-leads",
+          "test_name": "פנייה ציבורית אינה עוקפת סינון פרסום",
+          "expected_result": "שיוך activityId או groupId נדחה אם הפעילות או הקבוצה אינן זמינות דרך public APIs",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-026",
+          "module": "permissions",
+          "test_name": "פניות ציבוריות נצפות רק על ידי מנהל",
+          "expected_result": "/api/admin/public-leads חסום לאורח ולמשתמש שאינו admin וזמין רק למנהל לאחר החלפת סיסמה",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-023",
+          "module": "public-site",
+          "test_name": "נתיבי פעילות ציבוריים נשארים read-only ומסוננים",
+          "expected_result": "כל API ציבורי לפעילויות מחזיר רק publish_on_site=true ו-status=active ואינו דורש JWT או מאפשר כתיבה",
+          "critical": "yes"
+        },
+        {
+          "id": "REG-024",
+          "module": "frontend",
+          "test_name": "עמודי public SPA נשארים ניתנים לרענון ישיר",
+          "expected_result": "build כולל /home ו-/activities, והשרת מחזיר index.html בנתיבים ישירים ללא שבירת admin routes",
+          "critical": "yes"
+        },
         {
           "id": "REG-001",
           "module": "database",
@@ -3833,8 +4499,44 @@
     },
     "shared-info/modules.csv": {
       "path": "shared-info/modules.csv",
-      "hash": "a3fd17453a5478e620336956ac937f338db5ca1bc874aa1a23777e45c546678f",
+      "hash": "3a6028c12817da75920fbde6c5928caf5b65307aa11b62430926e808afc64cd6",
       "data": [
+        {
+          "module": "public-leads",
+          "owner": "AI DB;AI API;AI Components;AI Permissions",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/public_leads.csv",
+          "runtime_path": "src",
+          "depends_on": "public-site;activities;groups;authentication",
+          "notes": "public lead submission and admin lead viewing"
+        },
+        {
+          "module": "activities",
+          "owner": "AI DB",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/activities.csv",
+          "runtime_path": "agents/db/domain",
+          "depends_on": "users;media",
+          "notes": "public and admin-ready activity templates"
+        },
+        {
+          "module": "groups",
+          "owner": "AI DB",
+          "status": "implemented",
+          "source_of_truth": "agents/db/info/groups.csv",
+          "runtime_path": "agents/db/domain",
+          "depends_on": "activities;users",
+          "notes": "public and admin-ready activity groups"
+        },
+        {
+          "module": "public-site",
+          "owner": "AI API;AI Components;AI Permissions",
+          "status": "implemented",
+          "source_of_truth": "agents/components/info/components_list.csv",
+          "runtime_path": "src",
+          "depends_on": "activities;groups;general-settings;media",
+          "notes": "public home and activities pages with read-only APIs"
+        },
         {
           "module": "authentication",
           "owner": "AI API",
@@ -3929,11 +4631,11 @@
     },
     "shared-info/project_status.json": {
       "path": "shared-info/project_status.json",
-      "hash": "566763d0f2d43e7fa911eb7a783b4fe7fb55b92367396b71a5ebb27d3eb7cc60",
+      "hash": "00b48220aeab686490f67d2e31f8cf3557c32afa8cf48c225a03522fa3246991",
       "data": {
         "schemaVersion": 1,
-        "projectPhase": "admin-user-management-ui-visual-qa-approved",
-        "lastUpdated": "2026-06-09",
+        "projectPhase": "public-leads-foundation-implemented",
+        "lastUpdated": "2026-06-10",
         "implementedModules": [
           "authentication",
           "users",
@@ -3944,27 +4646,31 @@
           "admin-user-management-ui",
           "admin-spa",
           "design-profiles",
-          "context-bootstrap"
+          "context-bootstrap",
+          "activities",
+          "groups",
+          "public-site",
+          "public-leads"
         ],
         "activeBlockers": [],
         "automatedTests": {
-          "command": "npm test",
-          "lastResult": "14/14 PASS; visual QA PASS across 36 Chrome cases"
+          "command": "npm test; npm run db:init; INFORMATION_SCHEMA table check",
+          "lastResult": "PASS: context valid 4 roles, 8 tables, 22 APIs, 14 components; npm test 14/14 PASS; db:init PASS; public_leads table exists"
         },
         "nextRequiredActions": [
-          "Implement public site and activity foundation"
+          "Implement admin activity and group management"
         ]
       }
     }
   },
   "summary": {
     "roles": 4,
-    "tables": 5,
-    "apis": 17,
-    "components": 11,
+    "tables": 8,
+    "apis": 22,
+    "components": 14,
     "features": 32,
     "userStories": 32,
-    "qaCases": 33,
+    "qaCases": 41,
     "openContradictions": 0
   }
 }

@@ -3,6 +3,7 @@ import { ROUTES } from "../../app/config.js";
 const links = [
   { href: ROUTES.adminGeneral, label: "כללי" },
   { href: ROUTES.adminUsers, label: "משתמשים" },
+  { href: ROUTES.adminLeads, label: "פניות" },
   { href: ROUTES.adminMedia, label: "מדיה" }
 ];
 

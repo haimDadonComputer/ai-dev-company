@@ -1,4 +1,8 @@
 module,owner,status,source_of_truth,runtime_path,depends_on,notes
+public-leads,AI DB;AI API;AI Components;AI Permissions,implemented,agents/db/info/public_leads.csv,src,"public-site;activities;groups;authentication","public lead submission and admin lead viewing"
+activities,AI DB,implemented,agents/db/info/activities.csv,agents/db/domain,"users;media","public and admin-ready activity templates"
+groups,AI DB,implemented,agents/db/info/groups.csv,agents/db/domain,"activities;users","public and admin-ready activity groups"
+public-site,AI API;AI Components;AI Permissions,implemented,agents/components/info/components_list.csv,src,"activities;groups;general-settings;media","public home and activities pages with read-only APIs"
 authentication,AI API,implemented,agents/api/info/api_list.csv,src/server,"users;permissions;environment","JWT HttpOnly Cookie"
 users,AI DB,implemented,agents/db/info/users.csv,agents/db/domain,"environment;permissions","bootstrap admin"
 crm-identity-foundation,AI DB;AI API;AI Permissions,implemented,agents/db/info/users.csv,src/server,"users;permissions;authentication","student instructor admin roles with students and instructors extension tables"

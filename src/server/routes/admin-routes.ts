@@ -4,6 +4,7 @@ import {
   listMediaController,
   uploadMediaController,
 } from "../controllers/media-controller.js";
+import { listPublicLeadsController } from "../controllers/public-leads-controller.js";
 import {
   getAdminSettingsController,
   updateAdminSettingsController,
@@ -35,3 +36,4 @@ adminRouter.patch("/users/:id/status", updateUserStatusController);
 adminRouter.post("/media", uploadMediaController);
 adminRouter.get("/media", listMediaController);
 adminRouter.delete("/media/:id", deleteMediaController);
+adminRouter.get("/public-leads", listPublicLeadsController);

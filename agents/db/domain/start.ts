@@ -294,6 +294,106 @@ async function start(): Promise<void> {
     `);
 
     await connection.query(`
+      CREATE TABLE IF NOT EXISTS activities (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        name VARCHAR(191) NOT NULL,
+        activity_type VARCHAR(100) NOT NULL DEFAULT '',
+        audience VARCHAR(255) NOT NULL DEFAULT '',
+        summary VARCHAR(500) NOT NULL DEFAULT '',
+        description TEXT NULL,
+        image_media_asset_id BIGINT UNSIGNED NULL,
+        price_amount DECIMAL(10,2) NULL,
+        publish_on_site BOOLEAN NOT NULL DEFAULT FALSE,
+        status VARCHAR(20) NOT NULL DEFAULT 'active',
+        created_by_user_id BIGINT UNSIGNED NULL,
+        created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+        updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+          ON UPDATE CURRENT_TIMESTAMP(3),
+        PRIMARY KEY (id),
+        KEY idx_activities_public (publish_on_site, status, id),
+        KEY idx_activities_image (image_media_asset_id),
+        KEY idx_activities_created_by (created_by_user_id),
+        CONSTRAINT fk_activities_image
+          FOREIGN KEY (image_media_asset_id) REFERENCES media_assets (id)
+          ON UPDATE RESTRICT ON DELETE SET NULL,
+        CONSTRAINT fk_activities_created_by
+          FOREIGN KEY (created_by_user_id) REFERENCES users (id)
+          ON UPDATE RESTRICT ON DELETE SET NULL,
+        CONSTRAINT chk_activities_status
+          CHECK (status IN ('active', 'inactive', 'archived'))
+      ) ENGINE=InnoDB
+        DEFAULT CHARSET=utf8mb4
+        COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS \`groups\` (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        activity_id BIGINT UNSIGNED NOT NULL,
+        name VARCHAR(191) NOT NULL,
+        description TEXT NULL,
+        start_date DATE NULL,
+        end_date DATE NULL,
+        schedule_text VARCHAR(500) NOT NULL DEFAULT '',
+        capacity INT UNSIGNED NULL,
+        registration_status VARCHAR(20) NOT NULL DEFAULT 'open',
+        publish_on_site BOOLEAN NOT NULL DEFAULT FALSE,
+        status VARCHAR(20) NOT NULL DEFAULT 'active',
+        instructor_user_id BIGINT UNSIGNED NULL,
+        created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+        updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+          ON UPDATE CURRENT_TIMESTAMP(3),
+        PRIMARY KEY (id),
+        KEY idx_groups_activity_public (activity_id, publish_on_site, status),
+        KEY idx_groups_instructor (instructor_user_id),
+        CONSTRAINT fk_groups_activity
+          FOREIGN KEY (activity_id) REFERENCES activities (id)
+          ON UPDATE RESTRICT ON DELETE RESTRICT,
+        CONSTRAINT fk_groups_instructor
+          FOREIGN KEY (instructor_user_id) REFERENCES users (id)
+          ON UPDATE RESTRICT ON DELETE SET NULL,
+        CONSTRAINT chk_groups_status
+          CHECK (status IN ('active', 'inactive', 'archived')),
+        CONSTRAINT chk_groups_registration_status
+          CHECK (registration_status IN ('open', 'closed', 'full', 'archived'))
+      ) ENGINE=InnoDB
+        DEFAULT CHARSET=utf8mb4
+        COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS public_leads (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        activity_id BIGINT UNSIGNED NULL,
+        group_id BIGINT UNSIGNED NULL,
+        full_name VARCHAR(191) NOT NULL,
+        phone VARCHAR(50) NOT NULL,
+        email VARCHAR(254) NULL,
+        message TEXT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'new',
+        source_path VARCHAR(255) NOT NULL DEFAULT '',
+        created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+        updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+          ON UPDATE CURRENT_TIMESTAMP(3),
+        PRIMARY KEY (id),
+        KEY idx_public_leads_created (created_at),
+        KEY idx_public_leads_status (status, created_at),
+        KEY idx_public_leads_activity (activity_id),
+        KEY idx_public_leads_group (group_id),
+        CONSTRAINT fk_public_leads_activity
+          FOREIGN KEY (activity_id) REFERENCES activities (id)
+          ON UPDATE RESTRICT ON DELETE SET NULL,
+        CONSTRAINT fk_public_leads_group
+          FOREIGN KEY (group_id) REFERENCES \`groups\` (id)
+          ON UPDATE RESTRICT ON DELETE SET NULL,
+        CONSTRAINT chk_public_leads_status
+          CHECK (status IN ('new', 'contacted', 'closed', 'archived'))
+      ) ENGINE=InnoDB
+        DEFAULT CHARSET=utf8mb4
+        COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS site_settings (
         id TINYINT UNSIGNED NOT NULL DEFAULT 1,
         site_name VARCHAR(191) NOT NULL DEFAULT '',

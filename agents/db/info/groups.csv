@@ -1,0 +1,15 @@
+field,type,required,unique,default,description
+id,BIGINT UNSIGNED,yes,yes,auto_increment,מזהה קבוצה
+activity_id,BIGINT UNSIGNED,yes,no,,פעילות אב
+name,VARCHAR(191),yes,no,,שם הקבוצה
+description,TEXT,no,no,,תיאור הקבוצה
+start_date,DATE,no,no,null,תאריך התחלה
+end_date,DATE,no,no,null,תאריך סיום
+schedule_text,VARCHAR(500),yes,no,,ימים ושעות להצגה
+capacity,INT UNSIGNED,no,no,null,קיבולת כללית
+registration_status,VARCHAR(20),yes,no,open,סטטוס הרשמה
+publish_on_site,BOOLEAN,yes,no,false,האם לפרסם באתר הציבורי
+status,VARCHAR(20),yes,no,active,סטטוס עסקי
+instructor_user_id,BIGINT UNSIGNED,no,no,null,מדריך משויך אם קיים
+created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),תאריך יצירה
+updated_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),תאריך עדכון

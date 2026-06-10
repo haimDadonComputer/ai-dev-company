@@ -1,4 +1,9 @@
 source_agent,target_agent,resource,contract_type,description,risk_level
+AI DB,AI API,public_leads table,data,"טבלת public_leads שומרת פניות ציבוריות בלבד עם activity_id/group_id אופציונליים וסטטוס טיפול בסיסי",High
+AI API,AI Components,public lead APIs,http,"home-page ו-activities-page שולחים public_leads_create; admin-leads-page צורך admin_public_leads_list דרך credentials same-origin",High
+AI DB,AI API,activities and groups tables,data,"טבלאות activities ו-groups מספקות רק פעילויות וקבוצות עם publish_on_site=true ו-status=active לנתיבים ציבוריים",High
+AI API,AI Components,public activity APIs,http,"עמודי home ו-activities צורכים public_activities_list public_activity_get public_group_get דרך מעטפת success/data וללא JWT",Medium
+AI Permissions,AI Components,public site visibility,authorization,"home-page ו-activities-page גלויים ל-guest student instructor admin ואינם מאפשרים פעולות כתיבה",Low
 AI Permissions,AI API,admin role,authorization,"רק admin פעיל רשאי לגשת לנתיבי /api/admin; החלפת סיסמה זמנית נדרשת לפני פעולות ניהול",High
 AI Permissions,AI API,crm user roles,authorization,"student instructor admin הם תפקידי משתמש תקינים; auth APIs זמינים למשתמש מחובר אך נתיבי admin דורשים admin בלבד",High
 AI DB,AI API,users table,data,"Authentication משתמש ב-username password_hash password_salt is_active must_change_password",High

@@ -1,0 +1,49 @@
+<section class="admin-leads-page">
+  <header class="page-header">
+    <h1>פניות מהאתר</h1>
+    <p>צפייה בפניות שנשלחו מטפסי האתר הציבורי.</p>
+  </header>
+
+  <section class="admin-leads-page__toolbar card" aria-label="סינון פניות">
+    <div class="form-component__field">
+      <label for="leads-status-filter">סטטוס</label>
+      <select id="leads-status-filter" name="status">
+        <option value="">כל הסטטוסים</option>
+        <option value="new">חדש</option>
+        <option value="contacted">נוצר קשר</option>
+        <option value="closed">נסגר</option>
+        <option value="archived">בארכיון</option>
+      </select>
+    </div>
+    <button class="button-component button-component--secondary admin-leads-page__refresh" type="button">רענון</button>
+  </section>
+
+  <div class="admin-leads-page__grid">
+    <section class="admin-leads-page__list card" aria-labelledby="leads-list-title">
+      <div class="admin-leads-page__section-header">
+        <h2 id="leads-list-title">פניות</h2>
+        <span class="admin-leads-page__count" role="status"></span>
+      </div>
+      <div class="admin-leads-page__table-wrap">
+        <table class="admin-leads-page__table">
+          <thead>
+            <tr>
+              <th scope="col">פונה</th>
+              <th scope="col">פעילות</th>
+              <th scope="col">סטטוס</th>
+              <th scope="col">נשלח</th>
+            </tr>
+          </thead>
+          <tbody class="admin-leads-page__rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-leads-page__details card" aria-labelledby="lead-details-title">
+      <h2 id="lead-details-title">פרטי פנייה</h2>
+      <div class="admin-leads-page__selected">
+        <p class="empty-state">בחרו פנייה כדי לראות פרטים מלאים.</p>
+      </div>
+    </section>
+  </div>
+</section>

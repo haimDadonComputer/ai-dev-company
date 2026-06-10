@@ -31,6 +31,9 @@
       "agents/db/info/users.csv",
       "agents/db/info/students.csv",
       "agents/db/info/instructors.csv",
+      "agents/db/info/activities.csv",
+      "agents/db/info/groups.csv",
+      "agents/db/info/public_leads.csv",
       "agents/db/info/site_settings.csv",
       "agents/db/info/media_assets.csv"
     ],

@@ -1,4 +1,8 @@
 id,module,test_name,expected_result,critical
+REG-025,public-leads,"פנייה ציבורית אינה עוקפת סינון פרסום","שיוך activityId או groupId נדחה אם הפעילות או הקבוצה אינן זמינות דרך public APIs",yes
+REG-026,permissions,"פניות ציבוריות נצפות רק על ידי מנהל","/api/admin/public-leads חסום לאורח ולמשתמש שאינו admin וזמין רק למנהל לאחר החלפת סיסמה",yes
+REG-023,public-site,"נתיבי פעילות ציבוריים נשארים read-only ומסוננים","כל API ציבורי לפעילויות מחזיר רק publish_on_site=true ו-status=active ואינו דורש JWT או מאפשר כתיבה",yes
+REG-024,frontend,"עמודי public SPA נשארים ניתנים לרענון ישיר","build כולל /home ו-/activities, והשרת מחזיר index.html בנתיבים ישירים ללא שבירת admin routes",yes
 REG-001,database,"אתחול חוזר אינו דורס מנהל קיים","הרצת db:init נוספת אינה משנה סיסמה או משתמש admin קיים",yes
 REG-002,authentication,"חובת החלפת סיסמה נשמרת לאורך רענון","מנהל עם JWT זמני מופנה תמיד להחלפת סיסמה ונתיבי ניהול נשארים חסומים",yes
 REG-003,authentication,"התחברות שגויה אינה חושפת קיום משתמש","שם לא קיים וסיסמה שגויה מחזירים אותה הודעה ואותו סטטוס",yes

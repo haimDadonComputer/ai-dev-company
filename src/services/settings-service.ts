@@ -10,7 +10,9 @@ interface ApiGeneralSettings {
   instagram?: string;
   email?: string;
   logoMediaAssetId?: number | null;
+  logoUrl?: string | null;
   additionalMediaAssetIds?: number[];
+  additionalMediaUrls?: string[];
 }
 
 interface SettingsResponse {
@@ -26,7 +28,9 @@ const emptySettings: GeneralSettings = {
   instagram: "",
   email: "",
   logoMediaId: null,
-  imageMediaIds: []
+  logoUrl: null,
+  imageMediaIds: [],
+  imageUrls: []
 };
 
 function normalizeSettings(settings: ApiGeneralSettings): GeneralSettings {
@@ -34,13 +38,20 @@ function normalizeSettings(settings: ApiGeneralSettings): GeneralSettings {
     ...emptySettings,
     ...settings,
     logoMediaId: settings.logoMediaAssetId ?? null,
-    imageMediaIds: settings.additionalMediaAssetIds ?? []
+    logoUrl: settings.logoUrl ?? null,
+    imageMediaIds: settings.additionalMediaAssetIds ?? [],
+    imageUrls: settings.additionalMediaUrls ?? []
   };
 }
 
 export const settingsService = {
   async getGeneral(): Promise<GeneralSettings> {
     const response = await apiRequest<SettingsResponse>("/api/admin/settings/general");
+    return normalizeSettings(response.settings);
+  },
+
+  async getPublic(): Promise<GeneralSettings> {
+    const response = await apiRequest<SettingsResponse>("/api/public/settings");
     return normalizeSettings(response.settings);
   },
 

@@ -2,5 +2,8 @@ table_name,csv_file,description,risk_level
 users,users.csv,משתמשים ונתוני אימות מגובבים,High
 students,students.csv,הרחבת משתמש עבור תלמידים,High
 instructors,instructors.csv,הרחבת משתמש עבור מדריכים,High
+activities,activities.csv,תבניות פעילות ציבוריות וניהוליות,High
+groups,groups.csv,קבוצות פעילות שניתן לפרסם באתר,High
+public_leads,public_leads.csv,פניות ציבוריות מהאתר לפעילות או קבוצה,High
 media_assets,media_assets.csv,מטא-דאטה של קבצים שהועלו ומחיקה רכה,High
 site_settings,site_settings.csv,רשומת הגדרות האתר הכלליות,High

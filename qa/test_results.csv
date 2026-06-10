@@ -1,4 +1,12 @@
 id,test_case_id,date,result,tester,notes
+QAR-038,QA-038,2026-06-10,PASS,"AI QA","npm run db:init עבר. בדיקת INFORMATION_SCHEMA אישרה שהטבלה public_leads קיימת לאחר האתחול."
+QAR-039,QA-039,2026-06-10,PASS,"AI QA","npm test עבר 14/14. אימות סטטי: submitPublicLead מאמת group/activity מול findPublicGroupById/findPublicActivityById לפני createPublicLead."
+QAR-040,QA-040,2026-06-10,PASS,"AI QA","context:check עבר עם admin_public_leads_list תחת required_role=admin; route מחובר דרך adminRouter שמפעיל requireAdmin ו-requirePasswordChanged."
+QAR-041,QA-041,2026-06-10,PASS,"AI QA","npm test הפעיל build מלא. ה-SPA כולל admin-leads, טפסי home/activities משתמשים ב-leadsService דרך apiRequest credentials same-origin, ולא נוספה שמירת JWT בדפדפן."
+QAR-034,QA-034,2026-06-10,PASS,"AI QA","npm run db:init עבר מול MySQL. בדיקת INFORMATION_SCHEMA אישרה שהטבלאות activities ו-groups קיימות לאחר האתחול."
+QAR-035,QA-035,2026-06-10,PASS,"AI QA","אימות סטטי של repo ו-context: השאילתות הציבוריות משתמשות ב-publish_on_site = TRUE וב-status = active עבור פעילויות וקבוצות."
+QAR-036,QA-036,2026-06-10,PASS,"AI QA","npm test עבר 14/14 ו-context:check עבר עם 20 APIs. חוזי public_activities_list public_activity_get public_group_get רשומים כ-GET ציבורי read-only."
+QAR-037,QA-037,2026-06-10,PASS,"AI QA","npm test הפעיל build מלא. ה-SPA נארז עם /home ו-/activities, context מזהה 13 רכיבים, ולא נוספה שמירת JWT בצד לקוח."
 QAR-001,QA-001,2026-06-09,PASS,"AI QA","הורץ db:init מול MySQL במסד QA זמני נקי. אומת שנוצר admin פעיל עם role admin, must_change_password=true, hash ו-salt קיימים, והסיסמה 123123 אינה נשמרת כטקסט."
 QAR-002,QA-002,2026-06-09,PASS,"AI QA","הורץ E2E מול MySQL ושרת HTTP במסד QA זמני. לפני החלפת סיסמה /api/admin/settings/general החזיר 403 PASSWORD_CHANGE_REQUIRED; לאחר החלפה לסיסמה חזקה הנתיב החזיר 200 ו-JWT חדש."
 QAR-003,QA-003,2026-06-09,PASS,"AI QA","הורץ E2E מול MySQL ושרת HTTP במסד QA זמני. התחברות admin עם הסיסמה הראשונית הצליחה, mustChangePassword=true הוחזר, ונשלחה עוגיית admin_session עם HttpOnly ו-SameSite=Strict."

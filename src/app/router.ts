@@ -1,10 +1,13 @@
 import { ROUTES } from "./config.js";
 import { getState, setState } from "./state.js";
 import { authService } from "../services/auth-service.js";
+import { mountActivitiesPage } from "../pages/activities/script.js";
+import { mountHomePage } from "../pages/home/script.js";
 import { mountLoginPage } from "../pages/login/script.js";
 import { mountChangePasswordPage } from "../pages/change-password/script.js";
 import { mountAdminGeneralPage } from "../pages/admin-general/script.js";
 import { mountAdminUsersPage } from "../pages/admin-users/script.js";
+import { mountAdminLeadsPage } from "../pages/admin-leads/script.js";
 import { mountAdminMediaPage } from "../pages/admin-media/script.js";
 
 type PageMount = (root: HTMLElement) => void | Promise<void>;
@@ -16,6 +19,16 @@ interface RouteDefinition {
 }
 
 const routes: Record<string, RouteDefinition> = {
+  [ROUTES.home]: {
+    template: "/pages/home/index.html",
+    mount: mountHomePage,
+    protected: false
+  },
+  [ROUTES.activities]: {
+    template: "/pages/activities/index.html",
+    mount: mountActivitiesPage,
+    protected: false
+  },
   [ROUTES.login]: {
     template: "/pages/login/index.html",
     mount: mountLoginPage,
@@ -34,6 +47,11 @@ const routes: Record<string, RouteDefinition> = {
   [ROUTES.adminUsers]: {
     template: "/pages/admin-users/index.html",
     mount: mountAdminUsersPage,
+    protected: true
+  },
+  [ROUTES.adminLeads]: {
+    template: "/pages/admin-leads/index.html",
+    mount: mountAdminLeadsPage,
     protected: true
   },
   [ROUTES.adminMedia]: {
@@ -55,10 +73,13 @@ function getAppRoot(): HTMLElement {
 
 function setDocumentTitle(path: string): void {
   const titles: Record<string, string> = {
+    [ROUTES.home]: "בית",
+    [ROUTES.activities]: "פעילויות",
     [ROUTES.login]: "התחברות",
     [ROUTES.changePassword]: "החלפת סיסמה",
     [ROUTES.adminGeneral]: "הגדרות כלליות",
     [ROUTES.adminUsers]: "ניהול משתמשים",
+    [ROUTES.adminLeads]: "פניות מהאתר",
     [ROUTES.adminMedia]: "ניהול מדיה"
   };
   document.title = `${titles[path] ?? "מערכת ניהול"} | מערכת ניהול`;
@@ -86,7 +107,7 @@ async function renderRoute(): Promise<void> {
   const route = routes[path];
 
   if (!route) {
-    navigate(getState().user ? ROUTES.adminGeneral : ROUTES.login, true);
+    navigate(getState().user ? ROUTES.adminGeneral : ROUTES.home, true);
     return;
   }
 

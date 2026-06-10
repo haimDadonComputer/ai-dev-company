@@ -1,0 +1,58 @@
+<section class="activities-page">
+  <header class="activities-page__nav" aria-label="ניווט ציבורי">
+    <a class="activities-page__brand" href="/home" data-link>המרכז הדיגיטלי</a>
+    <nav>
+      <a href="/home" data-link>בית</a>
+      <a href="/activities" data-link>פעילויות</a>
+      <a href="/login" data-link>התחברות</a>
+    </nav>
+  </header>
+
+  <main class="activities-page__main">
+    <header class="page-header">
+      <h1>פעילויות</h1>
+      <p>קורסים, סדנאות וקבוצות שפתוחות לצפייה באתר.</p>
+    </header>
+
+    <div class="activities-page__layout">
+      <section class="activities-page__list card" aria-labelledby="activities-title">
+        <h2 id="activities-title">פעילויות מפורסמות</h2>
+        <div class="activities-page__items" aria-live="polite"></div>
+      </section>
+
+      <section class="activities-page__details card" aria-labelledby="activity-details-title">
+        <h2 id="activity-details-title">קבוצות פעילות</h2>
+        <div class="activities-page__selected" aria-live="polite">
+          <p class="empty-state">בחרו פעילות כדי לראות קבוצות פתוחות.</p>
+        </div>
+      </section>
+    </div>
+    <section class="activities-page__lead card" aria-labelledby="activities-lead-title">
+      <h2 id="activities-lead-title">השארת פרטים</h2>
+      <form class="form-component activities-page__lead-form" novalidate>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__grid">
+          <div class="form-component__field">
+            <label for="activity-lead-name">שם מלא</label>
+            <input id="activity-lead-name" name="fullName" type="text" maxlength="191" autocomplete="name" required>
+          </div>
+          <div class="form-component__field">
+            <label for="activity-lead-phone">טלפון</label>
+            <input id="activity-lead-phone" name="phone" type="tel" maxlength="50" autocomplete="tel" required>
+          </div>
+          <div class="form-component__field">
+            <label for="activity-lead-email">אימייל</label>
+            <input id="activity-lead-email" name="email" type="email" maxlength="254" autocomplete="email">
+          </div>
+        </div>
+        <div class="form-component__field">
+          <label for="activity-lead-message">הודעה</label>
+          <textarea id="activity-lead-message" name="message" maxlength="5000"></textarea>
+        </div>
+        <div class="form-component__actions">
+          <button class="button-component button-component--primary" type="submit">שליחת פנייה</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</section>

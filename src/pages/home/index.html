@@ -1,0 +1,75 @@
+<section class="home-page">
+  <header class="home-page__nav" aria-label="ניווט ציבורי">
+    <a class="home-page__brand" href="/home" data-link>המרכז הדיגיטלי</a>
+    <nav>
+      <a href="/home" data-link>בית</a>
+      <a href="/activities" data-link>פעילויות</a>
+      <a href="/login" data-link>התחברות</a>
+    </nav>
+  </header>
+
+  <section class="home-page__hero">
+    <div class="home-page__hero-content">
+      <p class="home-page__eyebrow">למידה דיגיטלית נגישה</p>
+      <h1 class="home-page__title">המרכז הדיגיטלי</h1>
+      <p class="home-page__intro"></p>
+      <div class="home-page__actions">
+        <a class="button-component button-component--primary" href="/activities" data-link>צפייה בפעילויות</a>
+        <a class="button-component button-component--secondary home-page__contact-link" href="#contact">יצירת קשר</a>
+      </div>
+    </div>
+    <figure class="home-page__visual" hidden>
+      <img alt="">
+    </figure>
+  </section>
+
+  <section class="home-page__activities" aria-labelledby="home-activities-title">
+    <div class="home-page__section-heading">
+      <h2 id="home-activities-title">פעילויות קרובות</h2>
+      <a href="/activities" data-link>לכל הפעילויות</a>
+    </div>
+    <div class="home-page__activity-list" aria-live="polite"></div>
+  </section>
+
+  <section id="contact" class="home-page__contact" aria-labelledby="home-contact-title">
+    <h2 id="home-contact-title">יצירת קשר</h2>
+    <dl>
+      <div>
+        <dt>טלפון</dt>
+        <dd class="home-page__phone"></dd>
+      </div>
+      <div>
+        <dt>כתובת</dt>
+        <dd class="home-page__address"></dd>
+      </div>
+      <div>
+        <dt>אימייל</dt>
+        <dd class="home-page__email"></dd>
+      </div>
+    </dl>
+    <form class="form-component home-page__lead-form" novalidate>
+      <div class="form-component__message" role="alert" hidden></div>
+      <div class="form-component__grid">
+        <div class="form-component__field">
+          <label for="home-lead-name">שם מלא</label>
+          <input id="home-lead-name" name="fullName" type="text" maxlength="191" autocomplete="name" required>
+        </div>
+        <div class="form-component__field">
+          <label for="home-lead-phone">טלפון</label>
+          <input id="home-lead-phone" name="phone" type="tel" maxlength="50" autocomplete="tel" required>
+        </div>
+        <div class="form-component__field">
+          <label for="home-lead-email">אימייל</label>
+          <input id="home-lead-email" name="email" type="email" maxlength="254" autocomplete="email">
+        </div>
+      </div>
+      <div class="form-component__field">
+        <label for="home-lead-message">הודעה</label>
+        <textarea id="home-lead-message" name="message" maxlength="5000"></textarea>
+      </div>
+      <div class="form-component__actions">
+        <button class="button-component button-component--primary" type="submit">שליחת פנייה</button>
+      </div>
+    </form>
+  </section>
+</section>

@@ -1,4 +1,12 @@
 id,module,title,steps,expected_result,priority,status
+QA-038,database,"סכמת public_leads","להריץ db:init; לבדוק שהטבלה public_leads קיימת עם קשרים ל-activities ו-groups","הטבלה נוצרת ללא מחיקה או דריסת נתונים קיימים וכוללת סטטוס טיפול בסיסי",critical,READY
+QA-039,public-api,"יצירת פנייה ציבורית","להריץ build; לבדוק חוזה public_leads_create ו-validator; לוודא שיוך פעילות/קבוצה עובר דרך פונקציות public","פנייה ציבורית דורשת שם וטלפון, שומרת רק פעילות או קבוצה מפורסמת, ואינה דורשת JWT",critical,READY
+QA-040,admin-api,"צפייה בפניות למנהל","להריץ build; לבדוק חוזה admin_public_leads_list והנתיב תחת /api/admin","רק admin לאחר החלפת סיסמה יכול לצפות בפניות",critical,READY
+QA-041,frontend,"טפסי פנייה ועמוד admin leads","להריץ npm test; לבדוק שה-SPA נארז עם home activities admin-leads ושהטפסים משתמשים ב-apiRequest ללא localStorage","הטפסים הציבוריים ועמוד /admin/leads נארזים ועובדים דרך cookies same-origin בלבד",high,READY
+QA-034,database,"סכמת פעילויות וקבוצות ציבוריות","להריץ db:init; לבדוק שהטבלאות activities ו-groups קיימות עם FK ל-users media_assets ו-activities","הטבלאות נוצרות ללא מחיקה או דריסה של נתונים קיימים והקשרים נשמרים",critical,READY
+QA-035,public-site,"סינון פעילויות וקבוצות לפרסום ציבורי","לקרוא את פונקציות ה-repo הציבוריות מול נתוני בדיקה או לאמת סטטית את תנאי השאילתה","רק רשומות publish_on_site=true ו-status=active מוחזרות לנתיבים ציבוריים",critical,READY
+QA-036,public-api,"נתיבי פעילויות ציבוריים read-only","להריץ build; לבדוק רישום routes ציבוריים ואת חוזי api_list; לקרוא נתיבים ללא JWT כאשר שרת זמין","GET /api/public/activities /api/public/activities/:activityId /api/public/groups/:groupId אינם דורשים JWT ואינם מאפשרים כתיבה",high,READY
+QA-037,frontend,"עמודי home ו-activities ב-SPA","להריץ build; לבדוק שהעמודים נארזים ושה-router מכיר /home ו-/activities","עמודי האתר הציבורי נטענים כחלק מה-SPA, RTL, ללא אחסון JWT וללא תלות ישירה בין עמודים",high,READY
 QA-001,database,"אתחול מנהל ראשוני במסד","להריץ db:init מול MySQL נקי; לבדוק משתמש admin; לבדוק שהסיסמה אינה נשמרת כטקסט; לאמת התחברות עם 123123","נוצר admin פעיל; נשמרים hash ו-salt; must_change_password=true; לא נשמרת סיסמה גלויה",critical,READY
 QA-002,authentication,"חובת החלפת סיסמה ראשונית","להתחבר כמנהל ראשוני; לנסות לגשת לנתיבי /api/admin; להחליף לסיסמה חזקה; לנסות שוב","לפני ההחלפה מתקבל 403 PASSWORD_CHANGE_REQUIRED; לאחר ההחלפה הגישה מותרת וה-JWT מתחדש",critical,READY
 QA-003,authentication,"התחברות תקינה","לשלוח admin ו-123123 ל-/api/auth/login מול מסד מאותחל","מתקבלת תשובת הצלחה עם משתמש admin ועוגיית התחברות; mustChangePassword=true",critical,READY

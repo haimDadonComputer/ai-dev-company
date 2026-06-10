@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "projectPhase": "admin-user-management-ui-visual-qa-approved",
-  "lastUpdated": "2026-06-09",
+  "projectPhase": "public-leads-foundation-implemented",
+  "lastUpdated": "2026-06-10",
   "implementedModules": [
     "authentication",
     "users",
@@ -12,14 +12,18 @@
     "admin-user-management-ui",
     "admin-spa",
     "design-profiles",
-    "context-bootstrap"
+    "context-bootstrap",
+    "activities",
+    "groups",
+    "public-site",
+    "public-leads"
   ],
   "activeBlockers": [],
   "automatedTests": {
-    "command": "npm test",
-    "lastResult": "14/14 PASS; visual QA PASS across 36 Chrome cases"
+    "command": "npm test; npm run db:init; INFORMATION_SCHEMA table check",
+    "lastResult": "PASS: context valid 4 roles, 8 tables, 22 APIs, 14 components; npm test 14/14 PASS; db:init PASS; public_leads table exists"
   },
   "nextRequiredActions": [
-    "Implement public site and activity foundation"
+    "Implement admin activity and group management"
   ]
 }

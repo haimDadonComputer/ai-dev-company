@@ -5,10 +5,13 @@
 @import url("../components/button/style.css");
 @import url("../components/notification/style.css");
 @import url("../components/modal/style.css");
+@import url("../pages/home/style.css");
+@import url("../pages/activities/style.css");
 @import url("../pages/login/style.css");
 @import url("../pages/change-password/style.css");
 @import url("../pages/admin-general/style.css");
 @import url("../pages/admin-users/style.css");
+@import url("../pages/admin-leads/style.css");
 @import url("../pages/admin-media/style.css");
 
 :root {

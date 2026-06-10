@@ -31,7 +31,9 @@ export interface GeneralSettings {
   instagram: string;
   email: string;
   logoMediaId: number | null;
+  logoUrl?: string | null;
   imageMediaIds: number[];
+  imageUrls?: string[];
 }
 
 export interface ApiErrorBody {
@@ -101,4 +103,56 @@ export interface UpdateManagedUserInput {
   notes: string | null;
   student?: Partial<StudentProfile>;
   instructor?: Partial<InstructorProfile>;
+}
+
+export interface PublicActivity {
+  id: number;
+  name: string;
+  activityType: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  imageUrl: string | null;
+  priceAmount: string | null;
+}
+
+export interface PublicGroup {
+  id: number;
+  activityId: number;
+  name: string;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  scheduleText: string;
+  capacity: number | null;
+  registrationStatus: "open" | "closed" | "full" | "archived";
+  instructorName: string | null;
+}
+
+export type PublicLeadStatus = "new" | "contacted" | "closed" | "archived";
+
+export interface PublicLead {
+  id: number;
+  activityId: number | null;
+  groupId: number | null;
+  activityName: string | null;
+  groupName: string | null;
+  fullName: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  status: PublicLeadStatus;
+  sourcePath: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreatePublicLeadInput {
+  activityId: number | null;
+  groupId: number | null;
+  fullName: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  sourcePath: string;
 }
