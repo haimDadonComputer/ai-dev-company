@@ -36,15 +36,3 @@ export function requireAdmin(
     next();
   });
 }
-
-export function requirePasswordChanged(
-  request: Request,
-  response: Response,
-  next: NextFunction
-): void {
-  if (request.auth?.mustChangePassword) {
-    sendError(response, 403, "PASSWORD_CHANGE_REQUIRED", "יש להחליף סיסמה לפני המשך");
-    return;
-  }
-  next();
-}

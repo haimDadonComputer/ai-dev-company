@@ -5,11 +5,13 @@
 @import url("../components/button/style.css");
 @import url("../components/notification/style.css");
 @import url("../components/modal/style.css");
+@import url("../components/data-grid/style.css");
 @import url("../pages/home/style.css");
 @import url("../pages/activities/style.css");
 @import url("../pages/login/style.css");
 @import url("../pages/change-password/style.css");
 @import url("../pages/admin-general/style.css");
+@import url("../pages/admin-activities/style.css");
 @import url("../pages/admin-users/style.css");
 @import url("../pages/admin-leads/style.css");
 @import url("../pages/admin-media/style.css");
@@ -89,6 +91,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
   font-size: var(--ui-font-size-body);
   font-weight: var(--design-font-weight-body);
   line-height: var(--ui-line-height);
@@ -137,6 +140,7 @@ a {
 
 .admin-layout__content {
   width: 100%;
+  min-width: 0;
   max-width: var(--design-content-max-width);
   margin-inline: auto;
   padding: var(--ui-space-md);
@@ -153,6 +157,7 @@ a {
   font-size: var(--ui-font-size-display);
   font-weight: var(--design-font-weight-heading);
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .page-header p,

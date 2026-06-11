@@ -1,6 +1,7 @@
 .admin-leads-page {
   display: grid;
   gap: var(--ui-space-lg);
+  min-width: 0;
 }
 
 .admin-leads-page__toolbar {
@@ -12,6 +13,7 @@
 .admin-leads-page__grid {
   display: grid;
   gap: var(--ui-space-lg);
+  min-width: 0;
 }
 
 .admin-leads-page__section-header {
@@ -27,6 +29,7 @@
   margin: 0;
   font-family: var(--design-font-heading);
   font-size: var(--ui-font-size-heading);
+  overflow-wrap: anywhere;
 }
 
 .admin-leads-page__count {
@@ -36,6 +39,11 @@
 
 .admin-leads-page__table-wrap {
   overflow-x: auto;
+}
+
+.admin-leads-page__grid-table {
+  width: 100%;
+  min-width: 0;
 }
 
 .admin-leads-page__table {

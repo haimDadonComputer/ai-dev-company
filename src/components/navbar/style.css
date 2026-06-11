@@ -3,6 +3,8 @@
   z-index: 20;
   top: 0;
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-sm);
   align-items: center;
   justify-content: space-between;
   min-height: var(--design-header-height);
@@ -12,17 +14,21 @@
 }
 
 .navbar-component__brand {
+  min-width: 0;
   color: var(--ui-text);
   font-family: var(--design-font-heading);
   font-size: var(--ui-font-size-heading);
   font-weight: var(--design-font-weight-heading);
+  overflow-wrap: anywhere;
   text-decoration: none;
 }
 
 .navbar-component__actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ui-space-sm);
+  min-width: 0;
 }
 
 .navbar-component__user {

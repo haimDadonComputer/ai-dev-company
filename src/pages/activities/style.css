@@ -19,8 +19,10 @@
 
 .activities-page__brand,
 .activities-page__nav a {
+  min-width: 0;
   color: var(--ui-text);
   font-weight: var(--design-font-weight-heading);
+  overflow-wrap: anywhere;
   text-decoration: none;
 }
 
@@ -28,10 +30,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--ui-space-sm);
+  min-width: 0;
 }
 
 .activities-page__main {
   width: min(100%, var(--design-content-max-width));
+  min-width: 0;
   margin-inline: auto;
   padding: var(--ui-space-xl) var(--ui-space-md);
 }
@@ -57,6 +61,7 @@
   margin: 0;
   font-family: var(--design-font-heading);
   font-size: var(--ui-font-size-heading);
+  overflow-wrap: anywhere;
 }
 
 .activities-page__items,
@@ -109,6 +114,7 @@
 .activities-page__group h3 {
   margin: 0;
   font-family: var(--design-font-heading);
+  overflow-wrap: anywhere;
 }
 
 .activities-page__group {

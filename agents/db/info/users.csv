@@ -10,7 +10,7 @@ users,phone,VARCHAR(50),yes,no,"",טלפון,Users,
 users,email,VARCHAR(254),yes,no,"",מייל,Users,
 users,status,VARCHAR(20),yes,no,active,סטטוס עסקי של המשתמש,Authentication; Users,active inactive archived
 users,is_active,BOOLEAN,yes,no,true,האם החשבון פעיל,Authentication,
-users,must_change_password,BOOLEAN,yes,no,true,האם נדרשת החלפת סיסמה לפני פעולות ניהול,Authentication,
+users,must_change_password,BOOLEAN,yes,no,false,דגל תאימות להחלפת סיסמה ידנית; אינו נאכף בכניסה ראשונה,Authentication,
 users,notes,TEXT,no,no,NULL,הערות פנימיות על המשתמש,Users,
 users,last_login_at,DATETIME(3),no,no,NULL,מועד התחברות מוצלחת אחרונה,Authentication,
 users,created_at,DATETIME(3),yes,no,CURRENT_TIMESTAMP(3),מועד יצירת המשתמש,Users,

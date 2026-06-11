@@ -6,6 +6,7 @@ import { mountHomePage } from "../pages/home/script.js";
 import { mountLoginPage } from "../pages/login/script.js";
 import { mountChangePasswordPage } from "../pages/change-password/script.js";
 import { mountAdminGeneralPage } from "../pages/admin-general/script.js";
+import { mountAdminActivitiesPage } from "../pages/admin-activities/script.js";
 import { mountAdminUsersPage } from "../pages/admin-users/script.js";
 import { mountAdminLeadsPage } from "../pages/admin-leads/script.js";
 import { mountAdminMediaPage } from "../pages/admin-media/script.js";
@@ -44,6 +45,11 @@ const routes: Record<string, RouteDefinition> = {
     mount: mountAdminGeneralPage,
     protected: true
   },
+  [ROUTES.adminActivities]: {
+    template: "/pages/admin-activities/index.html",
+    mount: mountAdminActivitiesPage,
+    protected: true
+  },
   [ROUTES.adminUsers]: {
     template: "/pages/admin-users/index.html",
     mount: mountAdminUsersPage,
@@ -78,6 +84,7 @@ function setDocumentTitle(path: string): void {
     [ROUTES.login]: "התחברות",
     [ROUTES.changePassword]: "החלפת סיסמה",
     [ROUTES.adminGeneral]: "הגדרות כלליות",
+    [ROUTES.adminActivities]: "ניהול פעילויות",
     [ROUTES.adminUsers]: "ניהול משתמשים",
     [ROUTES.adminLeads]: "פניות מהאתר",
     [ROUTES.adminMedia]: "ניהול מדיה"
@@ -121,13 +128,8 @@ async function renderRoute(): Promise<void> {
   }
 
   const user = getState().user;
-  if (user?.mustChangePassword && path !== ROUTES.changePassword) {
-    navigate(ROUTES.changePassword, true);
-    return;
-  }
-
   if (path === ROUTES.login && user) {
-    navigate(user.mustChangePassword ? ROUTES.changePassword : ROUTES.adminGeneral, true);
+    navigate(ROUTES.adminGeneral, true);
     return;
   }
 

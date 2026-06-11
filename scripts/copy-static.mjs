@@ -42,3 +42,16 @@ await cp(
   resolve("design-system/project-profile.json"),
   resolve(target, "design/project-profile.json")
 );
+await mkdir(resolve(target, "vendor"), { recursive: true });
+await cp(
+  resolve("node_modules/ag-grid-community/dist/ag-grid-community.min.js"),
+  resolve(target, "vendor/ag-grid-community.min.js")
+);
+await cp(
+  resolve("node_modules/ag-grid-community/styles/ag-grid.min.css"),
+  resolve(target, "vendor/ag-grid.min.css")
+);
+await cp(
+  resolve("node_modules/ag-grid-community/styles/ag-theme-quartz.min.css"),
+  resolve(target, "vendor/ag-theme-quartz.min.css")
+);

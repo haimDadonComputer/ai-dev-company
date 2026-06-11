@@ -146,7 +146,7 @@ export async function resetUserPassword(
     throw new ServiceError(404, "USER_NOT_FOUND", "המשתמש לא נמצא");
   }
   const password = await hashPassword(newPassword);
-  const updated = await updateUserPassword(id, password.hash, password.salt, true);
+  const updated = await updateUserPassword(id, password.hash, password.salt, false);
   if (!updated) {
     throw new ServiceError(500, "PASSWORD_RESET_FAILED", "איפוס הסיסמה נכשל");
   }

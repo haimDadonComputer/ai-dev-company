@@ -1,4 +1,9 @@
 import { mountAdminLayout } from "../../app/admin-layout.js";
+import {
+  mountDataGrid,
+  type DataGridColumn,
+  type DataGridController
+} from "../../components/data-grid/script.js";
 import { leadsService } from "../../services/leads-service.js";
 import type { PublicLead, PublicLeadStatus } from "../../types/app.js";
 
@@ -118,24 +123,71 @@ export async function mountAdminLeadsPage(root: HTMLElement): Promise<void> {
 
   const statusFilter = page.querySelector<HTMLSelectElement>("#leads-status-filter");
   const refreshButton = page.querySelector<HTMLButtonElement>(".admin-leads-page__refresh");
-  const rows = page.querySelector<HTMLElement>(".admin-leads-page__rows");
+  const gridTable = page.querySelector<HTMLElement>(".admin-leads-page__grid-table");
   const count = page.querySelector<HTMLElement>(".admin-leads-page__count");
   const details = page.querySelector<HTMLElement>(".admin-leads-page__selected");
-  if (!statusFilter || !refreshButton || !rows || !count || !details) {
+  if (!statusFilter || !refreshButton || !gridTable || !count || !details) {
     throw new Error("שדות עמוד הפניות אינם תקינים.");
   }
 
   let leads: PublicLead[] = [];
   let selectedLead: PublicLead | null = null;
+  let dataGrid: DataGridController<PublicLead>;
+
+  const leadColumns: Array<DataGridColumn<PublicLead>> = [
+    {
+      headerName: "פונה",
+      field: "fullName",
+      minWidth: 180,
+      cellRenderer: ({ data }) => {
+        if (!data) {
+          return "";
+        }
+        const wrapper = document.createElement("span");
+        wrapper.className = "data-grid-component__stack";
+        const name = document.createElement("strong");
+        name.textContent = data.fullName;
+        const phone = document.createElement("span");
+        phone.className = "data-grid-component__muted";
+        phone.textContent = data.phone;
+        wrapper.append(name, phone);
+        return wrapper;
+      }
+    },
+    {
+      headerName: "פעילות",
+      minWidth: 190,
+      valueGetter: ({ data }) =>
+        data ? [data.activityName, data.groupName].filter(Boolean).join(" | ") || "-" : "-"
+    },
+    {
+      headerName: "סטטוס",
+      field: "status",
+      minWidth: 130,
+      valueGetter: ({ data }) => (data ? statusLabels[data.status] : "")
+    },
+    {
+      headerName: "נשלח",
+      field: "createdAt",
+      minWidth: 160,
+      valueGetter: ({ data }) => (data ? formatDate(data.createdAt) : "")
+    }
+  ];
 
   const selectLead = (lead: PublicLead): void => {
     selectedLead = lead;
-    renderRows(rows, count, leads, selectedLead, selectLead);
+    dataGrid.refresh();
     renderDetails(details, selectedLead);
   };
 
+  dataGrid = mountDataGrid(gridTable, leadColumns, leads, {
+    emptyMessage: "לא נמצאו פניות להצגה.",
+    getRowClass: (lead) => (selectedLead?.id === lead.id ? "selected" : null),
+    onRowClick: selectLead
+  });
+
   const loadLeads = async (): Promise<void> => {
-    rows.setAttribute("aria-busy", "true");
+    gridTable.setAttribute("aria-busy", "true");
     try {
       leads = await leadsService.list({
         status: statusFilter.value ? (statusFilter.value as PublicLeadStatus) : undefined
@@ -143,13 +195,16 @@ export async function mountAdminLeadsPage(root: HTMLElement): Promise<void> {
       if (selectedLead && !leads.some((lead) => lead.id === selectedLead?.id)) {
         selectedLead = null;
       }
-      renderRows(rows, count, leads, selectedLead, selectLead);
+      count.textContent = `${leads.length} פניות`;
+      dataGrid.setRows(leads);
       renderDetails(details, selectedLead);
     } catch {
-      rows.innerHTML =
-        '<tr><td colspan="4" class="empty-state" role="alert">לא ניתן לטעון את רשימת הפניות.</td></tr>';
+      leads = [];
+      count.textContent = "0 פניות";
+      dataGrid.setRows(leads);
+      renderDetails(details, selectedLead);
     } finally {
-      rows.removeAttribute("aria-busy");
+      gridTable.removeAttribute("aria-busy");
     }
   };
 

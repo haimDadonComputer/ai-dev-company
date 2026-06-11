@@ -1,62 +1,73 @@
 :root {
-  /*
-   * Reference profile only. Replace these values and project-profile.json
-   * when creating a real project.
-   */
   --design-font-body: Arial, "Noto Sans Hebrew", sans-serif;
   --design-font-heading: Arial, "Noto Sans Hebrew", sans-serif;
-  --design-font-size-display: 2rem;
-  --design-font-size-heading: 1.5rem;
+  --design-font-size-display: 3.4rem;
+  --design-font-size-heading: 2rem;
   --design-font-size-body: 1rem;
-  --design-font-size-small: 0.875rem;
+  --design-font-size-small: 0.9rem;
   --design-font-weight-body: 400;
-  --design-font-weight-heading: 700;
-  --design-line-height: 1.5;
+  --design-font-weight-heading: 800;
+  --design-line-height: 1.65;
 
-  --design-color-action: #2563eb;
-  --design-color-action-hover: #1d4ed8;
-  --design-color-action-contrast: #ffffff;
-  --design-color-background: #f8fafc;
+  --design-color-action: #f2b705;
+  --design-color-action-hover: #d99a00;
+  --design-color-action-contrast: #172554;
+  --design-color-background: #eef4f8;
   --design-color-surface: #ffffff;
-  --design-color-surface-raised: #ffffff;
-  --design-color-text: #0f172a;
-  --design-color-muted: #475569;
-  --design-color-border: #cbd5e1;
-  --design-color-focus: #0ea5e9;
-  --design-color-success: #16a34a;
-  --design-color-danger: #dc2626;
-  --design-color-warning: #f59e0b;
-  --design-color-danger-surface: #fee2e2;
-  --design-color-danger-text: #991b1b;
-  --design-color-selected-surface: #dbeafe;
-  --design-color-selected-text: #1d4ed8;
-  --design-color-backdrop: rgb(15 23 42 / 65%);
+  --design-color-surface-raised: #f8fbff;
+  --design-color-text: #172033;
+  --design-color-muted: #58657a;
+  --design-color-border: #cfd9e6;
+  --design-color-focus: #00a7c8;
+  --design-color-success: #198754;
+  --design-color-danger: #c53030;
+  --design-color-warning: #d99a00;
+  --design-color-danger-surface: #ffe8e8;
+  --design-color-danger-text: #8a1c1c;
+  --design-color-selected-surface: #e2f3f8;
+  --design-color-selected-text: #174a8b;
+  --design-color-backdrop: rgb(13 25 45 / 68%);
   --design-auth-background: radial-gradient(
       circle at top right,
-      #dbeafe,
+      #d9f2f7,
       transparent 45%
     ),
     var(--design-color-background);
 
-  --design-space-xs: 0.25rem;
-  --design-space-sm: 0.5rem;
-  --design-space-md: 1rem;
-  --design-space-lg: 1.5rem;
-  --design-space-xl: 2rem;
-  --design-control-height: 2.75rem;
+  --design-space-xs: 0.35rem;
+  --design-space-sm: 0.75rem;
+  --design-space-md: 1.25rem;
+  --design-space-lg: 2rem;
+  --design-space-xl: 3rem;
+  --design-control-height: 3rem;
 
-  --design-radius-control: 0.5rem;
-  --design-radius-surface: 0.75rem;
+  --design-radius-control: 0.4rem;
+  --design-radius-surface: 0.5rem;
   --design-border-width: 1px;
-  --design-shadow-surface: 0 10px 25px rgb(15 23 42 / 10%);
+  --design-shadow-surface: 0 18px 42px rgb(23 32 51 / 13%);
 
-  --design-content-max-width: 73.75rem;
-  --design-navigation-width: 15rem;
+  --design-content-max-width: 72rem;
+  --design-navigation-width: 14rem;
   --design-rail-width: 5.5rem;
-  --design-header-height: 4.0625rem;
+  --design-header-height: 4.25rem;
   --design-auth-card-width: 28.75rem;
   --design-modal-width: 30rem;
   --design-media-card-min-width: 13.75rem;
-  --design-motion-duration: 160ms;
-  --design-motion-easing: ease;
+  --design-motion-duration: 220ms;
+  --design-motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --brand-navy: #101a35;
+  --brand-blue: #174a8b;
+  --brand-teal: #00a7c8;
+  --brand-sky: #d9f2f7;
+  --brand-gold: #f2b705;
+  --brand-cream: #fff8e5;
+  --brand-white-soft: #f8fbff;
+  --brand-hero-overlay-start: rgb(13 25 45 / 92%);
+  --brand-hero-overlay-middle: rgb(23 74 139 / 74%);
+  --brand-hero-overlay-end: rgb(16 26 53 / 36%);
+  --brand-hero-panel: rgb(255 255 255 / 15%);
+  --brand-hero-panel-border: rgb(255 255 255 / 24%);
+  --brand-hero-text-muted: rgb(255 255 255 / 86%);
+  --brand-section-soft: #e8f1f7;
 }

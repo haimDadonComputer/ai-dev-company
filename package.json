@@ -15,6 +15,7 @@
     "test": "npm run build && node --env-file=.env --test dist/tests/password.test.js dist/tests/jwt.test.js dist/tests/media-validator.test.js dist/tests/design-profile.test.js dist/tests/context.test.js"
   },
   "dependencies": {
+    "ag-grid-community": "^35.3.1",
     "express": "^5.1.0",
     "mysql2": "^3.14.1"
   },

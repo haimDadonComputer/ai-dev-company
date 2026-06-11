@@ -1,15 +1,18 @@
 source_agent,target_agent,resource,contract_type,description,risk_level
+AI Components,Admin Components,admin data tables,ui,"Every admin data table must use ag-grid-community through the shared data-grid component with sorting filtering movable columns 100 percent width vertically centered cells and 20 visible rows before vertical scroll",High
+AI API,AI Components,admin activity management APIs,http,"admin-activities-page צורך admin_activities_list create update ו-admin_groups_create update תחת requireAdmin",High
+AI DB,AI API,admin activities and groups,data,"ניהול activities ו-groups אינו מוחק רשומות; סטטוס ו-publish_on_site שולטים בפרסום הציבורי",High
 AI DB,AI API,public_leads table,data,"טבלת public_leads שומרת פניות ציבוריות בלבד עם activity_id/group_id אופציונליים וסטטוס טיפול בסיסי",High
 AI API,AI Components,public lead APIs,http,"home-page ו-activities-page שולחים public_leads_create; admin-leads-page צורך admin_public_leads_list דרך credentials same-origin",High
 AI DB,AI API,activities and groups tables,data,"טבלאות activities ו-groups מספקות רק פעילויות וקבוצות עם publish_on_site=true ו-status=active לנתיבים ציבוריים",High
 AI API,AI Components,public activity APIs,http,"עמודי home ו-activities צורכים public_activities_list public_activity_get public_group_get דרך מעטפת success/data וללא JWT",Medium
 AI Permissions,AI Components,public site visibility,authorization,"home-page ו-activities-page גלויים ל-guest student instructor admin ואינם מאפשרים פעולות כתיבה",Low
-AI Permissions,AI API,admin role,authorization,"רק admin פעיל רשאי לגשת לנתיבי /api/admin; החלפת סיסמה זמנית נדרשת לפני פעולות ניהול",High
+AI Permissions,AI API,admin role,authorization,"רק admin פעיל רשאי לגשת לנתיבי /api/admin; אין חובת החלפת סיסמה בכניסה ראשונה",High
 AI Permissions,AI API,crm user roles,authorization,"student instructor admin הם תפקידי משתמש תקינים; auth APIs זמינים למשתמש מחובר אך נתיבי admin דורשים admin בלבד",High
 AI DB,AI API,users table,data,"Authentication משתמש ב-username password_hash password_salt is_active must_change_password",High
 AI DB,AI API,crm identity tables,data,"users כולל פרטי זהות בסיסיים ותפקיד יחיד; students ו-instructors הם הרחבות 1:1 של users",High
 AI API,AI DB,admin user management,data,"יצירת student או instructor חייבת ליצור גם רשומת הרחבה תואמת באותה טרנזקציה; שינוי סטטוס הוא ארכיון לוגי ולא מחיקה",High
-AI Permissions,AI API,admin user management authorization,authorization,"רק admin לאחר החלפת סיסמה רשאי ליצור לערוך לאפס סיסמה או לארכב משתמשים",High
+AI Permissions,AI API,admin user management authorization,authorization,"רק admin פעיל רשאי ליצור לערוך לאפס סיסמה או לארכב משתמשים",High
 AI DB,AI API,site_settings table,data,"API כללי קורא ומעדכן את רשומת singleton שמזהה שלה 1",High
 AI DB,AI API,media_assets table,data,"API מדיה שומר מטא-דאטה בלבד ומבצע מחיקה רכה",High
 AI API,AI Components,authentication APIs,http,"Cookie מנוהל על ידי השרת; הלקוח שולח credentials same-origin ואינו שומר JWT",High

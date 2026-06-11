@@ -24,7 +24,7 @@ Database:
 API:
 
 - יצירת פנייה ציבורית זמינה ללא JWT, אך רק דרך same-origin ועם JSON מוגבל.
-- צפייה בפניות זמינה רק למנהל לאחר החלפת סיסמה.
+- צפייה בפניות זמינה רק למנהל פעיל ללא דרישת החלפת סיסמה.
 
 Permissions:
 
@@ -45,7 +45,7 @@ Components:
 ## הפחתת סיכונים
 
 - service מאמת פעילות/קבוצה באמצעות פונקציות public קיימות לפני יצירת הפנייה.
-- נתיב הניהול נמצא תחת `/api/admin` ומשתמש ב-`requireAdmin` ו-`requirePasswordChanged`.
+- נתיב הניהול נמצא תחת `/api/admin` ומשתמש ב-`requireAdmin`.
 - `context:check`, `npm test`, `db:init` ובדיקת schema הורצו.
 
 ## סטטוס

@@ -6,8 +6,8 @@
 
 - האימות מבוסס JWT ב־HttpOnly Cookie בשם `admin_session`.
 - רק משתמש פעיל בעל role מסוג `admin` יכול להתחבר.
-- מנהל עם `mustChangePassword=true` יכול לגשת רק ל־`me`,
-  `change-password` ו־`logout`.
+- דגל `mustChangePassword` מוחזר לתאימות אך אינו חוסם נתיבי admin.
+  `change-password` נשאר פעולה ידנית למשתמש מחובר.
 - התחברות מוגבלת לחמישה ניסיונות כושלים בחלון של 15 דקות לפי IP ושם משתמש.
 
 ## מדיה

@@ -39,6 +39,11 @@
   font-size: var(--ui-font-size-small);
 }
 
+.admin-users-page__grid-table {
+  width: 100%;
+  min-width: 0;
+}
+
 .admin-users-page__table-wrap {
   overflow-x: auto;
 }

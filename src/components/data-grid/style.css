@@ -1,0 +1,73 @@
+.data-grid-component {
+  width: 100%;
+  min-width: 0;
+  height: var(--data-grid-height);
+  overflow: hidden;
+  direction: rtl;
+}
+
+.data-grid-component .ag-root-wrapper {
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius-surface);
+}
+
+.data-grid-component .ag-header,
+.data-grid-component .ag-header-cell,
+.data-grid-component .ag-cell {
+  font-family: var(--design-font-body);
+}
+
+.data-grid-component .ag-header-cell-label,
+.data-grid-component .ag-cell {
+  align-items: center;
+}
+
+.data-grid-component .ag-cell {
+  display: flex;
+  min-width: 0;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.data-grid-component .ag-row {
+  cursor: pointer;
+}
+
+.data-grid-component .ag-cell-wrapper {
+  min-width: 0;
+}
+
+.data-grid-component .ag-cell-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data-grid-component__empty {
+  display: inline-flex;
+  padding: var(--ui-space-md);
+  color: var(--ui-muted);
+}
+
+.data-grid-component__row--selected {
+  --ag-row-background-color: var(--ui-selected-surface);
+}
+
+.data-grid-component__cell-stack {
+  display: grid;
+  gap: var(--ui-space-xs);
+  min-width: 0;
+}
+
+.data-grid-component__cell-main {
+  color: var(--ui-action);
+  font-weight: var(--design-font-weight-heading);
+}
+
+.data-grid-component__cell-muted {
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-font-size-small);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

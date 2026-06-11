@@ -156,3 +156,72 @@ export interface CreatePublicLeadInput {
   message: string | null;
   sourcePath: string;
 }
+
+export type ActivityStatus = "active" | "inactive" | "archived";
+export type GroupRegistrationStatus = "open" | "closed" | "full" | "archived";
+
+export interface AdminActivity {
+  id: number;
+  name: string;
+  activityType: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  imageMediaAssetId: number | null;
+  imageUrl: string | null;
+  priceAmount: string | null;
+  publishOnSite: boolean;
+  status: ActivityStatus;
+  createdByUserId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminGroup {
+  id: number;
+  activityId: number;
+  name: string;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  scheduleText: string;
+  capacity: number | null;
+  registrationStatus: GroupRegistrationStatus;
+  publishOnSite: boolean;
+  status: ActivityStatus;
+  instructorUserId: number | null;
+  instructorName: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminActivityWithGroups {
+  activity: AdminActivity;
+  groups: AdminGroup[];
+}
+
+export interface AdminActivityInput {
+  name: string;
+  activityType: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  imageMediaAssetId: number | null;
+  priceAmount: string | null;
+  publishOnSite: boolean;
+  status: ActivityStatus;
+}
+
+export interface AdminGroupInput {
+  activityId: number;
+  name: string;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  scheduleText: string;
+  capacity: number | null;
+  registrationStatus: GroupRegistrationStatus;
+  publishOnSite: boolean;
+  status: ActivityStatus;
+  instructorUserId: number | null;
+}

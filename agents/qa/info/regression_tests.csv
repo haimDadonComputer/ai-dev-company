@@ -1,10 +1,14 @@
 id,module,test_name,expected_result,critical
+REG-030,frontend,"Admin data tables keep ag-grid-community behavior","Every admin data table renders through the shared data-grid component, keeps sort filter and movable columns enabled, uses 100 percent width, vertically centers cells and limits visible rows to 20 before vertical scroll",yes
+REG-029,frontend,"דף הבית התדמיתי נשאר רספונסיבי ומבוסס נתוני ניהול","/home נטען כ-SPA ב-RTL, מציג Hero ויזואלי שכבות תוכן טופס קשר ופעילויות ללא גלישה אופקית ברוחבי 484 768 ו-1440, וממשיך להשתמש ב-public settings activities leads ללא שינוי חוזי API",yes
+REG-027,admin-activities,"ניהול פעילויות אינו שובר פרסום ציבורי","פעילויות וקבוצות שאינן publish_on_site=true ו-status=active אינן מוחזרות ב-public APIs גם לאחר עריכת admin",yes
+REG-028,permissions,"נתיבי ניהול פעילויות נשארים מוגנים","כל נתיבי /api/admin/activities ו-/api/admin/groups דורשים admin וסיסמה מוחלפת",yes
 REG-025,public-leads,"פנייה ציבורית אינה עוקפת סינון פרסום","שיוך activityId או groupId נדחה אם הפעילות או הקבוצה אינן זמינות דרך public APIs",yes
-REG-026,permissions,"פניות ציבוריות נצפות רק על ידי מנהל","/api/admin/public-leads חסום לאורח ולמשתמש שאינו admin וזמין רק למנהל לאחר החלפת סיסמה",yes
+REG-026,permissions,"פניות ציבוריות נצפות רק על ידי מנהל","/api/admin/public-leads חסום לאורח ולמשתמש שאינו admin וזמין למנהל פעיל ללא דרישת החלפת סיסמה",yes
 REG-023,public-site,"נתיבי פעילות ציבוריים נשארים read-only ומסוננים","כל API ציבורי לפעילויות מחזיר רק publish_on_site=true ו-status=active ואינו דורש JWT או מאפשר כתיבה",yes
 REG-024,frontend,"עמודי public SPA נשארים ניתנים לרענון ישיר","build כולל /home ו-/activities, והשרת מחזיר index.html בנתיבים ישירים ללא שבירת admin routes",yes
 REG-001,database,"אתחול חוזר אינו דורס מנהל קיים","הרצת db:init נוספת אינה משנה סיסמה או משתמש admin קיים",yes
-REG-002,authentication,"חובת החלפת סיסמה נשמרת לאורך רענון","מנהל עם JWT זמני מופנה תמיד להחלפת סיסמה ונתיבי ניהול נשארים חסומים",yes
+REG-002,authentication,"אין הפניה כפויה להחלפת סיסמה לאורך רענון","מנהל עם JWT תקין אינו מופנה להחלפת סיסמה ונתיבי ניהול נשארים זמינים לפי הרשאת admin",yes
 REG-003,authentication,"התחברות שגויה אינה חושפת קיום משתמש","שם לא קיים וסיסמה שגויה מחזירים אותה הודעה ואותו סטטוס",yes
 REG-004,authentication,"Rate limit מתאפס לאחר הצלחה או תום חלון","הצלחה מנקה מונה וחלון שפג אינו ממשיך לחסום",yes
 REG-005,authentication,"עוגיית אימות נשארת HttpOnly","כל הנפקה חידוש ומחיקה של admin_session שומרים על HttpOnly SameSite ו-Secure בפרודקשיין",yes

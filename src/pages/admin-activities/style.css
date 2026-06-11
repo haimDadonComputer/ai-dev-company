@@ -1,0 +1,101 @@
+.admin-activities-page {
+  display: grid;
+  gap: var(--ui-space-lg);
+  min-width: 0;
+}
+
+.admin-activities-page__grid,
+.admin-activities-page__groups-grid {
+  display: grid;
+  gap: var(--ui-space-lg);
+  min-width: 0;
+}
+
+.admin-activities-page__section-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-sm);
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--ui-space-md);
+}
+
+.admin-activities-page h2,
+.admin-activities-page h3 {
+  margin: 0;
+  font-family: var(--design-font-heading);
+  font-size: var(--ui-font-size-heading);
+  overflow-wrap: anywhere;
+}
+
+.admin-activities-page h3 {
+  font-size: var(--ui-font-size-body);
+}
+
+.admin-activities-page__items,
+.admin-activities-page__groups-list {
+  display: grid;
+  gap: var(--ui-space-sm);
+}
+
+.admin-activities-page__item,
+.admin-activities-page__group {
+  display: grid;
+  gap: var(--ui-space-xs);
+  padding: var(--ui-space-sm);
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-control);
+  background: var(--ui-surface);
+}
+
+.admin-activities-page__item--selected,
+.admin-activities-page__group--selected {
+  border-color: var(--ui-action);
+  background: var(--ui-selected-surface);
+}
+
+.admin-activities-page__item button,
+.admin-activities-page__group button {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  color: var(--ui-action);
+  background: transparent;
+  font: inherit;
+  font-weight: var(--design-font-weight-heading);
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.admin-activities-page__item p,
+.admin-activities-page__group p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-font-size-small);
+}
+
+.admin-activities-page__check {
+  display: flex;
+  flex-direction: row;
+  gap: var(--ui-space-sm);
+  align-items: center;
+  min-height: var(--ui-control-height);
+}
+
+.admin-activities-page__check input {
+  width: auto;
+}
+
+@media (min-width: 1080px) {
+  .admin-activities-page__grid {
+    grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .admin-activities-page__groups-grid {
+    grid-template-columns: minmax(260px, 0.4fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}

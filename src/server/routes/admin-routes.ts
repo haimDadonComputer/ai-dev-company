@@ -1,5 +1,12 @@
 import { Router } from "express";
 import {
+  createAdminActivityController,
+  createAdminGroupController,
+  listAdminActivitiesController,
+  updateAdminActivityController,
+  updateAdminGroupController,
+} from "../controllers/admin-activities-controller.js";
+import {
   deleteMediaController,
   listMediaController,
   uploadMediaController,
@@ -17,16 +24,18 @@ import {
   updateUserController,
   updateUserStatusController,
 } from "../controllers/users-controller.js";
-import {
-  requireAdmin,
-  requirePasswordChanged,
-} from "../middlewares/auth.js";
+import { requireAdmin } from "../middlewares/auth.js";
 
 export const adminRouter = Router();
 
-adminRouter.use(requireAdmin, requirePasswordChanged);
+adminRouter.use(requireAdmin);
 adminRouter.get("/settings/general", getAdminSettingsController);
 adminRouter.put("/settings/general", updateAdminSettingsController);
+adminRouter.get("/activities", listAdminActivitiesController);
+adminRouter.post("/activities", createAdminActivityController);
+adminRouter.put("/activities/:id", updateAdminActivityController);
+adminRouter.post("/groups", createAdminGroupController);
+adminRouter.put("/groups/:id", updateAdminGroupController);
 adminRouter.get("/users", listUsersController);
 adminRouter.post("/users", createUserController);
 adminRouter.get("/users/:id", getUserController);

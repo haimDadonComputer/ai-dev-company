@@ -1,4 +1,5 @@
 module,owner,status,source_of_truth,runtime_path,depends_on,notes
+admin-activity-management,AI API;AI Components;AI Permissions,implemented,agents/api/info/api_list.csv,src,"activities;groups;media;users;authentication","admin page and APIs for managing activities and groups"
 public-leads,AI DB;AI API;AI Components;AI Permissions,implemented,agents/db/info/public_leads.csv,src,"public-site;activities;groups;authentication","public lead submission and admin lead viewing"
 activities,AI DB,implemented,agents/db/info/activities.csv,agents/db/domain,"users;media","public and admin-ready activity templates"
 groups,AI DB,implemented,agents/db/info/groups.csv,agents/db/domain,"activities;users","public and admin-ready activity groups"

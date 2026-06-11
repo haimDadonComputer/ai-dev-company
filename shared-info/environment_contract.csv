@@ -10,7 +10,7 @@ DB_NAME,yes,no,database,ai_dev_company_base,שם מסד הנתונים,db;server
 JWT_SECRET,yes,yes,authentication,replace-with-at-least-32-random-characters,מפתח חתימת JWT,server
 JWT_TTL_SECONDS,yes,no,authentication,28800,משך חיי session בשניות,server
 ADMIN_INITIAL_USERNAME,yes,no,bootstrap,admin,שם מנהל ראשוני,db
-ADMIN_INITIAL_PASSWORD,yes,yes,bootstrap,replace-me,סיסמה ראשונית המחייבת החלפה,db
+ADMIN_INITIAL_PASSWORD,yes,yes,bootstrap,123123,סיסמת מנהל bootstrap ללא דרישת החלפה אוטומטית,db
 UPLOAD_DIR,yes,no,media,storage/uploads,תיקיית אחסון קבצים,server
 MAX_UPLOAD_BYTES,yes,no,media,5242880,מגבלת העלאה קשיחה של 5MB,server
 ALLOW_REFERENCE_DESIGN,yes,no,design,false,מאפשר reference design בפיתוח התשתית בלבד,build

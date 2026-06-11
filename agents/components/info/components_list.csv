@@ -1,15 +1,17 @@
 component_name,visible_to,used_by,api_used,description,risk_level
+data-grid,admin,"admin-users-page|admin-leads-page",none,"Reusable admin table component based on ag-grid-community: sortable filterable movable columns full width 20 visible rows vertical scroll and vertically centered cells",High
 home-page,"guest|student|instructor|admin",router,"public_settings_get|public_activities_list|public_leads_create","עמוד בית ציבורי המציג פרטי אתר פעילויות וטופס פנייה",Low
 activities-page,"guest|student|instructor|admin",router,"public_settings_get|public_activities_list|public_activity_get|public_group_get|public_leads_create","עמוד פעילויות ציבורי עם בחירת פעילות צפייה בקבוצות וטופס פנייה",Low
 login-page,"guest|student|instructor|admin",router,"auth_login|auth_me","עמוד התחברות למשתמשי המערכת",High
 change-password-page,"student|instructor|admin",router,"auth_me|auth_change_password","עמוד החלפת סיסמה למשתמש מחובר",High
 admin-general-page,admin,router,"auth_me|admin_general_get|admin_general_update|admin_media_list","ניהול פרטי האתר ובחירת לוגו ותמונות",High
+admin-activities-page,admin,router,"auth_me|admin_activities_list|admin_activities_create|admin_activities_update|admin_groups_create|admin_groups_update","ניהול פעילויות וקבוצות לפרסום באתר",High
 admin-users-page,admin,router,"auth_me|admin_users_list|admin_users_create|admin_users_get|admin_users_update|admin_users_reset_password|admin_users_update_status","ניהול משתמשים למנהל כולל יצירה עריכה איפוס סיסמה ושינוי סטטוס",High
 admin-leads-page,admin,router,"auth_me|admin_public_leads_list","צפייה בפניות שנשלחו מטפסי האתר הציבורי",High
 admin-media-page,admin,router,"auth_me|admin_media_upload|admin_media_list|admin_media_delete","העלאה ניהול ומחיקה של תמונות עד 5MB",High
-navbar,admin,"admin-general-page|admin-users-page|admin-leads-page|admin-media-page",auth_logout,"סרגל עליון עם זיהוי מנהל והתנתקות",High
-sidebar,admin,"admin-general-page|admin-users-page|admin-leads-page|admin-media-page",none,"ניווט בין עמודי ממשק הניהול",Low
-form,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",none,"מבנה וטיפול במצבי טפסים",Low
-button,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",none,"כפתורי פעולה עקביים ונגישים",Low
-notification,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-users-page|admin-leads-page|admin-media-page",none,"הודעות הצלחה שגיאה ומידע נגישות",Low
+navbar,admin,"admin-general-page|admin-activities-page|admin-users-page|admin-leads-page|admin-media-page",auth_logout,"סרגל עליון עם זיהוי מנהל והתנתקות",High
+sidebar,admin,"admin-general-page|admin-activities-page|admin-users-page|admin-leads-page|admin-media-page",none,"ניווט בין עמודי ממשק הניהול",Low
+form,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-activities-page|admin-users-page|admin-leads-page|admin-media-page",none,"מבנה וטיפול במצבי טפסים",Low
+button,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-activities-page|admin-users-page|admin-leads-page|admin-media-page",none,"כפתורי פעולה עקביים ונגישים",Low
+notification,"guest|student|instructor|admin","home-page|activities-page|login-page|change-password-page|admin-general-page|admin-activities-page|admin-users-page|admin-leads-page|admin-media-page",none,"הודעות הצלחה שגיאה ומידע נגישות",Low
 modal,admin,admin-media-page,none,"חלון אישור למחיקת קובץ מדיה",Low

@@ -54,8 +54,10 @@ function renderActivities(container: HTMLElement, activities: PublicActivity[]):
 }
 
 function renderSettings(page: HTMLElement, settings: GeneralSettings): void {
-  setText(page, ".home-page__brand", settings.siteName || "המרכז הדיגיטלי");
+  const siteName = settings.siteName || "המרכז הדיגיטלי";
+  setText(page, ".home-page__brand-text", siteName);
   setText(page, ".home-page__title", settings.siteName || "המרכז הדיגיטלי");
+  setText(page, ".home-page__footer-name", siteName);
   setText(
     page,
     ".home-page__intro",
@@ -65,13 +67,10 @@ function renderSettings(page: HTMLElement, settings: GeneralSettings): void {
   setText(page, ".home-page__address", settings.address || "-");
   setText(page, ".home-page__email", settings.email || "-");
 
-  const visual = page.querySelector<HTMLElement>(".home-page__visual");
-  const image = visual?.querySelector<HTMLImageElement>("img");
+  const heroMedia = page.querySelector<HTMLElement>(".home-page__hero-media");
   const heroImage = settings.imageUrls?.[0] ?? settings.logoUrl ?? null;
-  if (visual && image && heroImage) {
-    image.src = heroImage;
-    image.alt = settings.siteName || "המרכז הדיגיטלי";
-    visual.hidden = false;
+  if (heroMedia && heroImage) {
+    heroMedia.style.backgroundImage = `url("${heroImage}")`;
   }
 }
 

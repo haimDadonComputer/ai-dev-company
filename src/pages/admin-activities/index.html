@@ -1,0 +1,128 @@
+<section class="admin-activities-page">
+  <header class="page-header">
+    <h1>ניהול פעילויות</h1>
+    <p>יצירה, עריכה ופרסום של פעילויות וקבוצות באתר.</p>
+  </header>
+
+  <div class="admin-activities-page__grid">
+    <section class="admin-activities-page__list card" aria-labelledby="activities-admin-list-title">
+      <div class="admin-activities-page__section-header">
+        <h2 id="activities-admin-list-title">פעילויות</h2>
+        <button class="button-component button-component--secondary admin-activities-page__new-activity" type="button">פעילות חדשה</button>
+      </div>
+      <div class="admin-activities-page__items" aria-live="polite"></div>
+    </section>
+
+    <section class="admin-activities-page__activity card" aria-labelledby="activity-form-title">
+      <h2 id="activity-form-title">פעילות חדשה</h2>
+      <form class="form-component admin-activities-page__activity-form" novalidate>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__grid">
+          <div class="form-component__field">
+            <label for="activity-name">שם פעילות</label>
+            <input id="activity-name" name="name" type="text" maxlength="191" required>
+          </div>
+          <div class="form-component__field">
+            <label for="activity-type">סוג פעילות</label>
+            <input id="activity-type" name="activityType" type="text" maxlength="100">
+          </div>
+          <div class="form-component__field">
+            <label for="activity-audience">קהל יעד</label>
+            <input id="activity-audience" name="audience" type="text" maxlength="255">
+          </div>
+          <div class="form-component__field">
+            <label for="activity-price">מחיר</label>
+            <input id="activity-price" name="priceAmount" type="number" min="0" step="0.01">
+          </div>
+          <div class="form-component__field">
+            <label for="activity-status">סטטוס</label>
+            <select id="activity-status" name="status" required>
+              <option value="active">פעיל</option>
+              <option value="inactive">לא פעיל</option>
+              <option value="archived">בארכיון</option>
+            </select>
+          </div>
+          <label class="form-component__field admin-activities-page__check">
+            <input name="publishOnSite" type="checkbox">
+            <span>פרסום באתר</span>
+          </label>
+        </div>
+        <div class="form-component__field">
+          <label for="activity-summary">תקציר</label>
+          <textarea id="activity-summary" name="summary" maxlength="500"></textarea>
+        </div>
+        <div class="form-component__field">
+          <label for="activity-description">תיאור</label>
+          <textarea id="activity-description" name="description" maxlength="10000"></textarea>
+        </div>
+        <div class="form-component__actions">
+          <button class="button-component button-component--primary" type="submit">שמירת פעילות</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <section class="admin-activities-page__groups card" aria-labelledby="groups-admin-title">
+    <div class="admin-activities-page__section-header">
+      <h2 id="groups-admin-title">קבוצות לפעילות</h2>
+      <button class="button-component button-component--secondary admin-activities-page__new-group" type="button">קבוצה חדשה</button>
+    </div>
+    <div class="admin-activities-page__groups-grid">
+      <div class="admin-activities-page__groups-list" aria-live="polite"></div>
+      <form class="form-component admin-activities-page__group-form" novalidate>
+        <h3 id="group-form-title">קבוצה חדשה</h3>
+        <div class="form-component__message" role="alert" hidden></div>
+        <div class="form-component__grid">
+          <div class="form-component__field">
+            <label for="group-name">שם קבוצה</label>
+            <input id="group-name" name="name" type="text" maxlength="191" required>
+          </div>
+          <div class="form-component__field">
+            <label for="group-start-date">תאריך התחלה</label>
+            <input id="group-start-date" name="startDate" type="date">
+          </div>
+          <div class="form-component__field">
+            <label for="group-end-date">תאריך סיום</label>
+            <input id="group-end-date" name="endDate" type="date">
+          </div>
+          <div class="form-component__field">
+            <label for="group-capacity">מקומות</label>
+            <input id="group-capacity" name="capacity" type="number" min="1" step="1">
+          </div>
+          <div class="form-component__field">
+            <label for="group-registration-status">הרשמה</label>
+            <select id="group-registration-status" name="registrationStatus" required>
+              <option value="open">פתוחה</option>
+              <option value="closed">סגורה</option>
+              <option value="full">מלאה</option>
+              <option value="archived">בארכיון</option>
+            </select>
+          </div>
+          <div class="form-component__field">
+            <label for="group-status">סטטוס</label>
+            <select id="group-status" name="status" required>
+              <option value="active">פעיל</option>
+              <option value="inactive">לא פעיל</option>
+              <option value="archived">בארכיון</option>
+            </select>
+          </div>
+          <label class="form-component__field admin-activities-page__check">
+            <input name="publishOnSite" type="checkbox">
+            <span>פרסום באתר</span>
+          </label>
+        </div>
+        <div class="form-component__field">
+          <label for="group-schedule">לו"ז</label>
+          <textarea id="group-schedule" name="scheduleText" maxlength="500"></textarea>
+        </div>
+        <div class="form-component__field">
+          <label for="group-description">תיאור קבוצה</label>
+          <textarea id="group-description" name="description" maxlength="10000"></textarea>
+        </div>
+        <div class="form-component__actions">
+          <button class="button-component button-component--primary" type="submit">שמירת קבוצה</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</section>

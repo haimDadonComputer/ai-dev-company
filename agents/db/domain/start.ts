@@ -142,7 +142,7 @@ async function start(): Promise<void> {
         email VARCHAR(254) NOT NULL DEFAULT '',
         status VARCHAR(20) NOT NULL DEFAULT 'active',
         is_active BOOLEAN NOT NULL DEFAULT TRUE,
-        must_change_password BOOLEAN NOT NULL DEFAULT TRUE,
+        must_change_password BOOLEAN NOT NULL DEFAULT FALSE,
         notes TEXT NULL,
         last_login_at DATETIME(3) NULL,
         created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -210,6 +210,9 @@ async function start(): Promise<void> {
       "users",
       "idx_users_status",
       "(status)",
+    );
+    await connection.query(
+      "ALTER TABLE users MODIFY must_change_password BOOLEAN NOT NULL DEFAULT FALSE",
     );
 
     await connection.query(`
@@ -429,20 +432,32 @@ async function start(): Promise<void> {
       [adminUsername],
     );
 
-    if (!existingUsers[0]) {
-      const salt = randomBytes(32);
-      const derivedKey = (await scrypt(adminPassword, salt, 64)) as Buffer;
+    const salt = randomBytes(32);
+    const derivedKey = (await scrypt(adminPassword, salt, 64)) as Buffer;
 
+    if (!existingUsers[0]) {
       await connection.execute<ResultSetHeader>(
         `INSERT INTO users (
            username, password_hash, password_salt, role_name,
            first_name, last_name, status, is_active, must_change_password
-         ) VALUES (?, ?, ?, 'admin', 'מנהל', 'מערכת', 'active', TRUE, TRUE)`,
+         ) VALUES (?, ?, ?, 'admin', 'מנהל', 'מערכת', 'active', TRUE, FALSE)`,
         [
           adminUsername,
           derivedKey.toString("hex"),
           salt.toString("hex"),
         ],
+      );
+    } else {
+      await connection.execute<ResultSetHeader>(
+        `UPDATE users
+            SET password_hash = ?,
+                password_salt = ?,
+                role_name = 'admin',
+                status = 'active',
+                is_active = TRUE,
+                must_change_password = FALSE
+          WHERE username = ?`,
+        [derivedKey.toString("hex"), salt.toString("hex"), adminUsername],
       );
     }
 

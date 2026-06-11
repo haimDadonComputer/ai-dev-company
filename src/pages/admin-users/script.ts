@@ -1,4 +1,9 @@
 import { mountAdminLayout } from "../../app/admin-layout.js";
+import {
+  mountDataGrid,
+  type DataGridColumn,
+  type DataGridController
+} from "../../components/data-grid/script.js";
 import { setFormBusy, setFormMessage } from "../../components/form/script.js";
 import { notify } from "../../components/notification/script.js";
 import { usersService } from "../../services/users-service.js";
@@ -250,7 +255,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
   const roleFilter = page.querySelector<HTMLSelectElement>("#users-role-filter");
   const statusFilter = page.querySelector<HTMLSelectElement>("#users-status-filter");
   const refreshButton = page.querySelector<HTMLButtonElement>(".admin-users-page__refresh");
-  const rows = page.querySelector<HTMLElement>(".admin-users-page__rows");
+  const gridTable = page.querySelector<HTMLElement>(".admin-users-page__grid-table");
   const count = page.querySelector<HTMLElement>(".admin-users-page__count");
   const title = page.querySelector<HTMLElement>("#user-form-title");
   const newButton = page.querySelector<HTMLButtonElement>(".admin-users-page__new");
@@ -262,7 +267,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
     !roleFilter ||
     !statusFilter ||
     !refreshButton ||
-    !rows ||
+    !gridTable ||
     !count ||
     !title ||
     !newButton ||
@@ -276,7 +281,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
   const roleFilterElement = roleFilter;
   const statusFilterElement = statusFilter;
   const refreshButtonElement = refreshButton;
-  const rowsElement = rows;
+  const gridTableElement = gridTable;
   const countElement = count;
   const titleElement = title;
   const newButtonElement = newButton;
@@ -286,9 +291,68 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
 
   let users: ManagedUser[] = [];
   let selectedUser: ManagedUser | null = null;
+  const userColumns: Array<DataGridColumn<ManagedUser>> = [
+    {
+      headerName: "משתמש",
+      field: "username",
+      minWidth: 180,
+      flex: 1.3,
+      cellRenderer: ({ data }) => {
+        if (!data) {
+          return "";
+        }
+        const wrapper = document.createElement("div");
+        wrapper.className = "data-grid-component__cell-stack";
+        const username = document.createElement("span");
+        username.className = "data-grid-component__cell-main";
+        username.textContent = data.username;
+        const fullName = document.createElement("span");
+        fullName.className = "data-grid-component__cell-muted";
+        fullName.textContent = `${data.firstName} ${data.lastName}`.trim() || "-";
+        wrapper.append(username, fullName);
+        return wrapper;
+      }
+    },
+    {
+      headerName: "תפקיד",
+      field: "role",
+      minWidth: 120,
+      valueGetter: ({ data }) => (data ? roleLabels[data.role] : "")
+    },
+    {
+      headerName: "פרטים",
+      minWidth: 220,
+      flex: 1.5,
+      valueGetter: ({ data }) =>
+        data ? [data.phone, data.email].filter(Boolean).join(" | ") || "-" : ""
+    },
+    {
+      headerName: "סטטוס",
+      field: "status",
+      minWidth: 120,
+      valueGetter: ({ data }) => (data ? statusLabels[data.status] : "")
+    },
+    {
+      headerName: "סיסמה",
+      field: "mustChangePassword",
+      minWidth: 130,
+      valueGetter: ({ data }) =>
+        data ? (data.mustChangePassword ? "נדרשת החלפה" : "תקינה") : ""
+    }
+  ];
+  const dataGrid: DataGridController<ManagedUser> = mountDataGrid(
+    gridTableElement,
+    userColumns,
+    users,
+    {
+      emptyMessage: "לא נמצאו משתמשים להצגה.",
+      getRowClass: (user) => (selectedUser?.id === user.id ? "selected" : null),
+      onRowClick: (user) => void selectUser(user)
+    }
+  );
 
   const loadUsers = async (): Promise<void> => {
-    rowsElement.setAttribute("aria-busy", "true");
+    gridTableElement.setAttribute("aria-busy", "true");
     try {
       users = await usersService.list({
         role: roleFilterElement.value ? (roleFilterElement.value as UserRole) : undefined,
@@ -296,11 +360,15 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
           ? (statusFilterElement.value as UserStatus)
           : undefined
       });
-      renderRows(rowsElement, countElement, users, selectedUser, selectUser);
+      countElement.textContent = `${users.length} משתמשים`;
+      dataGrid.setRows(users);
     } catch {
-      rowsElement.innerHTML = '<tr><td colspan="5" class="empty-state" role="alert">לא ניתן לטעון את רשימת המשתמשים.</td></tr>';
+      users = [];
+      countElement.textContent = "0 משתמשים";
+      dataGrid.setRows(users);
+      notify("לא ניתן לטעון את רשימת המשתמשים.", "error");
     } finally {
-      rowsElement.removeAttribute("aria-busy");
+      gridTableElement.removeAttribute("aria-busy");
     }
   };
 
@@ -315,7 +383,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
     setFormMessage(passwordFormElement);
     setFormMessage(statusFormElement);
     syncProfileSections(userFormElement, selectedUser);
-    renderRows(rowsElement, countElement, users, selectedUser, selectUser);
+    dataGrid.refresh();
   };
 
   async function selectUser(user: ManagedUser): Promise<void> {
@@ -330,7 +398,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
     setFormMessage(passwordFormElement);
     setFormMessage(statusFormElement);
     syncProfileSections(userFormElement, selectedUser);
-    renderRows(rowsElement, countElement, users, selectedUser, selectUser);
+    dataGrid.refresh();
 
     setFormBusy(userFormElement, true);
     try {
@@ -392,7 +460,7 @@ export async function mountAdminUsersPage(root: HTMLElement): Promise<void> {
         getInput(passwordFormElement, "newPassword").value
       );
       passwordFormElement.reset();
-      notify("הסיסמה אופסה והמשתמש יידרש להחליף אותה בכניסה הבאה.", "success");
+      notify("הסיסמה אופסה בהצלחה.", "success");
       await loadUsers();
     } catch {
       setFormMessage(passwordFormElement, "איפוס הסיסמה נכשל.");

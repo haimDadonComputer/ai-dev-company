@@ -1,4 +1,5 @@
 id,date,decision,reason,approved_by,status,related_files,notes
+18,2026-06-11,"Use ag-grid-community for every admin data table","Admin tables require sorting filtering movable columns full width and controlled vertical scrolling with a single shared implementation",Haim,active,"package.json;src/components/data-grid;src/pages/admin-users;src/pages/admin-leads;shared-info/contracts.csv","Architecture change approved by user"
 1,2026-06-08,Use MySQL,פשטות ונוחות פריסה,Haim,active,AGENTS.md,
 2,2026-06-08,Use mysql2 without ORM,שליטה מלאה ופחות מורכבות,Haim,active,AGENTS.md,
 3,2026-06-08,Use Vanilla HTML CSS TypeScript,פשטות וללא Framework,Haim,active,AGENTS.md,
@@ -6,7 +7,7 @@ id,date,decision,reason,approved_by,status,related_files,notes
 5,2026-06-09,"Use Node built-in crypto for password hashing and JWT signing","עמידה במדיניות הספריות ושימוש ב-scrypt HMAC-SHA256 ללא תלות נוספת",Haim,active,"src/server/utils/password.ts;src/server/utils/jwt.ts","אושר במסגרת אישור High Risk"
 6,2026-06-09,"Store uploaded media on local server disk with metadata in MySQL","פתרון בסיסי ניתן להעתקה ללא שירות אחסון חיצוני",Haim,active,"agents/db/info/media_assets.csv;src/server/services","מוגבל ל-5MB ול-PNG JPEG WebP"
 7,2026-06-09,"Use active .env in development and process.env in production","תצורה אחידה בין פיתוח לפרודקשן ללא סודות בקוד",Haim,active,".env;.env.example;package.json","האחריות להחלפת ערכי פרודקשן היא של המשתמש"
-8,2026-06-09,"Require initial admin password change","הסיסמה הראשונית 123123 חלשה ואינה מתאימה לשימוש שוטף",Haim,active,"agents/db/domain/start.ts;src/server","גישה לפעולות ניהול נחסמת עד להחלפה"
+8,2026-06-09,"Require initial admin password change","הסיסמה הראשונית 123123 חלשה ואינה מתאימה לשימוש שוטף",Haim,superseded,"agents/db/domain/start.ts;src/server","הוחלף בהחלטה 16 לפי אישור משתמש ב-2026-06-11"
 9,2026-06-09,"Separate functional infrastructure from project visual identity","מניעת מראה אחיד בין פרויקטים המבוססים על אותה תשתית",Haim,active,"design-system/project-profile.json;src/design/active-profile.css;src/app/styles.css","Architecture change אושר במפורש"
 10,2026-06-09,"Block infrastructure reference design in production","להבטיח שכל פרויקט יקבל זהות חזותית עצמאית לפני פריסה",Haim,active,"scripts/check-design-profile.mjs;package.json",".env מאפשר reference רק לפיתוח התשתית"
 11,2026-06-09,"Require Manager Bootstrap before every task","להבטיח שמנהל AI טוען את כל החוזים והנתונים ללא הוראה מפורשת",Haim,active,"AGENTS.md;shared-info/manager_bootstrap.md;shared-info/system_manifest.json","Architecture change אושר במפורש"
@@ -14,3 +15,5 @@ id,date,decision,reason,approved_by,status,related_files,notes
 13,2026-06-09,"Use agents/qa/info as the only QA source of truth","מניעת כפילות תוך שמירת קובצי qa הנדרשים כתמונות תאימות",Haim,active,"agents/qa/info;qa;shared-info/system_manifest.json","qa mirrors נוצרים אוטומטית"
 14,2026-06-09,"Expand CRM identity roles to student instructor admin","נדרש לאפיון המרכז הדיגיטלי ולכל אזורי המשתמשים העתידיים",Haim,active,"agents/permissions/info/permissions.csv;agents/db/info/users.csv;src/server/utils/jwt.ts","אושר על ידי המשתמש במסגרת המשך לפי המלצת AI Manager"
 15,2026-06-09,"Allow multi-role required_role validation in API contracts","auth APIs משותפים לכל משתמש מחובר ולכן required_role צריך לתמוך ביותר מתפקיד אחד",Haim,active,"scripts/check-system-context.mjs;agents/api/info/api_list.csv","כל role ברשימה חייב להופיע ב-permissions.csv"
+16,2026-06-11,"Disable first-login password change requirement","?????? ???? ?????? ?????? admin 123123 ??? ????? ????? ????? ????? ?? ?????? ??? ???? ??????? ??????",Haim,active,"agents/db/domain/start.ts;agents/db/domain/repo.ts;src/server/routes/admin-routes.ts;src/app/router.ts;.env;.env.example","Critical authentication change approved explicitly by user"
+17,2026-06-11,"Use custom Merkaz Digitali visual identity","דף הבית הוא אתר תדמית ולכן נדרש פרופיל עיצוב מותגי במקום reference infrastructure profile",Haim,active,"design-system/project-profile.json;src/design/active-profile.css;src/pages/home","Architecture design change approved by user for full home page redesign"

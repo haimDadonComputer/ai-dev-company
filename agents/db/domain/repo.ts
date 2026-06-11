@@ -214,6 +214,33 @@ export interface ActivityWithGroups {
   groups: GroupRecord[];
 }
 
+export interface ActivityInput {
+  name: string;
+  activityType: string;
+  audience: string;
+  summary: string;
+  description: string | null;
+  imageMediaAssetId: number | null;
+  priceAmount: string | null;
+  publishOnSite: boolean;
+  status: string;
+  createdByUserId?: number | null;
+}
+
+export interface GroupInput {
+  activityId: number;
+  name: string;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  scheduleText: string;
+  capacity: number | null;
+  registrationStatus: string;
+  publishOnSite: boolean;
+  status: string;
+  instructorUserId: number | null;
+}
+
 export type PublicLeadStatus = "new" | "contacted" | "closed" | "archived";
 
 export interface PublicLeadRecord {
@@ -567,6 +594,11 @@ const publicActivitySelect = `SELECT id, name, activity_type, audience, summary,
     WHERE publish_on_site = TRUE
       AND status = 'active'`;
 
+const adminActivitySelect = `SELECT id, name, activity_type, audience, summary,
+          description, image_media_asset_id, CAST(price_amount AS CHAR) AS price_amount,
+          publish_on_site, status, created_by_user_id, created_at, updated_at
+     FROM activities`;
+
 const publicGroupSelect = `SELECT g.id, g.activity_id, g.name, g.description,
           g.start_date, g.end_date, g.schedule_text, g.capacity,
           g.registration_status, g.publish_on_site, g.status,
@@ -577,6 +609,15 @@ const publicGroupSelect = `SELECT g.id, g.activity_id, g.name, g.description,
      LEFT JOIN users u ON u.id = g.instructor_user_id
     WHERE g.publish_on_site = TRUE
       AND g.status = 'active'`;
+
+const adminGroupSelect = `SELECT g.id, g.activity_id, g.name, g.description,
+          g.start_date, g.end_date, g.schedule_text, g.capacity,
+          g.registration_status, g.publish_on_site, g.status,
+          g.instructor_user_id,
+          NULLIF(CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')), ' ') AS instructor_name,
+          g.created_at, g.updated_at
+     FROM \`groups\` g
+     LEFT JOIN users u ON u.id = g.instructor_user_id`;
 
 const publicLeadSelect = `SELECT l.id, l.activity_id, l.group_id,
           a.name AS activity_name, g.name AS group_name,
@@ -701,7 +742,7 @@ export async function createUserWithProfile(
          username, password_hash, password_salt, role_name,
          first_name, last_name, phone, email, status,
          is_active, must_change_password, notes
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', TRUE, TRUE, ?)`,
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', TRUE, FALSE, ?)`,
       [
         input.username,
         input.passwordHash,
@@ -1227,4 +1268,195 @@ export async function listPublicLeads(
   );
 
   return rows.map(mapPublicLead);
+}
+
+export async function listAdminActivities(): Promise<ActivityWithGroups[]> {
+  const [activityRows] = await pool.query<ActivityRow[]>(
+    `${adminActivitySelect}
+      ORDER BY id DESC`,
+  );
+
+  const [groupRows] = await pool.query<GroupRow[]>(
+    `${adminGroupSelect}
+      ORDER BY g.activity_id DESC, g.id DESC`,
+  );
+
+  return activityRows.map((activityRow) => ({
+    activity: mapActivity(activityRow),
+    groups: groupRows
+      .filter((groupRow) => groupRow.activity_id === activityRow.id)
+      .map(mapGroup),
+  }));
+}
+
+export async function findAdminActivityById(
+  id: number,
+): Promise<ActivityWithGroups | null> {
+  const [activityRows] = await pool.execute<ActivityRow[]>(
+    `${adminActivitySelect}
+      WHERE id = ?
+      LIMIT 1`,
+    [id],
+  );
+  if (!activityRows[0]) {
+    return null;
+  }
+
+  const [groupRows] = await pool.execute<GroupRow[]>(
+    `${adminGroupSelect}
+      WHERE g.activity_id = ?
+      ORDER BY g.id DESC`,
+    [id],
+  );
+
+  return {
+    activity: mapActivity(activityRows[0]),
+    groups: groupRows.map(mapGroup),
+  };
+}
+
+export async function createActivity(
+  input: ActivityInput,
+): Promise<ActivityRecord> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `INSERT INTO activities (
+       name, activity_type, audience, summary, description,
+       image_media_asset_id, price_amount, publish_on_site, status,
+       created_by_user_id
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      input.name,
+      input.activityType,
+      input.audience,
+      input.summary,
+      input.description,
+      input.imageMediaAssetId,
+      input.priceAmount,
+      input.publishOnSite,
+      input.status,
+      input.createdByUserId ?? null,
+    ],
+  );
+
+  const loaded = await findAdminActivityById(result.insertId);
+  if (!loaded) {
+    throw new Error("Created activity could not be loaded");
+  }
+  return loaded.activity;
+}
+
+export async function updateActivity(
+  id: number,
+  input: ActivityInput,
+): Promise<ActivityRecord | null> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `UPDATE activities
+        SET name = ?,
+            activity_type = ?,
+            audience = ?,
+            summary = ?,
+            description = ?,
+            image_media_asset_id = ?,
+            price_amount = ?,
+            publish_on_site = ?,
+            status = ?,
+            updated_at = CURRENT_TIMESTAMP(3)
+      WHERE id = ?`,
+    [
+      input.name,
+      input.activityType,
+      input.audience,
+      input.summary,
+      input.description,
+      input.imageMediaAssetId,
+      input.priceAmount,
+      input.publishOnSite,
+      input.status,
+      id,
+    ],
+  );
+  if (result.affectedRows !== 1) {
+    return null;
+  }
+  return (await findAdminActivityById(id))?.activity ?? null;
+}
+
+export async function createGroup(input: GroupInput): Promise<GroupRecord> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `INSERT INTO \`groups\` (
+       activity_id, name, description, start_date, end_date, schedule_text,
+       capacity, registration_status, publish_on_site, status, instructor_user_id
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      input.activityId,
+      input.name,
+      input.description,
+      input.startDate,
+      input.endDate,
+      input.scheduleText,
+      input.capacity,
+      input.registrationStatus,
+      input.publishOnSite,
+      input.status,
+      input.instructorUserId,
+    ],
+  );
+
+  const [rows] = await pool.execute<GroupRow[]>(
+    `${adminGroupSelect}
+      WHERE g.id = ?
+      LIMIT 1`,
+    [result.insertId],
+  );
+  if (!rows[0]) {
+    throw new Error("Created group could not be loaded");
+  }
+  return mapGroup(rows[0]);
+}
+
+export async function updateGroup(
+  id: number,
+  input: GroupInput,
+): Promise<GroupRecord | null> {
+  const [result] = await pool.execute<ResultSetHeader>(
+    `UPDATE \`groups\`
+        SET activity_id = ?,
+            name = ?,
+            description = ?,
+            start_date = ?,
+            end_date = ?,
+            schedule_text = ?,
+            capacity = ?,
+            registration_status = ?,
+            publish_on_site = ?,
+            status = ?,
+            instructor_user_id = ?,
+            updated_at = CURRENT_TIMESTAMP(3)
+      WHERE id = ?`,
+    [
+      input.activityId,
+      input.name,
+      input.description,
+      input.startDate,
+      input.endDate,
+      input.scheduleText,
+      input.capacity,
+      input.registrationStatus,
+      input.publishOnSite,
+      input.status,
+      input.instructorUserId,
+      id,
+    ],
+  );
+  if (result.affectedRows !== 1) {
+    return null;
+  }
+
+  const [rows] = await pool.execute<GroupRow[]>(
+    `${adminGroupSelect}
+      WHERE g.id = ?
+      LIMIT 1`,
+    [id],
+  );
+  return rows[0] ? mapGroup(rows[0]) : null;
 }
