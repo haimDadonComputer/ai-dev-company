@@ -33,7 +33,7 @@
       "agents/db/info/media_assets.csv"
     ],
     "api": ["agents/api/info/api_list.csv"],
-    "components": ["agents/components/info/components_list.csv"],
+    "components": ["agents/components/info/components_list.csv", "src/app/site-config.json"],
     "design": [
       "design-system/project-profile.json",
       "design-system/reference-design.json",

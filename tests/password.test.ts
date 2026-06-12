@@ -22,8 +22,8 @@ test("password hashing creates a verifiable salted digest", async () => {
   );
 });
 
-test("new password policy rejects short or single-category passwords", () => {
+test("new password policy requires more than six characters", () => {
   assert.ok(validateNewPassword("123123"));
-  assert.ok(validateNewPassword("onlyletters"));
-  assert.equal(validateNewPassword("SecurePass123"), null);
+  assert.equal(validateNewPassword("1231234"), null);
+  assert.equal(validateNewPassword("onlyletters"), null);
 });

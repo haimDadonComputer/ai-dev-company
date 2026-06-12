@@ -1,2 +1,0 @@
-component_name,visible_to,used_by,api_used,description,risk_level
-form,"guest|admin","login-page|change-password-page|admin-general-page|admin-media-page",none,"מבנה וטיפול במצבי טפסים",Low

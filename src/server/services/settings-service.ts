@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import {
   findMediaAssetById,
   getSiteSettings,
@@ -21,6 +24,59 @@ export interface SettingsResponse {
   additionalMediaUrls: string[];
   updatedAt: Date;
   updatedByUserId?: number | null;
+}
+
+export interface PublicSiteConfig {
+  siteLogo: string;
+  siteName: string;
+  siteDescription: string;
+  siteSlogan: string;
+  favicon: string;
+  businessPhone: string;
+  businessAddress: string;
+  businessInstagram: string;
+  businessFacebook: string;
+  businessWhatsapp: string;
+}
+
+const siteConfigCandidates = [
+  resolve("dist/public/app/site-config.json"),
+  resolve("src/app/site-config.json")
+];
+
+function requireStringField(value: unknown, fieldName: keyof PublicSiteConfig): string {
+  if (typeof value !== "string") {
+    throw new ServiceError(
+      500,
+      "SITE_CONFIG_INVALID",
+      `site-config.json field ${fieldName} must be a string`,
+    );
+  }
+  return value;
+}
+
+function parsePublicSiteConfig(value: unknown): PublicSiteConfig {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new ServiceError(
+      500,
+      "SITE_CONFIG_INVALID",
+      "site-config.json must contain an object",
+    );
+  }
+
+  const object = value as Record<keyof PublicSiteConfig, unknown>;
+  return {
+    siteLogo: requireStringField(object.siteLogo, "siteLogo"),
+    siteName: requireStringField(object.siteName, "siteName"),
+    siteDescription: requireStringField(object.siteDescription, "siteDescription"),
+    siteSlogan: requireStringField(object.siteSlogan, "siteSlogan"),
+    favicon: requireStringField(object.favicon, "favicon"),
+    businessPhone: requireStringField(object.businessPhone, "businessPhone"),
+    businessAddress: requireStringField(object.businessAddress, "businessAddress"),
+    businessInstagram: requireStringField(object.businessInstagram, "businessInstagram"),
+    businessFacebook: requireStringField(object.businessFacebook, "businessFacebook"),
+    businessWhatsapp: requireStringField(object.businessWhatsapp, "businessWhatsapp")
+  };
 }
 
 function mediaUrl(id: number): string {
@@ -86,8 +142,17 @@ export async function getAdminSettings(): Promise<SettingsResponse> {
   return toResponse(await requireSettings(), true);
 }
 
-export async function getPublicSettings(): Promise<SettingsResponse> {
-  return toResponse(await requireSettings(), false);
+export async function getPublicSettings(): Promise<PublicSiteConfig> {
+  const configPath = siteConfigCandidates.find((candidate) => existsSync(candidate));
+  if (!configPath) {
+    throw new ServiceError(
+      500,
+      "SITE_CONFIG_NOT_FOUND",
+      "site-config.json was not found",
+    );
+  }
+
+  return parsePublicSiteConfig(JSON.parse(await readFile(configPath, "utf8")));
 }
 
 export async function saveSettings(

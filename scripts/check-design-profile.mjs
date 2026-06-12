@@ -124,7 +124,9 @@ const isReference =
   profile.referenceOnly === true ||
   profile.status === "reference" ||
   profile.profileId === "base-infrastructure-reference";
-const allowReference = process.env.ALLOW_REFERENCE_DESIGN === "true";
+const allowReference =
+  process.env.NODE_ENV !== "production" &&
+  process.env.ALLOW_REFERENCE_DESIGN !== "false";
 if (process.env.NODE_ENV === "production" && isReference) {
   errors.push("production builds cannot use the infrastructure reference profile");
 } else if (isReference && !allowReference) {

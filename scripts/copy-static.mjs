@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { cp, mkdir, readdir, rm } from "node:fs/promises";
 import { extname, join, relative, resolve } from "node:path";
 
@@ -10,7 +11,12 @@ await cp(resolve("src/index.html"), resolve(target, "index.html"));
 await cp(resolve(compiledClient, "main.js"), resolve(target, "main.js"));
 
 for (const directory of ["app", "pages", "components", "services", "models", "types"]) {
-  await cp(resolve(compiledClient, directory), resolve(target, directory), {
+  const sourceDirectory = resolve(compiledClient, directory);
+  if (!existsSync(sourceDirectory)) {
+    continue;
+  }
+
+  await cp(sourceDirectory, resolve(target, directory), {
     recursive: true,
     filter: (source) => extname(source) !== ".map"
   });
@@ -23,7 +29,7 @@ async function copyStaticFiles(sourceDirectory) {
       await copyStaticFiles(source);
       continue;
     }
-    if (![".html", ".css"].includes(extname(entry.name))) {
+    if (![".html", ".css", ".json"].includes(extname(entry.name))) {
       continue;
     }
 
@@ -33,10 +39,12 @@ async function copyStaticFiles(sourceDirectory) {
   }
 }
 
-await copyStaticFiles(resolve("src/app"));
-await copyStaticFiles(resolve("src/design"));
-await copyStaticFiles(resolve("src/pages"));
-await copyStaticFiles(resolve("src/components"));
+for (const staticDirectory of ["src/app", "src/design", "src/pages", "src/components"]) {
+  const sourceDirectory = resolve(staticDirectory);
+  if (existsSync(sourceDirectory)) {
+    await copyStaticFiles(sourceDirectory);
+  }
+}
 await mkdir(resolve(target, "design"), { recursive: true });
 await cp(
   resolve("design-system/project-profile.json"),

@@ -41,11 +41,8 @@ export async function verifyPassword(
 }
 
 export function validateNewPassword(password: string): string | null {
-  if (password.length < 10) {
-    return "הסיסמה חייבת להכיל לפחות 10 תווים";
-  }
-  if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
-    return "הסיסמה חייבת לכלול אותיות ומספרים";
+  if (password.length <= 6) {
+    return "הסיסמה חייבת להכיל יותר מ-6 תווים";
   }
   return null;
 }

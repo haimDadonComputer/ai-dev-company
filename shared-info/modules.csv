@@ -1,8 +1,8 @@
 module,owner,status,source_of_truth,runtime_path,depends_on,notes
-authentication,AI API,implemented,agents/api/info/api_list.csv,src/server,"users;permissions;environment","JWT HttpOnly Cookie"
+authentication,AI API,implemented,agents/api/info/api_list.csv,src/server,"users;permissions;environment","JWT HttpOnly Cookie; no bundled login UI"
 users,AI DB,implemented,agents/db/info/users.csv,agents/db/domain,"environment;permissions","bootstrap admin"
-general-settings,AI DB;AI API;AI Components,implemented,agents/db/info/site_settings.csv,src,"users;media","singleton id=1"
-media,AI DB;AI API;AI Components,implemented,agents/db/info/media_assets.csv,src,"users;environment","PNG JPEG WebP up to 5MB"
-admin-spa,AI Components,implemented,agents/components/info/components_list.csv,src,"authentication;api;design","RTL responsive"
-design-profiles,AI Components,implemented,design-system/project-profile.json,src/design,"build;qa","reference blocked in production"
+global-site-config,AI Components;AI API,implemented,src/app/site-config.json,src/app,"build","simple JSON source for logo name description slogan favicon phone address instagram facebook whatsapp"
+general-settings-legacy,AI DB;AI API,implemented,agents/db/info/site_settings.csv,src/server,"users;media","legacy admin API only; not used by bundled UI"
+media,AI DB;AI API,implemented,agents/db/info/media_assets.csv,src/server,"users;environment","PNG JPEG WebP up to 5MB"
+design-profiles,AI Components,implemented,design-system/project-profile.json,src/design,"build;qa","available for derived projects; no base admin UI imports it"
 context-bootstrap,AI Manager,implemented,shared-info/system_manifest.json,shared-info,"all sources of truth","mandatory before every task"

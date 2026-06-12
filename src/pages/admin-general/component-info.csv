@@ -1,2 +1,0 @@
-component_name,visible_to,used_by,api_used,description,risk_level
-admin-general-page,admin,router,"auth_me|admin_general_get|admin_general_update|admin_media_list","ניהול פרטי האתר ובחירת לוגו ותמונות",High

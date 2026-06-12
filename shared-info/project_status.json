@@ -1,15 +1,18 @@
 {
   "schemaVersion": 1,
-  "projectPhase": "infrastructure-ready-with-environmental-qa-blockers",
-  "lastUpdated": "2026-06-09",
+  "projectPhase": "base-ui-removed-with-environmental-qa-blockers",
+  "lastUpdated": "2026-06-12",
   "implementedModules": [
     "authentication",
     "users",
-    "general-settings",
+    "global-site-config",
+    "general-settings-legacy",
     "media",
-    "admin-spa",
     "design-profiles",
     "context-bootstrap"
+  ],
+  "removedModules": [
+    "admin-spa"
   ],
   "activeBlockers": [
     {
@@ -20,20 +23,20 @@
       "source": "shared-info/contradictions.csv"
     },
     {
-      "id": "QA-VISUAL",
+      "id": "QA-HTTP-E2E",
       "severity": "Medium",
-      "reason": "Browser visual QA has not been executed",
-      "blocks": "Visual approval for navigation and density combinations",
+      "reason": "HTTP E2E was not run after removing the bundled UI",
+      "blocks": "Final runtime approval",
       "source": "agents/qa/info/test_results.csv"
     }
   ],
   "automatedTests": {
     "command": "npm test",
-    "lastResult": "10/10 PASS"
+    "lastResult": "13/13 PASS"
   },
   "nextRequiredActions": [
     "Start a MySQL 8 server and run npm run db:init",
     "Run database and HTTP E2E scenarios",
-    "Run browser visual QA for responsive and design profile variants"
+    "Run /api/public/settings HTTP verification against a running server"
   ]
 }
